@@ -39,6 +39,12 @@ UDBCDatabaseDriver class >> driverAt: aDriverId [
 	^ self driverManager driverAt: aDriverId
 ]
 
+{ #category : #accessing }
+UDBCDatabaseDriver class >> driverId [
+
+	self subclassResponsibility 
+]
+
 { #category : #'private - accessing' }
 UDBCDatabaseDriver class >> driverManager [
 	
