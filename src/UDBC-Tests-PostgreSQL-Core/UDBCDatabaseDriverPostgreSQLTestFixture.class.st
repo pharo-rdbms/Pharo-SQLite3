@@ -2,19 +2,19 @@
 Test fixture for PostgreSQL
 "
 Class {
-	#name : #UDBCPostgreSQLDatabaseDriverTestFixture,
+	#name : #UDBCDatabaseDriverPostgreSQLTestFixture,
 	#superclass : #UDBCDatabaseDriverTestFixture,
 	#category : #'UDBC-Tests-PostgreSQL-Core-Fixtures'
 }
 
 { #category : #'setting up - database' }
-UDBCPostgreSQLDatabaseDriverTestFixture >> createDatabase [
+UDBCDatabaseDriverPostgreSQLTestFixture >> createDatabase [
 
 	setupConnection execute: 'CREATE DATABASE sodbxtest'.
 ]
 
 { #category : #'setting up - database' }
-UDBCPostgreSQLDatabaseDriverTestFixture >> createTables [
+UDBCDatabaseDriverPostgreSQLTestFixture >> createTables [
 
 	self connection execute: 'CREATE TABLE student(
    	   id SERIAL PRIMARY KEY,
@@ -59,13 +59,13 @@ UDBCPostgreSQLDatabaseDriverTestFixture >> createTables [
 ]
 
 { #category : #'setting up - database' }
-UDBCPostgreSQLDatabaseDriverTestFixture >> dropDatabase [
+UDBCDatabaseDriverPostgreSQLTestFixture >> dropDatabase [
 
 	setupConnection execute: 'DROP DATABASE IF EXISTS sodbxtest'.
 ]
 
 { #category : #'setting up - database' }
-UDBCPostgreSQLDatabaseDriverTestFixture >> dropTables [
+UDBCDatabaseDriverPostgreSQLTestFixture >> dropTables [
 
 	self connection execute: 'DROP TABLE IF EXISTS course CASCADE'.
 	self connection execute: 'DROP TABLE IF EXISTS signature CASCADE'. 
