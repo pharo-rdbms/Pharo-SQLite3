@@ -49,7 +49,7 @@ UDBCConnectionString >> database [
 { #category : #accessing }
 UDBCConnectionString >> driverId [
 	
-	^ connectionString scheme
+	^ connectionStringURL scheme
 ]
 
 { #category : #'accessing - server' }
