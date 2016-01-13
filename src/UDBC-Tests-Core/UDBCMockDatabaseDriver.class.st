@@ -4,6 +4,9 @@ A fake database driver used as mock for testing
 Class {
 	#name : #UDBCMockDatabaseDriver,
 	#superclass : #Object,
+	#instVars : [
+		'id'
+	],
 	#category : #'UDBC-Tests-Core-Mocks'
 }
 
@@ -18,7 +21,7 @@ UDBCMockDatabaseDriver class >> withId: aString [
 { #category : #accessing }
 UDBCMockDatabaseDriver >> driverId [
 	
-	^ id
+	^ id 
 ]
 
 { #category : #accessing }
