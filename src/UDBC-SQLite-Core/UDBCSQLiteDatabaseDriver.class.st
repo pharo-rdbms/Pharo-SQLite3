@@ -4,6 +4,10 @@ Database driver for SQLite3
 Class {
 	#name : #UDBCSQLiteDatabaseDriver,
 	#superclass : #UDBCDatabaseDriver,
+	#instVars : [
+		'aDatabase',
+		'database'
+	],
 	#category : #'UDBC-SQLite-Core-Driver'
 }
 
@@ -36,4 +40,14 @@ UDBCSQLiteDatabaseDriver class >> initialize [
 UDBCSQLiteDatabaseDriver class >> supportsEncoding: anEncoding [
 	
 	^ (ZnCharacterEncoder newForEncoding: anEncoding) = ZnUTF8Encoder new
+]
+
+{ #category : #accessing }
+UDBCSQLiteDatabaseDriver >> database [
+	^ database
+]
+
+{ #category : #accessing }
+UDBCSQLiteDatabaseDriver >> database: aString [ 
+	database := aString
 ]
