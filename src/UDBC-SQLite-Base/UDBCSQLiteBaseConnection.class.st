@@ -7,7 +7,8 @@ Class {
 	#instVars : [
 		'dbFilename',
 		'dbHandle',
-		'isOpen'
+		'isOpen',
+		'library'
 	],
 	#category : #'UDBC-SQLite-Base-Connections'
 }
@@ -35,8 +36,8 @@ UDBCSQLiteBaseConnection class >> openOn: aFilename [
 UDBCSQLiteBaseConnection >> initialize [
 	
 	super initialize.
-	 
 	isOpen := false.
+	library := UDBCSQLiteLibrary current
 ]
 
 { #category : #private }
