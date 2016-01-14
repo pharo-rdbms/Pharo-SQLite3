@@ -5,7 +5,8 @@ Class {
 	#name : #UDBCSQLiteLibrary,
 	#superclass : #Object,
 	#classVars : [
-		'Current'
+		'Current',
+		'TypeMap'
 	],
 	#pools : [
 		'UDBCSQLiteConstants'
@@ -17,6 +18,37 @@ Class {
 UDBCSQLiteLibrary class >> current [
 
 	^Current ifNil: [ Current := self new ]
+]
+
+{ #category : #'unified FFI - binding' }
+UDBCSQLiteLibrary class >> ffiBindingOf: aTypeName [
+	^ TypeMap at: aTypeName ifAbsent: [ super ffiBindingOf: aTypeName ]
+]
+
+{ #category : #'class initialization' }
+UDBCSQLiteLibrary class >> initialize [
+
+	self initializeTypeMap.
+]
+
+{ #category : #'private - initialization' }
+UDBCSQLiteLibrary class >> initializeTypeMap [
+
+	TypeMap := Dictionary newFromPairs: #(
+		sqlite3		      UDBCSQLite3DatabaseExternalObject
+		"sqlite3_stmt			NBSQLite3StatementExternalObject
+		sqlite3_backup		NBSQLite3BackupExternalObject 
+		sqlite3_blob			NBSQLite3BlobExternalObject 
+		sqlite3_int64		NBInt64"
+	)
+]
+
+{ #category : #'private - api' }
+UDBCSQLiteLibrary >> apiOpen: filename via: handle [
+	"int sqlite3_open(const char*, sqlite3**)"
+
+	^ self ffiCall: #(int sqlite3_open (String filename, sqlite3* handle)) module: self library
+
 ]
 
 { #category : #'private - utilities' }
@@ -41,7 +73,7 @@ UDBCSQLiteLibrary >> library [
 	^ 'sqlite3'
 ]
 
-{ #category : #'private - api' }
+{ #category : #'connection handling' }
 UDBCSQLiteLibrary >> open: aFilename via: aHandle [	
 	^ self checkForOk: (self apiOpen: aFilename via: aHandle) on: aHandle
 ]
