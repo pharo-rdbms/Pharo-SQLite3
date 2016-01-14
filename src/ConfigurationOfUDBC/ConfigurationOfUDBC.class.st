@@ -152,7 +152,9 @@ ConfigurationOfUDBC >> baseline01: spec [
 			package: #'UDBC-Core';
 			package: #'UDBC-Tests-Core' with: [
 				spec requires: #(#'UDBC-Core' ). ];
-			package: #'UDBC-SQLite-Core';
+			package: #'UDBC-SQLite-Base';
+			package: #'UDBC-SQLite-Core' with: [
+				spec requires: #(#'UDBC-SQLite-Base' ). ];
 			package: #'UDBC-Tests-SQLite' with: [
 				spec requires: #(#'UDBC-Tests-Core' #'UDBC-SQLite-Core' ). ];
 			package: #'UDBC-PostgreSQL-Core';
@@ -162,11 +164,11 @@ ConfigurationOfUDBC >> baseline01: spec [
 			package: #'UDBC-Tests-MySQL-Core' with: [
 				spec requires: #(#'UDBC-Tests-Core' #'UDBC-MySQL-Core' ). ].
 		spec 
-			group: 'Tests' with: #();
-			group: 'SQLite' with: #();
-			group: 'all' with: #();
+			group: 'default' with: #();
 			group: 'Core' with: #();
-			group: 'default' with: #(). ].
+			group: 'all' with: #();
+			group: 'SQLite' with: #();
+			group: 'Tests' with: #(). ].
 
 ]
 
