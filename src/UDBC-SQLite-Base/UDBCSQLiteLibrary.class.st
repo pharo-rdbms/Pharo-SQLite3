@@ -35,7 +35,7 @@ UDBCSQLiteLibrary class >> initialize [
 UDBCSQLiteLibrary class >> initializeTypeMap [
 
 	TypeMap := Dictionary newFromPairs: #(
-		sqlite3		      UDBCSQLite3DatabaseExternalObject
+		sqlite3		      #UDBCSQLiteDatabaseExternalObject
 		"sqlite3_stmt			NBSQLite3StatementExternalObject
 		sqlite3_backup		NBSQLite3BackupExternalObject 
 		sqlite3_blob			NBSQLite3BlobExternalObject 
