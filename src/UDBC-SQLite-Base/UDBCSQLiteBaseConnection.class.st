@@ -45,3 +45,8 @@ UDBCSQLiteBaseConnection >> on: aFilename [
 	dbFilename := aFilename.
 	^ self
 ]
+
+{ #category : #'public API - open/close' }
+UDBCSQLiteBaseConnection >> open [
+	 
+]
