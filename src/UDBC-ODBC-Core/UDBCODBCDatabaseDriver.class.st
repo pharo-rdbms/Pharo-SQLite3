@@ -3,7 +3,7 @@ Database driver for ODBC
 "
 Class {
 	#name : #UDBCODBCDatabaseDriver,
-	#superclass : #Object,
+	#superclass : #UDBCDatabaseDriver,
 	#category : #'UDBC-ODBC-Core-Driver'
 }
 
