@@ -48,7 +48,7 @@ UDBCSQLiteLibrary class >> initializeTypeMap [
 UDBCSQLiteLibrary >> apiOpen: filename via: handle [
 	"int sqlite3_open(const char*, sqlite3**)"
 	 
-	^self ffiCall: #(int sqlite3_open(String filename, sqlite3 *handle)) module: self library.
+	^self ffiCall: #(int sqlite3_open(String filename, sqlite3 **handle)) module: self library.
 	 
 ]
 
@@ -76,7 +76,7 @@ UDBCSQLiteLibrary >> library [
 
 { #category : #'connection handling' }
 UDBCSQLiteLibrary >> open: aFilename via: aHandle [	
-	^ self checkForOk: (self apiOpen: aFilename via: aHandle) on: aHandle gcPointer
+	^ self checkForOk: (self apiOpen: aFilename via: aHandle) on: aHandle
 ]
 
 { #category : #'private - conversion' }
