@@ -22,6 +22,7 @@ UDBCSQLiteLibrary class >> current [
 
 { #category : #'unified FFI - binding' }
 UDBCSQLiteLibrary class >> ffiBindingOf: aTypeName [
+	 
 	^ TypeMap at: aTypeName ifAbsent: [ super ffiBindingOf: aTypeName ]
 ]
 
@@ -46,9 +47,9 @@ UDBCSQLiteLibrary class >> initializeTypeMap [
 { #category : #'private - api' }
 UDBCSQLiteLibrary >> apiOpen: filename via: handle [
 	"int sqlite3_open(const char*, sqlite3**)"
-
-	^ self ffiCall: #(int sqlite3_open (String filename, sqlite3* handle)) module: self library
-
+	 
+	^self ffiCall: #(int sqlite3_open(String filename, sqlite3 *handle)) module: self library.
+	 
 ]
 
 { #category : #'private - utilities' }
@@ -75,7 +76,7 @@ UDBCSQLiteLibrary >> library [
 
 { #category : #'connection handling' }
 UDBCSQLiteLibrary >> open: aFilename via: aHandle [	
-	^ self checkForOk: (self apiOpen: aFilename via: aHandle) on: aHandle
+	^ self checkForOk: (self apiOpen: aFilename via: aHandle) on: aHandle gcPointer
 ]
 
 { #category : #'private - conversion' }

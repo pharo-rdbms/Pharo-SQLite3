@@ -13,6 +13,12 @@ Class {
 	#category : #'UDBC-SQLite-Base-Connections'
 }
 
+{ #category : #examples }
+UDBCSQLiteBaseConnection class >> memory [
+
+	^self on: ':memory:'
+]
+
 { #category : #'instance creation' }
 UDBCSQLiteBaseConnection class >> on: aFilename [
 
@@ -49,5 +55,8 @@ UDBCSQLiteBaseConnection >> on: aFilename [
 
 { #category : #'public API - open/close' }
 UDBCSQLiteBaseConnection >> open [
-	 
+	 ((library open: dbFilename via: dbHandle) == 0)
+		ifTrue: [ 
+			isOpen := true.
+			^ self ]
 ]
