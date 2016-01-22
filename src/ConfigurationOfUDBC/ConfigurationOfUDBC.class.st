@@ -168,6 +168,8 @@ ConfigurationOfUDBC >> baseline01: spec [
 			package: #'UDBC-ODBC-Base';
 			package: #'UDBC-ODBC-Core' with: [
 				spec requires: #(#'UDBC-ODBC-Base' ). ];
+			package: #'UDBC-Tests-ODBC-Base' with: [
+				spec requires: #(#'UDBC-ODBC-Base' ). ];
 			package: #'UDBC-Tests-ODBC-Core' with: [
 				spec requires: #(#'UDBC-Tests-Core' #'UDBC-Tests-ODBC-Base' #'UDBC-ODBC-Core' ). ];
 			package: #'UDBC-OpenDBX-Base';
