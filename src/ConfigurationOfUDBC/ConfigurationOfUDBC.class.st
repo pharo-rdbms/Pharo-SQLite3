@@ -165,6 +165,11 @@ ConfigurationOfUDBC >> baseline01: spec [
 			package: #'UDBC-MySQL-Core';
 			package: #'UDBC-Tests-MySQL-Core' with: [
 				spec requires: #(#'UDBC-Tests-Core' #'UDBC-MySQL-Core' ). ];
+			package: #'UDBC-ODBC-Base';
+			package: #'UDBC-ODBC-Core' with: [
+				spec requires: #(#'UDBC-ODBC-Base' ). ];
+			package: #'UDBC-Tests-ODBC-Core' with: [
+				spec requires: #(#'UDBC-Tests-Core' #'UDBC-Tests-ODBC-Base' #'UDBC-ODBC-Core' ). ];
 			package: #'UDBC-OpenDBX-Base';
 			package: #'UDBC-OpenDBX-Core' with: [
 				spec requires: #(#'UDBC-OpenDBX-Base' ). ];
@@ -175,7 +180,8 @@ ConfigurationOfUDBC >> baseline01: spec [
 			group: 'PostgreSQL' with: #(#'UDBC-Tests-PostgreSQL-Core' );
 			group: 'OpenDBX' with: #(#'UDBC-Tests-OpenDBX-Core' );
 			group: 'SQLite' with: #(#'UDBC-Tests-SQLite-Core' );
-			group: 'Tests' with: #('SQLite' 'MySQL' 'OpenDBX' 'PostgreSQL' );
+			group: 'ODBC' with: #(#'UDBC-Tests-ODBC-Core' );
+			group: 'Tests' with: #('SQLite' 'MySQL' 'OpenDBX' 'PostgreSQL' 'ODBC');
 			group: 'all' with: #('Tests' );
 			group: 'Core' with: #(#'UDBC-Core' );
 			group: 'default' with: #('all' );
