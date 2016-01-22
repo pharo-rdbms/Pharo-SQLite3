@@ -43,7 +43,8 @@ UDBCSQLiteBaseConnection >> initialize [
 	
 	super initialize.
 	isOpen := false.
-	library := UDBCSQLiteLibrary current
+	library := UDBCSQLiteLibrary current.
+	dbHandle := UDBCSQLiteDatabaseExternalObject new
 ]
 
 { #category : #private }
