@@ -153,7 +153,7 @@ UDBCSQLiteLibrary >> prepare: aStatementHandle on: aDBHandle with: anSQLText [
 							withSQLText: anSQLText
 							with: (anSQLText size)
 							with: aStatementHandle
-							with: (ExternalAddress null))
+							with: (ExternalAddress new))
 		 on: aDBHandle
 	
 
