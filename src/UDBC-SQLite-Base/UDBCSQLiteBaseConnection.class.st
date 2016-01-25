@@ -54,6 +54,11 @@ UDBCSQLiteBaseConnection >> initialize [
 	dbHandle := UDBCSQLiteDatabaseExternalObject new
 ]
 
+{ #category : #testing }
+UDBCSQLiteBaseConnection >> isOpen [
+	^ isOpen
+]
+
 { #category : #private }
 UDBCSQLiteBaseConnection >> on: aFilename [
 
