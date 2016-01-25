@@ -85,6 +85,15 @@ UDBCSQLiteLibrary >> apiOpen: filename via: handle [
 	 
 ]
 
+{ #category : #'private - api' }
+UDBCSQLiteLibrary >> apiPrepare: dbHandle withSQLText: anSQLText with: textSize with: sHandle with: tail [
+	"int sqlite3_prepare_v2(sqlite3*, const char*, int, sqlite3_stmt**, const char **)"
+
+	^ self ffiCall: #(int sqlite3_prepare_v2 (sqlite3 dbHandle, String anSQLText, int textSize, sqlite3_stmt* sHandle, const char** tail))
+		module: self library
+	
+]
+
 { #category : #'private - utilities' }
 UDBCSQLiteLibrary >> checkForOk: aValue on: aHandle [
 
@@ -135,6 +144,19 @@ UDBCSQLiteLibrary >> pharoStringToUTF8: aPharoString [
 	"Converts from Pharo Multibyte Characters to SQLite3 UTF-8 storage format"
 	
 	^ZnUTF8Encoder new encodeString: aPharoString
+]
+
+{ #category : #operating }
+UDBCSQLiteLibrary >> prepare: aStatementHandle on: aDBHandle with: anSQLText [
+
+	^ self checkForOk: (self apiPrepare: aDBHandle 
+							withSQLText: anSQLText
+							with: (anSQLText size)
+							with: aStatementHandle
+							with: (NBExternalAddress null))
+		 on: aDBHandle
+	
+
 ]
 
 { #category : #'private - utilities' }

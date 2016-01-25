@@ -101,3 +101,14 @@ UDBCSQLiteBaseConnection >> open [
 			isOpen := true.
 			^ self ]
 ]
+
+{ #category : #'public API - operating' }
+UDBCSQLiteBaseConnection >> prepare: anSQLText [ 
+	| s |
+	
+	s := UDBCSQLiteStatement new.
+	s connection: self.
+	library prepare: s handle on: dbHandle with: anSQLText.
+	^ s
+	
+]
