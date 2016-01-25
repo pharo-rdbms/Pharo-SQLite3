@@ -53,6 +53,14 @@ UDBCSQLiteLibrary >> apiClose: handle [
 ]
 
 { #category : #'private - api' }
+UDBCSQLiteLibrary >> apiErrorMessage: handle [ 
+	"const char *sqlite3_errmsg(sqlite3*)"
+	 
+	^self ffiCall: #(String sqlite3_errmsg(sqlite3 *handle)) module: self library.
+	 
+]
+
+{ #category : #'private - api' }
 UDBCSQLiteLibrary >> apiOpen: filename via: handle [
 	"int sqlite3_open(const char*, sqlite3**)"
 	 
@@ -97,4 +105,11 @@ UDBCSQLiteLibrary >> pharoStringToUTF8: aPharoString [
 	"Converts from Pharo Multibyte Characters to SQLite3 UTF-8 storage format"
 	
 	^ZnUTF8Encoder new encodeString: aPharoString
+]
+
+{ #category : #'private - utilities' }
+UDBCSQLiteLibrary >> signal: exceptionClass with: value on: handle [
+	(exceptionClass new)
+		resultCode: value; 
+		signal: (self apiErrorMessage: handle)
 ]
