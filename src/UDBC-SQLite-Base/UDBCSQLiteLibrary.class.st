@@ -37,8 +37,8 @@ UDBCSQLiteLibrary class >> initializeTypeMap [
 
 	TypeMap := Dictionary newFromPairs: #(
 		sqlite3		      #UDBCSQLiteDatabaseExternalObject
-		"sqlite3_stmt			NBSQLite3StatementExternalObject
-		sqlite3_backup		NBSQLite3BackupExternalObject 
+		sqlite3_stmt			#UDBCSQLiteStatementExternalObject
+		"sqlite3_backup		NBSQLite3BackupExternalObject 
 		sqlite3_blob			NBSQLite3BlobExternalObject 
 		sqlite3_int64		NBInt64"
 	)
@@ -57,6 +57,23 @@ UDBCSQLiteLibrary >> apiErrorMessage: handle [
 	"const char *sqlite3_errmsg(sqlite3*)"
 	 
 	^self ffiCall: #(String sqlite3_errmsg(sqlite3 *handle)) module: self library.
+	 
+]
+
+{ #category : #'private - api' }
+UDBCSQLiteLibrary >> apiExec: dbHandle withSQLText: anSQLText with: callback with: callbackData with: errorMessageBuffer [
+	"int sqlite3_exec(sqlite3*, const char*, int (*callback), void*, char **)"
+
+	^self ffiCall: #(int sqlite3_exec (sqlite3 dbHandle, String anSQLText, void *callback, void *callbackData, char **errorMessageBuffer))
+		module: self library
+	
+]
+
+{ #category : #'private - api' }
+UDBCSQLiteLibrary >> apiFinalize: handle [
+	"int sqlite3_finalize(sqlite3_stmt*)"
+	 
+	^self ffiCall: #(int sqlite3_finalize(sqlite3_stmt handle)) module: self library.
 	 
 ]
 
@@ -86,6 +103,19 @@ UDBCSQLiteLibrary >> checkForOk: aValue on: aHandle [
 { #category : #'connection handling' }
 UDBCSQLiteLibrary >> close: aHandle [	
 	^ self checkForOk: (self apiClose: aHandle) on: aHandle
+]
+
+{ #category : #operating }
+UDBCSQLiteLibrary >> execute: anSQLText on: aDBHandle [
+	| null |	
+	null := ExternalAddress new.
+	^ self checkForOk: (self apiExec: aDBHandle 
+							withSQLText: anSQLText
+							with: null
+							with: null
+							with: null)
+		 on: aDBHandle
+	
 ]
 
 { #category : #'private - accessing' }

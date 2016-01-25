@@ -38,11 +38,39 @@ UDBCSQLiteBaseConnection class >> openOn: aFilename [
 
 ]
 
+{ #category : #'public API - operating' }
+UDBCSQLiteBaseConnection >> basicExecute: anSQLText [ 
+	^ library execute: anSQLText on: dbHandle.
+	
+]
+
 { #category : #'public API - open/close' }
 UDBCSQLiteBaseConnection >> close [
 	dbHandle ifNotNil: [ library close: dbHandle ].
 	dbHandle := nil.
 	isOpen := false.
+]
+
+{ #category : #'public API - introspection' }
+UDBCSQLiteBaseConnection >> columnNamesFor: aTableName [
+	
+	self isOpen
+		ifFalse: [ UDBCSQLiteNotOpen signal ]
+		ifTrue: [ 
+			| s tableExists |
+			s := self prepare: 'select count(*) from sqlite_master where type = "table" and tbl_name = ?'.
+			s at: 1 putString: aTableName.
+	  		s basicExecute: [ :row | tableExists := ((row integerAt: 0) = 1) ].
+	  		s finalize.
+			tableExists ifTrue: [ 
+				| columns |
+				columns := OrderedCollection new.
+				s := self prepare: 'pragma table_info(', aTableName, ')'.
+				s basicExecute: [ :row | columns add: (row stringAt: 1) ].
+				s finalize.
+				^ columns ].
+			^ nil ]
+		
 ]
 
 { #category : #initialization }
