@@ -48,7 +48,7 @@ UDBCSQLiteLibrary class >> initializeTypeMap [
 UDBCSQLiteLibrary >> apiClose: handle [
 	"int sqlite3_close(sqlite3*)"
 	 
-	^self ffiCall: #(int sqlite3_open(sqlite3 *handle)) module: self library.
+	^self ffiCall: #(int sqlite3_close(sqlite3 *handle)) module: self library.
 	 
 ]
 
