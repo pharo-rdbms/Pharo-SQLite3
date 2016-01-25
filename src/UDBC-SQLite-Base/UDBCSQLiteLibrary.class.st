@@ -45,6 +45,14 @@ UDBCSQLiteLibrary class >> initializeTypeMap [
 ]
 
 { #category : #'private - api' }
+UDBCSQLiteLibrary >> apiClose: handle [
+	"int sqlite3_close(sqlite3*)"
+	 
+	^self ffiCall: #(int sqlite3_open(sqlite3 *handle)) module: self library.
+	 
+]
+
+{ #category : #'private - api' }
 UDBCSQLiteLibrary >> apiOpen: filename via: handle [
 	"int sqlite3_open(const char*, sqlite3**)"
 	 
@@ -65,6 +73,11 @@ UDBCSQLiteLibrary >> checkForOk: aValue on: aHandle [
 				ifTrue: [ self signal: UDBCSQLiteMisuse with: aValue on: aHandle ].				
 			self signal: UDBCSQLiteError with: aValue on: aHandle ].	
 	^ OK
+]
+
+{ #category : #'connection handling' }
+UDBCSQLiteLibrary >> close: aHandle [	
+	^ self checkForOk: (self apiClose: aHandle) on: aHandle
 ]
 
 { #category : #'private - accessing' }

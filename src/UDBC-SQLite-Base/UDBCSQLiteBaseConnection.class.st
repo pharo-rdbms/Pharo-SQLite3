@@ -38,6 +38,13 @@ UDBCSQLiteBaseConnection class >> openOn: aFilename [
 
 ]
 
+{ #category : #'public API - open/close' }
+UDBCSQLiteBaseConnection >> close [
+	dbHandle ifNotNil: [ library close: dbHandle ].
+	dbHandle := nil.
+	isOpen := false.
+]
+
 { #category : #initialization }
 UDBCSQLiteBaseConnection >> initialize [
 	
