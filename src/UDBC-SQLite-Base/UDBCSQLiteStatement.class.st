@@ -61,3 +61,8 @@ UDBCSQLiteStatement >> integerAt: aColumn [
 UDBCSQLiteStatement >> step [
 	^ UDBCSQLiteLibrary current step: handle
 ]
+
+{ #category : #operating }
+UDBCSQLiteStatement >> stringAt: aColumn [	 
+	^ UDBCSQLiteLibrary current stringFrom: handle at: aColumn
+]

@@ -70,6 +70,15 @@ UDBCSQLiteLibrary >> apiColumnInt: aStatement atColumn: aColumn [
 
 ]
 
+{ #category : #api }
+UDBCSQLiteLibrary >> apiColumnText: aStatement atColumn: aColumn [
+	"const unsigned char *sqlite3_column_text(sqlite3_stmt*, int)"
+	 
+	^ self ffiCall: #(String sqlite3_column_text (sqlite3_stmt* aStatement, int aColumn))
+		module: self library
+
+]
+
 { #category : #'private - api' }
 UDBCSQLiteLibrary >> apiErrorMessage: handle [ 
 	"const char *sqlite3_errmsg(sqlite3*)"
@@ -203,6 +212,11 @@ UDBCSQLiteLibrary >> step: aStatementHandle [
 	^ self apiStep: aStatementHandle
 	
 
+]
+
+{ #category : #operating }
+UDBCSQLiteLibrary >> stringFrom: aStatement at: aColumn [
+	^ self utf8StringToPharo: (self apiColumnText: aStatement atColumn: aColumn)
 ]
 
 { #category : #'public API - operating' }
