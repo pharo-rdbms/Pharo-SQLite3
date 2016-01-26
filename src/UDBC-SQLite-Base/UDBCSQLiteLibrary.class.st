@@ -103,6 +103,15 @@ UDBCSQLiteLibrary >> apiPrepare: dbHandle withSQLText: anSQLText with: textSize 
 	
 ]
 
+{ #category : #api }
+UDBCSQLiteLibrary >> apiStep: handle [
+	"int sqlite3_step(sqlite3_stmt*)"
+	 
+	^ self ffiCall: #(int sqlite3_step (sqlite3_stmt* handle))
+		module: self library
+
+]
+
 { #category : #'private - utilities' }
 UDBCSQLiteLibrary >> checkForOk: aValue on: aHandle [
 
@@ -173,6 +182,13 @@ UDBCSQLiteLibrary >> signal: exceptionClass with: value on: handle [
 	(exceptionClass new)
 		resultCode: value; 
 		signal: (self apiErrorMessage: handle)
+]
+
+{ #category : #stepping }
+UDBCSQLiteLibrary >> step: aStatementHandle [	
+	^ self apiStep: aStatementHandle
+	
+
 ]
 
 { #category : #'public API - operating' }

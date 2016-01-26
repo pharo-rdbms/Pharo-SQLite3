@@ -107,7 +107,6 @@ UDBCSQLiteBaseConnection >> prepare: anSQLText [
 	| s |
 	
 	s := UDBCSQLiteStatement new.
-	self halt.
 	s connection: self.
 	library prepare: s handle on: dbHandle with: anSQLText.
 	^ s

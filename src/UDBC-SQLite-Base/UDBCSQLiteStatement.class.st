@@ -21,6 +21,19 @@ UDBCSQLiteStatement >> at: aColumn putString: aString [
 	^ UDBCSQLiteLibrary current with: handle at: aColumn putString: aString
 ]
 
+{ #category : #public }
+UDBCSQLiteStatement >> basicExecute: aBlock [
+	| ret |
+	
+	ret := self step. 
+	(ret = 101) " == SQLITE_DONE, meaning step should not be sent again."
+		ifTrue: [ aBlock value: self ]
+		ifFalse: [
+			[ ret = 100 ] whileTrue: [ " == SQLITE_ROW, meaning another row is available."
+				aBlock value: self.
+				ret := self step ]]
+]
+
 { #category : #'private - accessing' }
 UDBCSQLiteStatement >> connection: anObject [
 	connection := anObject
@@ -37,4 +50,9 @@ UDBCSQLiteStatement >> initialize [
 	super initialize.
 	handle := UDBCSQLiteStatementExternalObject new.
 	FFIExternalResourceManager addResource: handle data: handle
+]
+
+{ #category : #'as yet unclassified' }
+UDBCSQLiteStatement >> step [
+	^ UDBCSQLiteLibrary current step: handle
 ]
