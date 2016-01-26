@@ -16,6 +16,11 @@ UDBCSQLiteStatement class >> finalizeResourceData: aHandle [
 	UDBCSQLiteLibrary current apiFinalize: aHandle.
 ]
 
+{ #category : #'public - accessing' }
+UDBCSQLiteStatement >> at: aColumn putString: aString [
+	^ UDBCSQLiteLibrary current with: handle at: aColumn putString: aString
+]
+
 { #category : #'private - accessing' }
 UDBCSQLiteStatement >> connection: anObject [
 	connection := anObject

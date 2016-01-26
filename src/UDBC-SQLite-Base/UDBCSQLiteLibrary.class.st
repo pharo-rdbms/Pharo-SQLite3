@@ -45,6 +45,15 @@ UDBCSQLiteLibrary class >> initializeTypeMap [
 ]
 
 { #category : #'private - api' }
+UDBCSQLiteLibrary >> apiBindString: aStatement atColumn: aColumn with: aString with: anInteger with: anotherInteger [
+	"int sqlite3_bind_text(sqlite3_stmt*, int, const char*, int, void(*)(void*))"
+	 
+	^ self ffiCall: #(int sqlite3_bind_text (sqlite3_stmt* aStatement, int aColumn, String aString, int anInteger, int anotherInteger))
+		module: self library
+
+]
+
+{ #category : #'private - api' }
 UDBCSQLiteLibrary >> apiClose: handle [
 	"int sqlite3_close(sqlite3*)"
 	 
@@ -89,7 +98,7 @@ UDBCSQLiteLibrary >> apiOpen: filename via: handle [
 UDBCSQLiteLibrary >> apiPrepare: dbHandle withSQLText: anSQLText with: textSize with: sHandle with: tail [
 	"int sqlite3_prepare_v2(sqlite3*, const char*, int, sqlite3_stmt**, const char **)"
 
-	^ self ffiCall: #(int sqlite3_prepare_v2 (sqlite3 dbHandle, String anSQLText, int textSize, sqlite3_stmt* sHandle, const char** tail))
+	^ self ffiCall: #(int sqlite3_prepare_v2 (sqlite3* dbHandle, String anSQLText, int textSize, sqlite3_stmt** sHandle, const char** tail))
 		module: self library
 	
 ]
@@ -164,4 +173,9 @@ UDBCSQLiteLibrary >> signal: exceptionClass with: value on: handle [
 	(exceptionClass new)
 		resultCode: value; 
 		signal: (self apiErrorMessage: handle)
+]
+
+{ #category : #'public API - operating' }
+UDBCSQLiteLibrary >> with: aStatement at: aColumn putString: aString [ 
+	^self apiBindString: aStatement atColumn: aColumn with: (self pharoStringToUTF8: aString) with: -1 with: -1 
 ]
