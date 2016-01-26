@@ -61,6 +61,15 @@ UDBCSQLiteLibrary >> apiClose: handle [
 	 
 ]
 
+{ #category : #api }
+UDBCSQLiteLibrary >> apiColumnInt: aStatement atColumn: aColumn [
+	"int sqlite3_column_int(sqlite3_stmt*, int)"
+	 
+	^ self ffiCall: #(int sqlite3_column_int (sqlite3_stmt* aStatement, int aColumn))
+		module: self library
+
+]
+
 { #category : #'private - api' }
 UDBCSQLiteLibrary >> apiErrorMessage: handle [ 
 	"const char *sqlite3_errmsg(sqlite3*)"
@@ -143,6 +152,11 @@ UDBCSQLiteLibrary >> execute: anSQLText on: aDBHandle [
 							with: null)
 		 on: aDBHandle
 	
+]
+
+{ #category : #operating }
+UDBCSQLiteLibrary >> integerFrom: aStatement at: aColumn [
+	^ self apiColumnInt: aStatement atColumn: aColumn
 ]
 
 { #category : #'private - accessing' }
