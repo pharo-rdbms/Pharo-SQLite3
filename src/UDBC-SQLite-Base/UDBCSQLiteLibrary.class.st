@@ -219,6 +219,13 @@ UDBCSQLiteLibrary >> stringFrom: aStatement at: aColumn [
 	^ self utf8StringToPharo: (self apiColumnText: aStatement atColumn: aColumn)
 ]
 
+{ #category : #'private - conversion' }
+UDBCSQLiteLibrary >> utf8StringToPharo: anUTF8String [
+	"Converts from SQLite UTF-8 to Pharo Multibyte Characters"
+	
+	^(ZnCharacterReadStream on: anUTF8String asByteArray readStream) upToEnd
+]
+
 { #category : #'public API - operating' }
 UDBCSQLiteLibrary >> with: aStatement at: aColumn putString: aString [ 
 	^self apiBindString: aStatement atColumn: aColumn with: (self pharoStringToUTF8: aString) with: -1 with: -1 
