@@ -52,7 +52,12 @@ UDBCSQLiteStatement >> initialize [
 	FFIExternalResourceManager addResource: handle data: handle
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'public - accessing' }
+UDBCSQLiteStatement >> integerAt: aColumn [ 
+	^UDBCSQLiteLibrary current integerFrom: handle at: aColumn
+]
+
+{ #category : #private }
 UDBCSQLiteStatement >> step [
 	^ UDBCSQLiteLibrary current step: handle
 ]
