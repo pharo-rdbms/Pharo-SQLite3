@@ -41,6 +41,7 @@ UDBCSQLiteStatement >> connection: anObject [
 
 { #category : #initialization }
 UDBCSQLiteStatement >> finalize [
+	UDBCSQLiteLibrary current apiFinalize: handle.
 	handle := nil
 ]
 
