@@ -112,3 +112,17 @@ UDBCSQLiteBaseConnection >> prepare: anSQLText [
 	^ s
 	
 ]
+
+{ #category : #'public API - introspection' }
+UDBCSQLiteBaseConnection >> tableNames [
+	| tables s |
+	
+	self isOpen
+		ifFalse: [ UDBCSQLiteNotOpen signal ]
+		ifTrue: [ 
+			tables := OrderedCollection new.
+			s := self prepare: 'select tbl_name from sqlite_master where type = "table"'.
+	  		s basicExecute: [ :row | tables add: (row stringAt: 0) ].
+	  		s finalize.
+			^ tables ]
+]
