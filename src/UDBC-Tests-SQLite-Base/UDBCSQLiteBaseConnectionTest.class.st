@@ -72,3 +72,29 @@ UDBCSQLiteBaseConnectionTest >> testColumnNames [
 	
 
 ]
+
+{ #category : #running }
+UDBCSQLiteBaseConnectionTest >> testColumnNamesBobbyGo [
+	"In this test, Bobby Tables strikes naive SQL string construction."
+	| tables bobby |
+	
+	res := db basicExecute: 'create table x (xk integer, xv integer);'.
+	self assert: (res = 0).
+	res := db basicExecute: 'create table students (sk integer, sname varchar);'.
+	self assert: (res = 0).
+
+	tables := db tableNames.
+	self assert: (tables size = 2).
+	self assert: (tables first = 'x').	
+	self assert: (tables second = 'students').	
+
+	bobby := 'x); drop table students; --'.	
+	res := db basicExecute: 'pragma table_info(', bobby, ')'.
+	self assert: (res = 0).
+
+	tables := db tableNames.
+	self assert: (tables size = 1).
+	self assert: (tables first = 'x').	
+
+
+]
