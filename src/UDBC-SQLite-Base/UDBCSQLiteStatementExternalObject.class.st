@@ -7,3 +7,8 @@ Class {
 	#superclass : #FFIExternalObject,
 	#category : #'UDBC-SQLite-Base-UFFI-Support'
 }
+
+{ #category : #finalization }
+UDBCSQLiteStatementExternalObject >> finalizeResourceData: aHandle [
+	UDBCSQLiteLibrary current apiFinalize: aHandle.
+]

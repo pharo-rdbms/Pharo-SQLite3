@@ -39,6 +39,11 @@ UDBCSQLiteStatement >> connection: anObject [
 	connection := anObject
 ]
 
+{ #category : #initialization }
+UDBCSQLiteStatement >> finalize [
+	handle := nil
+]
+
 { #category : #'private - accessing' }
 UDBCSQLiteStatement >> handle [
 	^ handle
