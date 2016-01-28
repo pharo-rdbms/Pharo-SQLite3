@@ -98,3 +98,56 @@ UDBCSQLiteBaseConnectionTest >> testColumnNamesBobbyGo [
 
 
 ]
+
+{ #category : #running }
+UDBCSQLiteBaseConnectionTest >> testColumnNamesBobbyStop [
+	"In this test, Bobby Tables strikes again, but fails, because #columnNamesFor: uses parameter binding."
+	| columns tables |
+	
+	res := db basicExecute: 'create table x (xk integer, xv integer);'.
+	self assert: (res = 0).
+	res := db basicExecute: 'create table students (sk integer, sname varchar);'.
+	self assert: (res = 0).
+
+	tables := db tableNames.
+	self assert: (tables size = 2).
+	self assert: (tables first = 'x').	
+	self assert: (tables second = 'students').	
+	
+	columns := db columnNamesFor: 'x; drop table students; --'.
+	self assert: (columns isNil).
+
+	tables := db tableNames.
+	self assert: (tables size = 2).
+	self assert: (tables first = 'x').	
+	self assert: (tables second = 'students').	
+
+
+]
+
+{ #category : #running }
+UDBCSQLiteBaseConnectionTest >> testColumnNamesNoSuchTable [
+	| columns |
+	
+	res := db basicExecute: 'create table x (xk integer, xv integer);'.
+	self assert: (res = 0).
+	columns := db columnNamesFor: 'y'.
+	self assert: (columns isNil).
+]
+
+{ #category : #running }
+UDBCSQLiteBaseConnectionTest >> testDataValuesAvailable [
+	| s | 
+	
+	res := db basicExecute: 'create table x (xk integer primary key, iv integer, tv text);'.
+	self assert: (res = 0).
+
+	res := db basicExecute: 'insert into x values (NULL, 1, "duh");'.	
+	self assert: (res = 0).
+	
+	s := db prepare: 'select * from x'.
+	s basicExecute: [  :row |
+		self assert: (row dataValuesAvailable = 3) ].
+	s finalize.
+	
+]
