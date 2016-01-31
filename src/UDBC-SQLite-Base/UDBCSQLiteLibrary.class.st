@@ -71,6 +71,15 @@ UDBCSQLiteLibrary >> apiColumnInt: aStatement atColumn: aColumn [
 ]
 
 { #category : #'private - api' }
+UDBCSQLiteLibrary >> apiColumnName: aStatement atColumn: aColumn [
+	"const char *sqlite3_column_name(sqlite3_stmt*, int)"
+
+	^ self
+		ffiCall: #(String sqlite3_column_name(sqlite3_stmt* aStatement, int aColumn))
+		module: self library
+]
+
+{ #category : #'private - api' }
 UDBCSQLiteLibrary >> apiColumnText: aStatement atColumn: aColumn [
 	"const unsigned char *sqlite3_column_text(sqlite3_stmt*, int)"
 	 
@@ -188,6 +197,11 @@ UDBCSQLiteLibrary >> library [
 
 	Smalltalk os isMacOS ifTrue: [ ^ #sqlite3 ].
 	^ 'sqlite3'
+]
+
+{ #category : #accessing }
+UDBCSQLiteLibrary >> nameFor: aStatement at: aColumn [
+	^ self apiColumnName: aStatement atColumn: aColumn
 ]
 
 { #category : #'connection handling' }

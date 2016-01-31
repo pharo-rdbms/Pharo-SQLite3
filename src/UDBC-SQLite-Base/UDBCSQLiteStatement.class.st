@@ -86,6 +86,11 @@ UDBCSQLiteStatement >> library [
 	^UDBCSQLiteLibrary current
 ]
 
+{ #category : #'public - accessing' }
+UDBCSQLiteStatement >> nameOfColumn: aColumn [
+	^ self library nameFor: handle at: aColumn
+]
+
 { #category : #private }
 UDBCSQLiteStatement >> step [
 	^ UDBCSQLiteLibrary current step: handle
