@@ -179,3 +179,27 @@ UDBCSQLiteBaseConnectionTest >> testDateAndTime [
 	s finalize.
 	
 ]
+
+{ #category : #tests }
+UDBCSQLiteBaseConnectionTest >> testDoubleClose [
+	
+	db close.
+	[ db close ] on: UDBCSQLiteMisuse do: [ ]
+	"#tearDown will close the db again, and is similarly guarded."
+]
+
+{ #category : #tests }
+UDBCSQLiteBaseConnectionTest >> testFloat [
+	| s |	
+	res := db basicExecute: 'create table x (xk integer primary key, xv real);'.
+	self assert: (res = 0).
+	res := db basicExecute: 'insert into x values (NULL, 1.141);'.
+	self assert: (res = 0).
+	
+	s := db prepare: 'select * from x'.
+	s basicExecute: [ :row |
+		self assert: (row nameOfColumn: 1) equals: 'xv'.
+		self assert: (row floatAt: 1) equals: 1.141 ].
+	s finalize.
+
+]
