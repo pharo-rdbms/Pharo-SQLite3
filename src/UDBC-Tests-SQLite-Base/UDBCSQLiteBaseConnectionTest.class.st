@@ -30,7 +30,7 @@ UDBCSQLiteBaseConnectionTest >> tearDown [
 
 ]
 
-{ #category : #running }
+{ #category : #tests }
 UDBCSQLiteBaseConnectionTest >> testBadOpen [
 	| invalidFilename |
 	invalidFilename := Smalltalk os isWindows
@@ -41,7 +41,7 @@ UDBCSQLiteBaseConnectionTest >> testBadOpen [
 	self assert: db2 isOpen = false
 ]
 
-{ #category : #running }
+{ #category : #tests }
 UDBCSQLiteBaseConnectionTest >> testBasicExecuteOk [
 
 	res := db basicExecute: 'create table x (xk integer, xv integer);'.
@@ -51,7 +51,7 @@ UDBCSQLiteBaseConnectionTest >> testBasicExecuteOk [
 	
 ]
 
-{ #category : #running }
+{ #category : #tests }
 UDBCSQLiteBaseConnectionTest >> testBasicExecuteSyntaxError [
 
 	self should: [ db basicExecute: 'create table,;' ]
@@ -59,7 +59,7 @@ UDBCSQLiteBaseConnectionTest >> testBasicExecuteSyntaxError [
 	
 ]
 
-{ #category : #running }
+{ #category : #tests }
 UDBCSQLiteBaseConnectionTest >> testColumnNames [
 	| columns |
 	
@@ -73,7 +73,7 @@ UDBCSQLiteBaseConnectionTest >> testColumnNames [
 
 ]
 
-{ #category : #running }
+{ #category : #tests }
 UDBCSQLiteBaseConnectionTest >> testColumnNamesBobbyGo [
 	"In this test, Bobby Tables strikes naive SQL string construction."
 	| tables bobby |
@@ -99,7 +99,7 @@ UDBCSQLiteBaseConnectionTest >> testColumnNamesBobbyGo [
 
 ]
 
-{ #category : #running }
+{ #category : #tests }
 UDBCSQLiteBaseConnectionTest >> testColumnNamesBobbyStop [
 	"In this test, Bobby Tables strikes again, but fails, because #columnNamesFor: uses parameter binding."
 	| columns tables |
@@ -125,7 +125,7 @@ UDBCSQLiteBaseConnectionTest >> testColumnNamesBobbyStop [
 
 ]
 
-{ #category : #running }
+{ #category : #tests }
 UDBCSQLiteBaseConnectionTest >> testColumnNamesNoSuchTable [
 	| columns |
 	
@@ -135,7 +135,7 @@ UDBCSQLiteBaseConnectionTest >> testColumnNamesNoSuchTable [
 	self assert: (columns isNil).
 ]
 
-{ #category : #running }
+{ #category : #tests }
 UDBCSQLiteBaseConnectionTest >> testDataValuesAvailable [
 	| s | 
 	
@@ -148,6 +148,34 @@ UDBCSQLiteBaseConnectionTest >> testDataValuesAvailable [
 	s := db prepare: 'select * from x'.
 	s basicExecute: [  :row |
 		self assert: (row dataValuesAvailable = 3) ].
+	s finalize.
+	
+]
+
+{ #category : #tests }
+UDBCSQLiteBaseConnectionTest >> testDateAndTime [
+	| data s | 
+	
+	data := DateAndTime year: 2015 month: 4 day: 1.
+	
+	res := db basicExecute: 'create table x (xv datetime);'.
+	self assert: (res = 0).
+
+	res := db basicExecute: 'begin'.
+	self assert: (res = 0).
+	s := db prepare: 'insert into x values (?)'.
+	s at: 1 putDateTime: data.
+	s step. s finalize.
+	res := db basicExecute: 'commit'.
+	self assert: (res = 0).
+	
+	s := db prepare: 'select xv from x'.
+	s basicExecute: [  :row |
+		| v |
+		v := row dateTimeAt: 0.
+		self assert: ((v year) = 2015).
+		self assert: ((v month) = 4).
+		self assert: ((v dayOfMonth) = 1) ].
 	s finalize.
 	
 ]
