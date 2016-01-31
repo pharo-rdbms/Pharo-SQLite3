@@ -21,12 +21,12 @@ UDBCSQLiteStatement >> at: aColumn putDateTime: aDateTime [
 
 	| s |
 	s := UDBCSQLiteDateTimeString streamContents: [ :stream | aDateTime printOn: stream ].
-	^ UDBCSQLiteLibrary current with: handle at: aColumn putString: s
+	^ self library with: handle at: aColumn putString: s
 ]
 
 { #category : #'public - accessing' }
 UDBCSQLiteStatement >> at: aColumn putString: aString [
-	^ UDBCSQLiteLibrary current with: handle at: aColumn putString: aString
+	^ self library with: handle at: aColumn putString: aString
 ]
 
 { #category : #public }
@@ -48,8 +48,13 @@ UDBCSQLiteStatement >> connection: anObject [
 ]
 
 { #category : #'public - accessing' }
+UDBCSQLiteStatement >> dataValuesAvailable [
+	^ self library dataValuesAvailable: handle
+]
+
+{ #category : #'public - accessing' }
 UDBCSQLiteStatement >> dateTimeAt: aColumn [	
-	^ DateAndTime fromString: (UDBCSQLiteLibrary current stringFrom: handle at: aColumn)
+	^ DateAndTime fromString: (self library stringFrom: handle at: aColumn)
 ]
 
 { #category : #initialization }
@@ -73,7 +78,12 @@ UDBCSQLiteStatement >> initialize [
 
 { #category : #'public - accessing' }
 UDBCSQLiteStatement >> integerAt: aColumn [ 
-	^UDBCSQLiteLibrary current integerFrom: handle at: aColumn
+	^self library integerFrom: handle at: aColumn
+]
+
+{ #category : #private }
+UDBCSQLiteStatement >> library [
+	^UDBCSQLiteLibrary current
 ]
 
 { #category : #private }

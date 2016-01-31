@@ -61,7 +61,7 @@ UDBCSQLiteLibrary >> apiClose: handle [
 	 
 ]
 
-{ #category : #api }
+{ #category : #'private - api' }
 UDBCSQLiteLibrary >> apiColumnInt: aStatement atColumn: aColumn [
 	"int sqlite3_column_int(sqlite3_stmt*, int)"
 	 
@@ -70,12 +70,20 @@ UDBCSQLiteLibrary >> apiColumnInt: aStatement atColumn: aColumn [
 
 ]
 
-{ #category : #api }
+{ #category : #'private - api' }
 UDBCSQLiteLibrary >> apiColumnText: aStatement atColumn: aColumn [
 	"const unsigned char *sqlite3_column_text(sqlite3_stmt*, int)"
 	 
 	^ self ffiCall: #(String sqlite3_column_text (sqlite3_stmt* aStatement, int aColumn))
 		module: self library
+
+]
+
+{ #category : #'private - api' }
+UDBCSQLiteLibrary >> apiDataCount: handle [
+	"int sqlite3_data_count(sqlite3_stmt*)"
+	
+	^ self ffiCall: #(int sqlite3_data_count (sqlite3_stmt handle)) module: self library
 
 ]
 
@@ -121,7 +129,7 @@ UDBCSQLiteLibrary >> apiPrepare: dbHandle withSQLText: anSQLText with: textSize 
 	
 ]
 
-{ #category : #api }
+{ #category : #'private - api' }
 UDBCSQLiteLibrary >> apiStep: handle [
 	"int sqlite3_step(sqlite3_stmt*)"
 	 
@@ -148,6 +156,13 @@ UDBCSQLiteLibrary >> checkForOk: aValue on: aHandle [
 { #category : #'connection handling' }
 UDBCSQLiteLibrary >> close: aHandle [	
 	^ self checkForOk: (self apiClose: aHandle) on: aHandle
+]
+
+{ #category : #accessing }
+UDBCSQLiteLibrary >> dataValuesAvailable: aStatementHandle [
+	^ self apiDataCount: aStatementHandle
+	
+
 ]
 
 { #category : #operating }
@@ -226,7 +241,7 @@ UDBCSQLiteLibrary >> utf8StringToPharo: anUTF8String [
 	^(ZnCharacterReadStream on: anUTF8String asByteArray readStream) upToEnd
 ]
 
-{ #category : #'public API - operating' }
+{ #category : #operating }
 UDBCSQLiteLibrary >> with: aStatement at: aColumn putString: aString [ 
 	^self apiBindString: aStatement atColumn: aColumn with: (self pharoStringToUTF8: aString) with: -1 with: -1 
 ]
