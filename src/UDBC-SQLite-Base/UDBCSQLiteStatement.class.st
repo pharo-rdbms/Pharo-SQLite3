@@ -17,6 +17,14 @@ UDBCSQLiteStatement class >> finalizeResourceData: aHandle [
 ]
 
 { #category : #'public - accessing' }
+UDBCSQLiteStatement >> at: aColumn putDateTime: aDateTime [
+
+	| s |
+	s := UDBCSQLiteDateTimeString streamContents: [ :stream | aDateTime printOn: stream ].
+	^ UDBCSQLiteLibrary current with: handle at: aColumn putString: s
+]
+
+{ #category : #'public - accessing' }
 UDBCSQLiteStatement >> at: aColumn putString: aString [
 	^ UDBCSQLiteLibrary current with: handle at: aColumn putString: aString
 ]
@@ -37,6 +45,11 @@ UDBCSQLiteStatement >> basicExecute: aBlock [
 { #category : #'private - accessing' }
 UDBCSQLiteStatement >> connection: anObject [
 	connection := anObject
+]
+
+{ #category : #'public - accessing' }
+UDBCSQLiteStatement >> dateTimeAt: aColumn [	
+	^ DateAndTime fromString: (UDBCSQLiteLibrary current stringFrom: handle at: aColumn)
 ]
 
 { #category : #initialization }

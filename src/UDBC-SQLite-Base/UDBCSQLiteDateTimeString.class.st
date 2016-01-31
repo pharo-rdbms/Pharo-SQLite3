@@ -1,10 +1,9 @@
 "
-SQLite does not support a DateTime column type. Instead, it provides date and time functions which handle strings in ISO 8601 format.
-
-I represent a date time string in ISO 8601 format. 
+A date time string
 "
 Class {
 	#name : #UDBCSQLiteDateTimeString,
-	#superclass : #Object,
-	#category : #'UDBC-SQLite-Base-Utilities'
+	#superclass : #ByteString,
+	#type : #bytes,
+	#category : #'UDBC-SQLite-Base-Types'
 }
