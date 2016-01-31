@@ -62,6 +62,15 @@ UDBCSQLiteLibrary >> apiClose: handle [
 ]
 
 { #category : #'private - api' }
+UDBCSQLiteLibrary >> apiColumnDouble: aStatement atColumn: aColumn [
+	"double sqlite3_column_double(sqlite3_stmt*, int)"
+
+	^ self nbCall: #(double sqlite3_column_double (sqlite3_stmt* aStatement, int aColumn))
+		module: self library
+
+]
+
+{ #category : #'private - api' }
 UDBCSQLiteLibrary >> apiColumnInt: aStatement atColumn: aColumn [
 	"int sqlite3_column_int(sqlite3_stmt*, int)"
 	 
@@ -185,6 +194,12 @@ UDBCSQLiteLibrary >> execute: anSQLText on: aDBHandle [
 							with: null)
 		 on: aDBHandle
 	
+]
+
+{ #category : #accessing }
+UDBCSQLiteLibrary >> floatFrom: aStatement at: aColumn [
+
+	^ self apiColumnDouble: aStatement atColumn: aColumn
 ]
 
 { #category : #operating }

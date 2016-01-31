@@ -63,6 +63,12 @@ UDBCSQLiteStatement >> finalize [
 	handle := nil
 ]
 
+{ #category : #'public - accessing' }
+UDBCSQLiteStatement >> floatAt: aColumn [
+
+	^self library floatFrom: handle at: aColumn
+]
+
 { #category : #'private - accessing' }
 UDBCSQLiteStatement >> handle [
 	^ handle
