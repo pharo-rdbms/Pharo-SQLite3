@@ -203,3 +203,32 @@ UDBCSQLiteBaseConnectionTest >> testFloat [
 	s finalize.
 
 ]
+
+{ #category : #tests }
+UDBCSQLiteBaseConnectionTest >> testObjectBlob [
+	| data s | 
+	
+	data := OrderedCollection with: 1 with: 'two' with: 3.3.
+	
+	res := db basicExecute: 'create table x (xk integer primary key, xv blob);'.
+	self assert: (res = 0).
+
+	res := db basicExecute: 'begin'.
+	self assert: (res = 0).
+	s := db prepare: 'insert into x values (NULL, ?)'.
+	s at: 1 putObject: data.
+	s step. s finalize.
+	res := db basicExecute: 'commit'.
+	self assert: (res = 0).
+	
+	s := db prepare: 'select xv from x'.
+	s basicExecute: [  :row |
+		| v |
+		v := row objectAt: 0.
+		self assert: v size equals: 3.
+		self assert: v first equals: 1.
+		self assert: v second equals: 'two'.
+		self assert: v third equals: 3.3 ].
+	s finalize.
+	
+]
