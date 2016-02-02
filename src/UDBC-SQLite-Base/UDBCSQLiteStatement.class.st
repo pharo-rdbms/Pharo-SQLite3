@@ -25,6 +25,12 @@ UDBCSQLiteStatement >> at: aColumn putDateTime: aDateTime [
 ]
 
 { #category : #'public - accessing' }
+UDBCSQLiteStatement >> at: aColumn putInteger: anInteger [
+
+	^ self library with: handle at: aColumn putInteger: anInteger
+]
+
+{ #category : #'public - accessing' }
 UDBCSQLiteStatement >> at: aColumn putObject: anObject [
 	^ self library with: handle at: aColumn putBlob: (FLSerializer serializeToByteArray: anObject)
 ]
@@ -45,6 +51,11 @@ UDBCSQLiteStatement >> basicExecute: aBlock [
 			[ ret = 100 ] whileTrue: [ " == SQLITE_ROW, meaning another row is available."
 				aBlock value: self.
 				ret := self step ]]
+]
+
+{ #category : #public }
+UDBCSQLiteStatement >> clearBindings [
+	connection clearBindings: self
 ]
 
 { #category : #'private - accessing' }
@@ -105,6 +116,11 @@ UDBCSQLiteStatement >> nameOfColumn: aColumn [
 { #category : #'public - accessing' }
 UDBCSQLiteStatement >> objectAt: aColumn [
 	^ FLMaterializer materializeFromByteArray: (self library blobFrom: handle at: aColumn)  
+]
+
+{ #category : #public }
+UDBCSQLiteStatement >> reset [
+	connection reset: self
 ]
 
 { #category : #private }

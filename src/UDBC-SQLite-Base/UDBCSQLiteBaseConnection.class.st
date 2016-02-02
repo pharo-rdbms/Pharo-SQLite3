@@ -44,6 +44,12 @@ UDBCSQLiteBaseConnection >> basicExecute: anSQLText [
 	
 ]
 
+{ #category : #'public API - operating' }
+UDBCSQLiteBaseConnection >> clearBindings: aStatement [
+	library clearBindings: aStatement handle on: dbHandle
+	
+]
+
 { #category : #'public API - open/close' }
 UDBCSQLiteBaseConnection >> close [
 	dbHandle ifNotNil: [ library close: dbHandle ].
@@ -110,6 +116,12 @@ UDBCSQLiteBaseConnection >> prepare: anSQLText [
 	s connection: self.
 	library prepare: s handle on: dbHandle with: anSQLText.
 	^ s
+	
+]
+
+{ #category : #public }
+UDBCSQLiteBaseConnection >> reset: aStatement [ 
+	library reset: aStatement handle on: dbHandle
 	
 ]
 

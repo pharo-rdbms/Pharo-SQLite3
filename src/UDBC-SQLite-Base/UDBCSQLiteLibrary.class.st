@@ -39,8 +39,8 @@ UDBCSQLiteLibrary class >> initializeTypeMap [
 		sqlite3		      #UDBCSQLiteDatabaseExternalObject
 		sqlite3_stmt			#UDBCSQLiteStatementExternalObject
 		"sqlite3_backup		NBSQLite3BackupExternalObject 
-		sqlite3_blob			NBSQLite3BlobExternalObject 
-		sqlite3_int64		NBInt64"
+		sqlite3_blob			NBSQLite3BlobExternalObject "
+		sqlite3_int64		FFIInt64
 	)
 ]
 
@@ -67,7 +67,7 @@ UDBCSQLiteLibrary >> apiBindInteger: aStatement atColumn: aColumn with: anIntege
 	"int sqlite3_bind_int64(sqlite3_stmt*, int, sqlite_int64)"
 
 	^ self
-		ffiCall: #(#int #sqlite3_bind_int64 #(#sqlite3_stmt #* #aStatement #, #int #aColumn #, #sqlite_int64 #anInteger))
+		ffiCall: #(int sqlite3_bind_int64 (sqlite3_stmt* aStatement,int aColumn,sqlite3_int64 anInteger))
 		module: self library
 ]
 
@@ -76,6 +76,15 @@ UDBCSQLiteLibrary >> apiBindString: aStatement atColumn: aColumn with: aString w
 	"int sqlite3_bind_text(sqlite3_stmt*, int, const char*, int, void(*)(void*))"
 	 
 	^ self ffiCall: #(int sqlite3_bind_text (sqlite3_stmt* aStatement, int aColumn, String aString, int anInteger, int anotherInteger))
+		module: self library
+
+]
+
+{ #category : #'private - api' }
+UDBCSQLiteLibrary >> apiClearBindings: aStatement [
+	"int sqlite3_clear_bindings(sqlite3_stmt*)"
+
+	^ self ffiCall: #(int sqlite3_clear_bindings (sqlite3_stmt* aStatement))
 		module: self library
 
 ]
@@ -193,6 +202,15 @@ UDBCSQLiteLibrary >> apiPrepare: dbHandle withSQLText: anSQLText with: textSize 
 ]
 
 { #category : #'private - api' }
+UDBCSQLiteLibrary >> apiReset: handle [
+	"int sqlite3_reset(sqlite3_stmt*)"
+	 
+	^ self ffiCall: #(int sqlite3_reset (sqlite3_stmt handle))
+		module: self library
+
+]
+
+{ #category : #'private - api' }
 UDBCSQLiteLibrary >> apiStep: handle [
 	"int sqlite3_step(sqlite3_stmt*)"
 	 
@@ -225,6 +243,14 @@ UDBCSQLiteLibrary >> checkForOk: aValue on: aHandle [
 				ifTrue: [ self signal: UDBCSQLiteMisuse with: aValue on: aHandle ].				
 			self signal: UDBCSQLiteError with: aValue on: aHandle ].	
 	^ OK
+]
+
+{ #category : #cleaning }
+UDBCSQLiteLibrary >> clearBindings: sHandle on: dbHandle [
+	
+	^ self checkForOk: (self apiClearBindings: sHandle) on: dbHandle
+	
+
 ]
 
 { #category : #'connection handling' }
@@ -296,6 +322,13 @@ UDBCSQLiteLibrary >> prepare: aStatementHandle on: aDBHandle with: anSQLText [
 							with: aStatementHandle
 							with: (ExternalAddress new))
 		 on: aDBHandle
+	
+
+]
+
+{ #category : #cleaning }
+UDBCSQLiteLibrary >> reset: aStatementHandle on: aDBHandle [	
+	^ self checkForOk: (self apiReset: aStatementHandle) on: aDBHandle
 	
 
 ]
