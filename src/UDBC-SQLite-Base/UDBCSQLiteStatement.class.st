@@ -25,6 +25,11 @@ UDBCSQLiteStatement >> at: aColumn putDateTime: aDateTime [
 ]
 
 { #category : #'public - accessing' }
+UDBCSQLiteStatement >> at: aColumn putObject: anObject [
+	^ self library with: handle at: aColumn putBlob: (FLSerializer serializeToByteArray: anObject)
+]
+
+{ #category : #'public - accessing' }
 UDBCSQLiteStatement >> at: aColumn putString: aString [
 	^ self library with: handle at: aColumn putString: aString
 ]
@@ -95,6 +100,11 @@ UDBCSQLiteStatement >> library [
 { #category : #'public - accessing' }
 UDBCSQLiteStatement >> nameOfColumn: aColumn [
 	^ self library nameFor: handle at: aColumn
+]
+
+{ #category : #'public - accessing' }
+UDBCSQLiteStatement >> objectAt: aColumn [
+	^ FLMaterializer materializeFromByteArray: (self library blobFrom: handle at: aColumn)  
 ]
 
 { #category : #private }
