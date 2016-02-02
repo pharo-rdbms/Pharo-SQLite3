@@ -232,3 +232,30 @@ UDBCSQLiteBaseConnectionTest >> testObjectBlob [
 	s finalize.
 	
 ]
+
+{ #category : #tests }
+UDBCSQLiteBaseConnectionTest >> testPrepareStep [
+	| s i | 
+	
+	res := db basicExecute: 'create table x (xk integer primary key, iv integer, tv text);'.
+	self assert: (res = 0).
+
+	res := db basicExecute: 'begin'.
+	self assert: (res = 0).
+	s := db prepare: 'insert into x values (NULL, ?, ?)'.
+	1 to: 10 do: [ :x |
+		s at: 1 putInteger: x * x.
+		s at: 2 putString: x asString, ' * ', x asString.
+		s step. s clearBindings. s reset. ].		
+	s finalize.
+	res := db basicExecute: 'commit'.
+	self assert: (res = 0).
+	
+	s := db prepare: 'select * from x'.
+	s basicExecute: [  :row |
+		i := row integerAt: 0.
+		self assert: (row integerAt: 1) equals: (i * i).
+		self assert: (row stringAt: 2) equals: (i asString, ' * ', i asString) ].
+	s finalize.
+	
+]
