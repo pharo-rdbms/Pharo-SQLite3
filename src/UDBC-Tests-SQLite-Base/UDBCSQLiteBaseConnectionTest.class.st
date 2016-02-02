@@ -259,3 +259,38 @@ UDBCSQLiteBaseConnectionTest >> testPrepareStep [
 	s finalize.
 	
 ]
+
+{ #category : #tests }
+UDBCSQLiteBaseConnectionTest >> testResultSetColumnIntrospection [
+	| s | 
+
+	res := db basicExecute: 'create table x (xk integer primary key, iv integer, tv text);'.
+	self assert: (res = 0).
+
+	res := db basicExecute: 'insert into x values (NULL, 1, "duh");'.	
+	self assert: (res = 0).
+	
+	s := db prepare: 'select * from x'.
+	s basicExecute: [  :row |
+		self assert: ((row nameOfColumn: 0) = 'xk').
+		self assert: ((row valueOfColumn: 0) = 1).
+		self assert: ((row nameOfColumn: 1) = 'iv').
+		self assert: ((row valueOfColumn: 1) = 1).
+		self assert: ((row nameOfColumn: 2) = 'tv').
+		self assert: ((row valueOfColumn: 2) = 'duh') ].
+	s finalize.
+	
+]
+
+{ #category : #tests }
+UDBCSQLiteBaseConnectionTest >> testTableNames [
+	| tables |
+	
+	res := db basicExecute: 'create table x (xk integer, xv integer);'.
+	self assert: (res = 0).
+	tables := db tableNames.
+	self assert: (tables size = 1).
+	self assert: (tables first = 'x')
+	
+
+]
