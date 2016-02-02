@@ -132,3 +132,14 @@ UDBCSQLiteStatement >> step [
 UDBCSQLiteStatement >> stringAt: aColumn [	 
 	^ UDBCSQLiteLibrary current stringFrom: handle at: aColumn
 ]
+
+{ #category : #public }
+UDBCSQLiteStatement >> typeOfColumn: aColumn [
+	^ self library typeFor: handle at: aColumn
+]
+
+{ #category : #public }
+UDBCSQLiteStatement >> valueOfColumn: aColumn [
+	^ self perform: (self typeOfColumn: aColumn) with: aColumn
+
+]

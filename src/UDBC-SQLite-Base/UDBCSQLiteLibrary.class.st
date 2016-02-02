@@ -6,6 +6,7 @@ Class {
 	#superclass : #Object,
 	#classVars : [
 		'Current',
+		'DataTypeMap',
 		'TypeMap'
 	],
 	#pools : [
@@ -20,6 +21,11 @@ UDBCSQLiteLibrary class >> current [
 	^Current ifNil: [ Current := self new ]
 ]
 
+{ #category : #'private - accessing' }
+UDBCSQLiteLibrary class >> dateTimeTypes [
+	^ #('datetime' 'date' 'timestamp')
+]
+
 { #category : #'unified FFI - binding' }
 UDBCSQLiteLibrary class >> ffiBindingOf: aTypeName [
 	 
@@ -29,7 +35,21 @@ UDBCSQLiteLibrary class >> ffiBindingOf: aTypeName [
 { #category : #'class initialization' }
 UDBCSQLiteLibrary class >> initialize [
 
-	self initializeTypeMap.
+	self 
+		initializeTypeMap;
+		initializeDataTypeMap
+]
+
+{ #category : #'private - initialization' }
+UDBCSQLiteLibrary class >> initializeDataTypeMap [
+
+	DataTypeMap := Dictionary newFromPairs: #(
+		1			#integerAt: 
+		2			#floatAt:
+		3			#stringAt:
+		4			#byteArrayAt:
+		5			#nilAt:
+	)
 ]
 
 { #category : #'private - initialization' }
@@ -116,6 +136,15 @@ UDBCSQLiteLibrary >> apiColumnBytes: aStatement atColumn: aColumn [
 ]
 
 { #category : #'private - api' }
+UDBCSQLiteLibrary >> apiColumnDeclaredType: aStatement atColumn: aColumn [
+	"const char *sqlite3_column_decltype(sqlite3_stmt*, int)"
+
+	^ self
+		ffiCall: #(#String #sqlite3_column_decltype #(#sqlite3_stmt #aStatement #, #int #aColumn))
+		module: self library
+]
+
+{ #category : #'private - api' }
 UDBCSQLiteLibrary >> apiColumnDouble: aStatement atColumn: aColumn [
 	"double sqlite3_column_double(sqlite3_stmt*, int)"
 
@@ -149,6 +178,15 @@ UDBCSQLiteLibrary >> apiColumnText: aStatement atColumn: aColumn [
 	^ self ffiCall: #(String sqlite3_column_text (sqlite3_stmt* aStatement, int aColumn))
 		module: self library
 
+]
+
+{ #category : #'private - api' }
+UDBCSQLiteLibrary >> apiColumnType: aStatement atColumn: aColumn [
+	"int sqlite3_column_type(sqlite3_stmt*, int)"
+
+	^ self
+		ffiCall: #(int sqlite3_column_type(sqlite3_stmt* aStatement,int aColumn))
+		module: self library
 ]
 
 { #category : #'private - api' }
@@ -350,6 +388,19 @@ UDBCSQLiteLibrary >> step: aStatementHandle [
 { #category : #operating }
 UDBCSQLiteLibrary >> stringFrom: aStatement at: aColumn [
 	^ self utf8StringToPharo: (self apiColumnText: aStatement atColumn: aColumn)
+]
+
+{ #category : #'private - utilities' }
+UDBCSQLiteLibrary >> typeFor: aStatement at: aColumn [
+	| selector declared |
+	
+	selector := DataTypeMap at: (self apiColumnType: aStatement atColumn: aColumn).
+	(selector = #stringAt:) ifTrue: [
+		declared := (self apiColumnDeclaredType: aStatement atColumn: aColumn).
+		declared notNil ifTrue: [ 
+			(self class dateTimeTypes includes: declared asLowercase) ifTrue: [ ^ #dateTimeAt: ]]].
+	^ selector
+
 ]
 
 { #category : #'private - conversion' }
