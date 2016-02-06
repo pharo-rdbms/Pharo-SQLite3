@@ -294,3 +294,41 @@ UDBCSQLiteBaseConnectionTest >> testTableNames [
 	
 
 ]
+
+{ #category : #tests }
+UDBCSQLiteBaseConnectionTest >> testTracing [
+	| sql callback expected actual  |
+	
+	sql := #('create table if not exists x (xk integer primary key, iv integer, tv text)'
+			'insert into x values (NULL, 1, ''two'')'
+			'drop table x').
+			
+	expected := String streamContents: [ :s |
+		s nextPutAll: sql first; cr;
+			nextPutAll: sql second; cr;
+			nextPutAll: sql third; cr ].
+	
+	actual := WriteStream on: String new.
+	
+	callback := FFICallback 	
+						signature: '#(void (ExternalAddress appData, String sqlText)'
+						block: [ :appdata :sqltext |
+							"We ignore appdata in this test, because we're passing a null pointer in."
+							actual nextPutAll: sqltext; cr ].
+	
+	"The null pointer appears as appdata in the callback."
+	db traceUsing: callback with: ExternalAddress new. 
+	
+	res := db basicExecute: sql first.
+	self assert: (res = 0).
+	
+	res := db basicExecute: sql second.
+	self assert: (res = 0).
+
+	res := db basicExecute: sql third.
+	self assert: (res = 0).
+
+	self assert: (actual contents = expected)
+	
+
+]
