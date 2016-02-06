@@ -119,7 +119,7 @@ UDBCSQLiteBaseConnection >> prepare: anSQLText [
 	
 ]
 
-{ #category : #public }
+{ #category : #'public API - cleaning' }
 UDBCSQLiteBaseConnection >> reset: aStatement [ 
 	library reset: aStatement handle on: dbHandle
 	
@@ -137,4 +137,10 @@ UDBCSQLiteBaseConnection >> tableNames [
 	  		s basicExecute: [ :row | tables add: (row stringAt: 0) ].
 	  		s finalize.
 			^ tables ]
+]
+
+{ #category : #'public API - tracing' }
+UDBCSQLiteBaseConnection >> traceUsing: callback with: appdata [
+	library trace: dbHandle with: callback with: appdata
+	
 ]

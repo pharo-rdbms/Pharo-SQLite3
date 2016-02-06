@@ -257,6 +257,17 @@ UDBCSQLiteLibrary >> apiStep: handle [
 
 ]
 
+{ #category : #'private - api' }
+UDBCSQLiteLibrary >> apiTrace: handle with: callback with: appdata [
+	"void *sqlite3_trace(sqlite3* void(*)(void*, const char*), void*)"
+	<primitive: #primitiveNativeCall module: #NativeBoostPlugin error: errorCode>
+	^ self ffiCallout 
+		options: #( optMayGC );
+		function: #(void* sqlite3_trace (sqlite3* handle, FFICallback callback, ExternalAddress appdata))
+		module: self library
+
+]
+
 { #category : #accessing }
 UDBCSQLiteLibrary >> blobFrom: aStatement at: aColumn [
 	| address size array |
@@ -388,6 +399,12 @@ UDBCSQLiteLibrary >> step: aStatementHandle [
 { #category : #operating }
 UDBCSQLiteLibrary >> stringFrom: aStatement at: aColumn [
 	^ self utf8StringToPharo: (self apiColumnText: aStatement atColumn: aColumn)
+]
+
+{ #category : #tracing }
+UDBCSQLiteLibrary >> trace: handle with: callback with: appdata [
+	^ self apiTrace: handle with: callback with: appdata
+
 ]
 
 { #category : #'private - utilities' }
