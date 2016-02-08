@@ -311,7 +311,7 @@ UDBCSQLiteBaseConnectionTest >> testTracing [
 	actual := WriteStream on: String new.
 	
 	callback := FFICallback 	
-						signature: '#(void (ExternalAddress appData, String sqlText)'
+						signature: #(void (ExternalAddress appData, String sqlText))
 						block: [ :appdata :sqltext |
 							"We ignore appdata in this test, because we're passing a null pointer in."
 							actual nextPutAll: sqltext; cr ].
