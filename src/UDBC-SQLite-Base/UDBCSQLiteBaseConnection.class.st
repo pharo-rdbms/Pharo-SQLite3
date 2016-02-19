@@ -38,10 +38,46 @@ UDBCSQLiteBaseConnection class >> openOn: aFilename [
 
 ]
 
+{ #category : #'public API - backups' }
+UDBCSQLiteBaseConnection >> asBackupDestination: backupObject [
+	self asBackupDestination: backupObject forDatabase: 'main'
+]
+
+{ #category : #'public API - backups' }
+UDBCSQLiteBaseConnection >> asBackupDestination: backupObject forDatabase: databaseName [
+	
+	backupObject destinationHandle: dbHandle.
+	backupObject destinationDatabaseName: databaseName
+	
+]
+
+{ #category : #'public API - backups' }
+UDBCSQLiteBaseConnection >> asBackupSource: backupObject [
+	self asBackupSource: backupObject forDatabase: 'main'
+]
+
+{ #category : #'public API - backups' }
+UDBCSQLiteBaseConnection >> asBackupSource: backupObject forDatabase: databaseName [
+	
+	backupObject sourceHandle: dbHandle.
+	backupObject sourceDatabaseName: databaseName
+	
+]
+
 { #category : #'public API - operating' }
 UDBCSQLiteBaseConnection >> basicExecute: anSQLText [ 
 	^ library execute: anSQLText on: dbHandle.
 	
+]
+
+{ #category : #'public API - transactional' }
+UDBCSQLiteBaseConnection >> beginTransaction [
+	^ self basicExecute: 'begin'	
+]
+
+{ #category : #'public API - introspection' }
+UDBCSQLiteBaseConnection >> changes [
+	^ library changes: dbHandle
 ]
 
 { #category : #'public API - operating' }
@@ -79,6 +115,11 @@ UDBCSQLiteBaseConnection >> columnNamesFor: aTableName [
 		
 ]
 
+{ #category : #'public API - transactional' }
+UDBCSQLiteBaseConnection >> commitTransaction [
+	^ self basicExecute: 'commit'	
+]
+
 { #category : #initialization }
 UDBCSQLiteBaseConnection >> initialize [
 	
@@ -106,6 +147,11 @@ UDBCSQLiteBaseConnection >> open [
 		ifTrue: [ 
 			isOpen := true.
 			^ self ]
+		ifFalse: [
+			| err |
+			err := library apiErrorMessage: dbHandle.
+			library apiClose: dbHandle.
+			UDBCSQLiteError signal: err ]
 ]
 
 { #category : #'public API - operating' }
@@ -125,6 +171,11 @@ UDBCSQLiteBaseConnection >> reset: aStatement [
 	
 ]
 
+{ #category : #'public API - transactional' }
+UDBCSQLiteBaseConnection >> rollbackTransaction [
+	^ self basicExecute: 'rollback'	
+]
+
 { #category : #'public API - introspection' }
 UDBCSQLiteBaseConnection >> tableNames [
 	| tables s |
@@ -137,6 +188,11 @@ UDBCSQLiteBaseConnection >> tableNames [
 	  		s basicExecute: [ :row | tables add: (row stringAt: 0) ].
 	  		s finalize.
 			^ tables ]
+]
+
+{ #category : #'public API - introspection' }
+UDBCSQLiteBaseConnection >> totalChanges [
+	^ library totalChanges: dbHandle
 ]
 
 { #category : #'public API - tracing' }

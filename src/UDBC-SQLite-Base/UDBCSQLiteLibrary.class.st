@@ -101,6 +101,15 @@ UDBCSQLiteLibrary >> apiBindString: aStatement atColumn: aColumn with: aString w
 ]
 
 { #category : #'private - api' }
+UDBCSQLiteLibrary >> apiChanges: handle [
+	"int sqlite3_changes(sqlite3*)"
+
+	^ self ffiCall: #(int sqlite3_changes (sqlite3 handle))
+		module: self library
+
+]
+
+{ #category : #'private - api' }
 UDBCSQLiteLibrary >> apiClearBindings: aStatement [
 	"int sqlite3_clear_bindings(sqlite3_stmt*)"
 
@@ -258,6 +267,15 @@ UDBCSQLiteLibrary >> apiStep: handle [
 ]
 
 { #category : #'private - api' }
+UDBCSQLiteLibrary >> apiTotalChanges: handle [
+	"int sqlite3_total_changes(sqlite3*)"
+
+	^ self ffiCall: #(int sqlite3_total_changes (sqlite3 handle))
+		module: self library
+
+]
+
+{ #category : #'private - api' }
 UDBCSQLiteLibrary >> apiTrace: handle with: callback with: appdata [
 	"void *sqlite3_trace(sqlite3* void(*)(void*, const char*), void*)"
 	<primitive: #primitiveNativeCall module: #NativeBoostPlugin error: errorCode>
@@ -277,6 +295,13 @@ UDBCSQLiteLibrary >> blobFrom: aStatement at: aColumn [
 	array := address copyFrom: 1 to: size.
 	^array 
 	 
+]
+
+{ #category : #introspection }
+UDBCSQLiteLibrary >> changes: aHandle [	
+	^ self apiChanges: aHandle
+	
+
 ]
 
 { #category : #'private - utilities' }
@@ -399,6 +424,13 @@ UDBCSQLiteLibrary >> step: aStatementHandle [
 { #category : #operating }
 UDBCSQLiteLibrary >> stringFrom: aStatement at: aColumn [
 	^ self utf8StringToPharo: (self apiColumnText: aStatement atColumn: aColumn)
+]
+
+{ #category : #introspection }
+UDBCSQLiteLibrary >> totalChanges: aHandle [	
+	^ self apiTotalChanges: aHandle
+	
+
 ]
 
 { #category : #tracing }

@@ -64,6 +64,29 @@ UDBCSQLiteStatement >> connection: anObject [
 ]
 
 { #category : #'public - accessing' }
+UDBCSQLiteStatement >> dataTypeForObject: anObject [
+
+	anObject ifNil: [ ^#at:putNil: ].
+
+	(anObject isKindOf: Integer)
+		ifTrue: [ ^#at:putInteger: ].
+		
+	(anObject isKindOf: Float)
+		ifTrue: [ ^#at:putFloat: ].
+		
+	(anObject isKindOf: String)
+		ifTrue: [ ^#at:putString: ].
+		
+	(anObject isKindOf: ByteArray)
+		ifTrue: [ ^#at:putByteArray: ].
+		
+	(anObject isKindOf: DateAndTime)
+		ifTrue: [ ^#at:putDateTime: ].
+		
+	^ #at:putObject: 
+]
+
+{ #category : #'public - accessing' }
 UDBCSQLiteStatement >> dataValuesAvailable [
 	^ self library dataValuesAvailable: handle
 ]
