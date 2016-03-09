@@ -3,12 +3,12 @@ I represent the SQLite API 'sqlite3_stmt' C-level type.
 
 "
 Class {
-	#name : #UDBCSQLiteStatementExternalObject,
+	#name : #UDBCSQLite3StatementExternalObject,
 	#superclass : #FFIExternalObject,
 	#category : #'UDBC-SQLite-Base-UFFI-Support'
 }
 
 { #category : #finalization }
-UDBCSQLiteStatementExternalObject >> finalizeResourceData: aHandle [
-	UDBCSQLiteLibrary current apiFinalize: aHandle.
+UDBCSQLite3StatementExternalObject >> finalizeResourceData: aHandle [
+	UDBCSQLite3Library current apiFinalize: aHandle.
 ]

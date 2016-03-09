@@ -2,7 +2,7 @@
 I represent the SQLite API 'sqlite3' C-level type.
 "
 Class {
-	#name : #UDBCSQLiteDatabaseExternalObject,
+	#name : #UDBCSQLite3DatabaseExternalObject,
 	#superclass : #FFIExternalObject,
 	#category : #'UDBC-SQLite-Base-UFFI-Support'
 }

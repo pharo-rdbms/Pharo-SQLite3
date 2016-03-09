@@ -3,21 +3,21 @@ I represent a connection to an SQLite database.
 
 "
 Class {
-	#name : #UDBCSQLiteConnection,
-	#superclass : #UDBCSQLiteBaseConnection,
+	#name : #UDBCSQLite3Connection,
+	#superclass : #UDBCSQLite3BaseConnection,
 	#category : #'UDBC-SQLite-Base-Connections'
 }
 
 { #category : #'public API - operating' }
-UDBCSQLiteConnection >> execute: anSQLText [	
+UDBCSQLite3Connection >> execute: anSQLText [	
 	^ self execute: anSQLText with: #()
 ]
 
 { #category : #'public API - operating' }
-UDBCSQLiteConnection >> execute: anSQLText with: anObject [
+UDBCSQLite3Connection >> execute: anSQLText with: anObject [
 
 	anObject isString
-		ifTrue: [ UDBCSQLiteError signal: 'Unable to execute SQL on instance of String.' ].
+		ifTrue: [ UDBCSQLite3Error signal: 'Unable to execute SQL on instance of String.' ].
 			
 	^ UDBCSQLite3ResultSet new execute: anSQLText with: anObject on: self	
 

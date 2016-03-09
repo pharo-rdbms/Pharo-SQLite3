@@ -2,7 +2,7 @@
 I represent an SQLite non-ok condition.
 "
 Class {
-	#name : #UDBCSQLiteError,
+	#name : #UDBCSQLite3Error,
 	#superclass : #Error,
 	#instVars : [
 		'resultCode'
@@ -11,11 +11,11 @@ Class {
 }
 
 { #category : #accessing }
-UDBCSQLiteError >> resultCode [
+UDBCSQLite3Error >> resultCode [
 	^ resultCode
 ]
 
 { #category : #accessing }
-UDBCSQLiteError >> resultCode: anObject [
+UDBCSQLite3Error >> resultCode: anObject [
 	resultCode := anObject
 ]

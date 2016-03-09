@@ -2,7 +2,7 @@
 I represent an SQLite prepared statement.
 "
 Class {
-	#name : #UDBCSQLiteStatement,
+	#name : #UDBCSQLite3Statement,
 	#superclass : #Object,
 	#instVars : [
 		'connection',
@@ -12,36 +12,36 @@ Class {
 }
 
 { #category : #'instance finalization' }
-UDBCSQLiteStatement class >> finalizeResourceData: aHandle [
-	UDBCSQLiteLibrary current apiFinalize: aHandle.
+UDBCSQLite3Statement class >> finalizeResourceData: aHandle [
+	UDBCSQLite3Library current apiFinalize: aHandle.
 ]
 
 { #category : #'public - accessing' }
-UDBCSQLiteStatement >> at: aColumn putDateTime: aDateTime [
+UDBCSQLite3Statement >> at: aColumn putDateTime: aDateTime [
 
 	| s |
-	s := UDBCSQLiteDateTimeString streamContents: [ :stream | aDateTime printOn: stream ].
+	s := UDBCSQLite3DateTimeString streamContents: [ :stream | aDateTime printOn: stream ].
 	^ self library with: handle at: aColumn putString: s
 ]
 
 { #category : #'public - accessing' }
-UDBCSQLiteStatement >> at: aColumn putInteger: anInteger [
+UDBCSQLite3Statement >> at: aColumn putInteger: anInteger [
 
 	^ self library with: handle at: aColumn putInteger: anInteger
 ]
 
 { #category : #'public - accessing' }
-UDBCSQLiteStatement >> at: aColumn putObject: anObject [
+UDBCSQLite3Statement >> at: aColumn putObject: anObject [
 	^ self library with: handle at: aColumn putBlob: (FLSerializer serializeToByteArray: anObject)
 ]
 
 { #category : #'public - accessing' }
-UDBCSQLiteStatement >> at: aColumn putString: aString [
+UDBCSQLite3Statement >> at: aColumn putString: aString [
 	^ self library with: handle at: aColumn putString: aString
 ]
 
 { #category : #public }
-UDBCSQLiteStatement >> basicExecute: aBlock [
+UDBCSQLite3Statement >> basicExecute: aBlock [
 	| ret |
 	
 	ret := self step. 
@@ -54,17 +54,17 @@ UDBCSQLiteStatement >> basicExecute: aBlock [
 ]
 
 { #category : #public }
-UDBCSQLiteStatement >> clearBindings [
+UDBCSQLite3Statement >> clearBindings [
 	connection clearBindings: self
 ]
 
 { #category : #'private - accessing' }
-UDBCSQLiteStatement >> connection: anObject [
+UDBCSQLite3Statement >> connection: anObject [
 	connection := anObject
 ]
 
 { #category : #'public - accessing' }
-UDBCSQLiteStatement >> dataTypeForObject: anObject [
+UDBCSQLite3Statement >> dataTypeForObject: anObject [
 
 	anObject ifNil: [ ^#at:putNil: ].
 
@@ -87,82 +87,82 @@ UDBCSQLiteStatement >> dataTypeForObject: anObject [
 ]
 
 { #category : #'public - accessing' }
-UDBCSQLiteStatement >> dataValuesAvailable [
+UDBCSQLite3Statement >> dataValuesAvailable [
 	^ self library dataValuesAvailable: handle
 ]
 
 { #category : #'public - accessing' }
-UDBCSQLiteStatement >> dateTimeAt: aColumn [	
+UDBCSQLite3Statement >> dateTimeAt: aColumn [	
 	^ DateAndTime fromString: (self library stringFrom: handle at: aColumn)
 ]
 
 { #category : #initialization }
-UDBCSQLiteStatement >> finalize [
-	UDBCSQLiteLibrary current apiFinalize: handle.
+UDBCSQLite3Statement >> finalize [
+	UDBCSQLite3Library current apiFinalize: handle.
 	handle := nil
 ]
 
 { #category : #'public - accessing' }
-UDBCSQLiteStatement >> floatAt: aColumn [
+UDBCSQLite3Statement >> floatAt: aColumn [
 
 	^self library floatFrom: handle at: aColumn
 ]
 
 { #category : #'private - accessing' }
-UDBCSQLiteStatement >> handle [
+UDBCSQLite3Statement >> handle [
 	^ handle
 ]
 
 { #category : #initialization }
-UDBCSQLiteStatement >> initialize [
+UDBCSQLite3Statement >> initialize [
 
 	super initialize.
-	handle := UDBCSQLiteStatementExternalObject new.
+	handle := UDBCSQLite3StatementExternalObject new.
 	FFIExternalResourceManager addResource: handle data: handle
 ]
 
 { #category : #'public - accessing' }
-UDBCSQLiteStatement >> integerAt: aColumn [ 
+UDBCSQLite3Statement >> integerAt: aColumn [ 
 	^self library integerFrom: handle at: aColumn
 ]
 
 { #category : #private }
-UDBCSQLiteStatement >> library [
-	^UDBCSQLiteLibrary current
+UDBCSQLite3Statement >> library [
+	^UDBCSQLite3Library current
 ]
 
 { #category : #'public - accessing' }
-UDBCSQLiteStatement >> nameOfColumn: aColumn [
+UDBCSQLite3Statement >> nameOfColumn: aColumn [
 	^ self library nameFor: handle at: aColumn
 ]
 
 { #category : #'public - accessing' }
-UDBCSQLiteStatement >> objectAt: aColumn [
+UDBCSQLite3Statement >> objectAt: aColumn [
 	^ FLMaterializer materializeFromByteArray: (self library blobFrom: handle at: aColumn)  
 ]
 
 { #category : #public }
-UDBCSQLiteStatement >> reset [
+UDBCSQLite3Statement >> reset [
 	connection reset: self
 ]
 
 { #category : #private }
-UDBCSQLiteStatement >> step [
-	^ UDBCSQLiteLibrary current step: handle
+UDBCSQLite3Statement >> step [
+	^ UDBCSQLite3Library current step: handle
 ]
 
 { #category : #operating }
-UDBCSQLiteStatement >> stringAt: aColumn [	 
-	^ UDBCSQLiteLibrary current stringFrom: handle at: aColumn
+UDBCSQLite3Statement >> stringAt: aColumn [	 
+	^ UDBCSQLite3Library current stringFrom: handle at: aColumn
 ]
 
 { #category : #public }
-UDBCSQLiteStatement >> typeOfColumn: aColumn [
+UDBCSQLite3Statement >> typeOfColumn: aColumn [
 	^ self library typeFor: handle at: aColumn
 ]
 
 { #category : #public }
-UDBCSQLiteStatement >> valueOfColumn: aColumn [
+UDBCSQLite3Statement >> valueOfColumn: aColumn [
 	^ self perform: (self typeOfColumn: aColumn) with: aColumn
 
 ]

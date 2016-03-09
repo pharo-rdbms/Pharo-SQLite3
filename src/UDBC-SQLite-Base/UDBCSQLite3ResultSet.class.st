@@ -33,7 +33,7 @@ UDBCSQLite3ResultSet >> execute: anSQLText with: anObject on: aDb [
 		ifFalse: [
 			(anObject respondsTo: #keysAndValuesDo:)
 				ifTrue: [ self execute: anSQLText withKeysAndValues: obj ]
-				ifFalse: [ UDBCSQLiteError signal: 'Unable to execute SQL on instance of ', obj class asString ]]
+				ifFalse: [ UDBCSQLite3Error signal: 'Unable to execute SQL on instance of ', obj class asString ]]
 	
 
 
@@ -92,7 +92,7 @@ UDBCSQLite3ResultSet >> initialize [
 UDBCSQLite3ResultSet >> next [
 	| nc rr |
 
-	statement ifNil: [ UDBCSQLiteMisuse signal: 'This result set does not contain a prepared statement.' ].	
+	statement ifNil: [ UDBCSQLite3Misuse signal: 'This result set does not contain a prepared statement.' ].	
 	
 	moreRows ifTrue: [	
 		nc := statement dataValuesAvailable.
@@ -122,7 +122,7 @@ UDBCSQLite3ResultSet >> prepareStatement: anSQLText [
 UDBCSQLite3ResultSet >> rows [
 	| rows nc rr |
 
-	statement ifNil: [ UDBCSQLiteMisuse signal: 'This result set does not contain a prepared statement.' ].	
+	statement ifNil: [ UDBCSQLite3Misuse signal: 'This result set does not contain a prepared statement.' ].	
 	
 	rows := OrderedCollection new.
 	[ moreRows ] whileTrue: [	
