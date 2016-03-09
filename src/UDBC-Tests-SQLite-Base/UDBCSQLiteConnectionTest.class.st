@@ -39,7 +39,7 @@ UDBCSQLiteConnectionTest >> populateRowsInto: tableName of: database [
 UDBCSQLiteConnectionTest >> setUp [ 
 
 	super setUp.
-	db := UDBCSQLiteConnection on: ':memory:'.
+	db := UDBCSQLite3Connection on: ':memory:'.
 	db open.
 
 ]
@@ -47,7 +47,7 @@ UDBCSQLiteConnectionTest >> setUp [
 { #category : #running }
 UDBCSQLiteConnectionTest >> tearDown [
 	
-	[ db close ] on: UDBCSQLiteMisuse do: [ ].
+	[ db close ] on: UDBCSQLite3Misuse do: [ ].
 	super tearDown.
 ]
 
@@ -311,7 +311,7 @@ UDBCSQLiteConnectionTest >> testExecuteWithToFail [
 	self assert: (res = 0).
 
 	self should: [ db execute: 'insert into x values (NULL, ?, ?)' with: 42 ]
-		raise: UDBCSQLiteError.
+		raise: UDBCSQLite3Error.
 
 	res := db rollbackTransaction.
 	self assert: (res = 0).
@@ -331,7 +331,7 @@ UDBCSQLiteConnectionTest >> testExecuteWithToFail2 [
 	self assert: (res = 0).
 
 	self should: [ db execute: 'insert into x values (NULL, ?, ?)' with: '42' ]
-		raise: UDBCSQLiteError.
+		raise: UDBCSQLite3Error.
 
 	res := db rollbackTransaction.
 	self assert: (res = 0).

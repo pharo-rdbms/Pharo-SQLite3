@@ -17,7 +17,7 @@ Class {
 UDBCSQLiteBaseConnectionTest >> setUp [ 
 
 	super setUp.
-	db := UDBCSQLiteBaseConnection on: ':memory:'.
+	db := UDBCSQLite3BaseConnection on: ':memory:'.
 	db open.
 
 ]
@@ -25,7 +25,7 @@ UDBCSQLiteBaseConnectionTest >> setUp [
 { #category : #running }
 UDBCSQLiteBaseConnectionTest >> tearDown [
 	
-	[ db close ] on: UDBCSQLiteMisuse do: [ ].
+	[ db close ] on: UDBCSQLite3Misuse do: [ ].
 	super tearDown.
 
 ]
@@ -36,8 +36,8 @@ UDBCSQLiteBaseConnectionTest >> testBadOpen [
 	invalidFilename := Smalltalk os isWindows
 		ifTrue: [ '/&*no' ]
 		ifFalse: [ '/nosuchfile' ].
-	db2 := UDBCSQLiteBaseConnection on: invalidFilename.
-	self should: [ db2 open ] raise: UDBCSQLiteError.
+	db2 := UDBCSQLite3BaseConnection on: invalidFilename.
+	self should: [ db2 open ] raise: UDBCSQLite3Error.
 	self assert: db2 isOpen = false
 ]
 
@@ -55,7 +55,7 @@ UDBCSQLiteBaseConnectionTest >> testBasicExecuteOk [
 UDBCSQLiteBaseConnectionTest >> testBasicExecuteSyntaxError [
 
 	self should: [ db basicExecute: 'create table,;' ]
-		raise: UDBCSQLiteError
+		raise: UDBCSQLite3Error
 	
 ]
 
@@ -184,7 +184,7 @@ UDBCSQLiteBaseConnectionTest >> testDateAndTime [
 UDBCSQLiteBaseConnectionTest >> testDoubleClose [
 	
 	db close.
-	[ db close ] on: UDBCSQLiteMisuse do: [ ]
+	[ db close ] on: UDBCSQLite3Misuse do: [ ]
 	"#tearDown will close the db again, and is similarly guarded."
 ]
 
