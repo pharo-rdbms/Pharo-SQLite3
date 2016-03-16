@@ -104,7 +104,7 @@ UDBCSQLite3Library >> apiBindString: aStatement atColumn: aColumn with: aString 
 UDBCSQLite3Library >> apiChanges: handle [
 	"int sqlite3_changes(sqlite3*)"
 
-	^ self ffiCall: #(int sqlite3_changes (sqlite3 handle))
+	^ self ffiCall: #(int sqlite3_changes (sqlite3 *handle))
 		module: self library
 
 ]
@@ -149,7 +149,7 @@ UDBCSQLite3Library >> apiColumnDeclaredType: aStatement atColumn: aColumn [
 	"const char *sqlite3_column_decltype(sqlite3_stmt*, int)"
 
 	^ self
-		ffiCall: #(#String #sqlite3_column_decltype #(#sqlite3_stmt #aStatement #, #int #aColumn))
+		ffiCall: #(String sqlite3_column_decltype #(sqlite3_stmt *aStatement, int aColumn))
 		module: self library
 ]
 
@@ -202,7 +202,7 @@ UDBCSQLite3Library >> apiColumnType: aStatement atColumn: aColumn [
 UDBCSQLite3Library >> apiDataCount: handle [
 	"int sqlite3_data_count(sqlite3_stmt*)"
 	
-	^ self ffiCall: #(int sqlite3_data_count (sqlite3_stmt handle)) module: self library
+	^ self ffiCall: #(int sqlite3_data_count (sqlite3_stmt *handle)) module: self library
 
 ]
 
@@ -218,7 +218,7 @@ UDBCSQLite3Library >> apiErrorMessage: handle [
 UDBCSQLite3Library >> apiExec: dbHandle withSQLText: anSQLText with: callback with: callbackData with: errorMessageBuffer [
 	"int sqlite3_exec(sqlite3*, const char*, int (*callback), void*, char **)"
 
-	^self ffiCall: #(int sqlite3_exec (sqlite3 dbHandle, String anSQLText, void *callback, void *callbackData, char **errorMessageBuffer))
+	^self ffiCall: #(int sqlite3_exec (sqlite3 *dbHandle, String anSQLText, void *callback, void *callbackData, char **errorMessageBuffer))
 		module: self library
 	
 ]
@@ -227,7 +227,7 @@ UDBCSQLite3Library >> apiExec: dbHandle withSQLText: anSQLText with: callback wi
 UDBCSQLite3Library >> apiFinalize: handle [
 	"int sqlite3_finalize(sqlite3_stmt*)"
 	 
-	^self ffiCall: #(int sqlite3_finalize(sqlite3_stmt handle)) module: self library.
+	^self ffiCall: #(int sqlite3_finalize(sqlite3_stmt *handle)) module: self library.
 	 
 ]
 
@@ -252,7 +252,7 @@ UDBCSQLite3Library >> apiPrepare: dbHandle withSQLText: anSQLText with: textSize
 UDBCSQLite3Library >> apiReset: handle [
 	"int sqlite3_reset(sqlite3_stmt*)"
 	 
-	^ self ffiCall: #(int sqlite3_reset (sqlite3_stmt handle))
+	^ self ffiCall: #(int sqlite3_reset (sqlite3_stmt *handle))
 		module: self library
 
 ]
@@ -270,7 +270,7 @@ UDBCSQLite3Library >> apiStep: handle [
 UDBCSQLite3Library >> apiTotalChanges: handle [
 	"int sqlite3_total_changes(sqlite3*)"
 
-	^ self ffiCall: #(int sqlite3_total_changes (sqlite3 handle))
+	^ self ffiCall: #(int sqlite3_total_changes (sqlite3 *handle))
 		module: self library
 
 ]
