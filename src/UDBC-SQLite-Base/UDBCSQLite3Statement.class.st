@@ -11,11 +11,6 @@ Class {
 	#category : #'UDBC-SQLite-Base-Database'
 }
 
-{ #category : #'instance finalization' }
-UDBCSQLite3Statement class >> finalizeResourceData: aHandle [
-	UDBCSQLite3Library current apiFinalize: aHandle.
-]
-
 { #category : #'public - accessing' }
 UDBCSQLite3Statement >> at: aColumn putDateTime: aDateTime [
 
@@ -98,7 +93,9 @@ UDBCSQLite3Statement >> dateTimeAt: aColumn [
 
 { #category : #initialization }
 UDBCSQLite3Statement >> finalize [
-	UDBCSQLite3Library current apiFinalize: handle.
+	
+	"Let FFIExternalResourceManager take care."
+	"UDBCSQLite3Library current apiFinalize: handle."
 	handle := nil
 ]
 
@@ -118,7 +115,7 @@ UDBCSQLite3Statement >> initialize [
 
 	super initialize.
 	handle := UDBCSQLite3StatementExternalObject new.
-	FFIExternalResourceManager addResource: handle data: handle
+	handle autoRelease
 ]
 
 { #category : #'public - accessing' }

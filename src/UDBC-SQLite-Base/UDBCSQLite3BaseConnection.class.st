@@ -88,7 +88,9 @@ UDBCSQLite3BaseConnection >> clearBindings: aStatement [
 
 { #category : #'public API - open/close' }
 UDBCSQLite3BaseConnection >> close [
-	dbHandle ifNotNil: [ library close: dbHandle ].
+
+	"Let FFIExternalResourceManager take care."
+	"dbHandle ifNotNil: [ library close: dbHandle ]."
 	dbHandle := nil.
 	isOpen := false.
 ]
@@ -126,7 +128,8 @@ UDBCSQLite3BaseConnection >> initialize [
 	super initialize.
 	isOpen := false.
 	library := UDBCSQLite3Library current.
-	dbHandle := UDBCSQLite3DatabaseExternalObject new
+	dbHandle := UDBCSQLite3DatabaseExternalObject new.
+	dbHandle autoRelease
 ]
 
 { #category : #testing }
