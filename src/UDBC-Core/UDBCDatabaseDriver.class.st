@@ -20,6 +20,7 @@ Class {
 
 { #category : #'driver management' }
 UDBCDatabaseDriver class >> availableDrivers [
+	<script: 'self availableDrivers inspect'>
 	
 	^ self driverManager availableDrivers
 ]
@@ -42,7 +43,7 @@ UDBCDatabaseDriver class >> driverAt: aDriverId [
 { #category : #accessing }
 UDBCDatabaseDriver class >> driverId [
 
-	self subclassResponsibility 
+	^self subclassResponsibility 
 ]
 
 { #category : #'private - accessing' }
@@ -73,7 +74,7 @@ UDBCDatabaseDriver class >> subscribeDriver [
 	self driverManager subscribeDriver: self
 ]
 
-{ #category : #testing }
+{ #category : #'testing - encoding' }
 UDBCDatabaseDriver class >> supportsEncoding: anEncoding [
 	
 	self subclassResponsibility
@@ -94,8 +95,8 @@ UDBCDatabaseDriver >> backend [
 
 { #category : #transactions }
 UDBCDatabaseDriver >> beginTransaction [
-
 	"Starts a database transaction"
+	
 	self subclassResponsibility
 ]
 
@@ -108,8 +109,8 @@ UDBCDatabaseDriver >> close [
 
 { #category : #transactions }
 UDBCDatabaseDriver >> commitTransaction [
-
 	"Commits the current database transaction"
+	
 	self subclassResponsibility
 ]
 
@@ -141,8 +142,8 @@ UDBCDatabaseDriver >> createStatement [
 
 { #category : #statement }
 UDBCDatabaseDriver >> createStatement: aSQLString [
-	
 	"Creates a statement object from a sql query"
+	
 	self subclassResponsibility
 ]
 
