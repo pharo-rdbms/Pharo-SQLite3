@@ -18,3 +18,9 @@ UDBCODBCDatabaseDriver class >> initialize [
 
 	self subscribeDriver
 ]
+
+{ #category : #'testing - encoding' }
+UDBCODBCDatabaseDriver class >> supportsEncoding: aString [
+
+	^true
+]
