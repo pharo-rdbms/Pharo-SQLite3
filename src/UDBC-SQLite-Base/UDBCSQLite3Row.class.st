@@ -26,6 +26,12 @@ UDBCSQLite3Row >> at: aKey put: anObject [
 	^ data at: aKey put: anObject
 ]
 
+{ #category : #accessing }
+UDBCSQLite3Row >> data [
+
+	 ^data
+]
+
 { #category : #'reflective operations' }
 UDBCSQLite3Row >> doesNotUnderstand: aMessage [
 	^ self at: aMessage selector asString ifAbsent: [ super doesNotUnderstand: aMessage ]
