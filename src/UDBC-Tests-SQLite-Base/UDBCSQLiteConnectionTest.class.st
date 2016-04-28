@@ -94,8 +94,9 @@ UDBCSQLiteConnectionTest >> testExecuteNoResult [
 ]
 
 { #category : #tests }
-UDBCSQLiteConnectionTest >> testExecuteWithInsert [
-	
+UDBCSQLiteConnectionTest >> testExecuteWithInsertArray [
+	| rd |
+		
 	res := db basicExecute: 'create table if not exists x (xk integer primary key, iv integer, tv text);'.
 	self assert: (res = 0).
 	
@@ -112,27 +113,10 @@ UDBCSQLiteConnectionTest >> testExecuteWithInsert [
 	res := db commitTransaction.
 	self assert: (res = 0).
 	
-]
-
-{ #category : #tests }
-UDBCSQLiteConnectionTest >> testExecuteWithInsert2 [
-	
-	res := db basicExecute: 'create table if not exists x (xk integer primary key, iv integer, tv text);'.
-	self assert: (res = 0).
-	
-	res := db basicExecute: 'delete from x;'.
-	self assert: (res = 0).	
-
-	res := db beginTransaction.
-	self assert: (res = 0).
-
-	rs := db execute: 'insert into x values (NULL, :first, :two)'
-		with: (Dictionary newFromPairs: #(':first' 1 ':two' 2 ':nosuch' 3)).
-	self assert: (rs next isNil).
-	rs close.
-
-	res := db commitTransaction.
-	self assert: (res = 0).
+	rd := (db execute: 'select * from x') rows first.
+	self assert: ((rd at: 'xk') = 1).
+	self assert: ((rd at: 'iv') = 1).
+	self assert: ((rd at: 'tv') = 'two').
 	
 ]
 
@@ -167,6 +151,34 @@ UDBCSQLiteConnectionTest >> testExecuteWithInsertChanges [
 	self assert: (db changes = 1).
 	self assert: (db totalChanges = 2).
 
+]
+
+{ #category : #tests }
+UDBCSQLiteConnectionTest >> testExecuteWithInsertDictionary [
+	| rd |
+	
+	res := db basicExecute: 'create table if not exists x (xk integer primary key, iv integer, tv text);'.
+	self assert: (res = 0).
+	
+	res := db basicExecute: 'delete from x;'.
+	self assert: (res = 0).	
+
+	res := db beginTransaction.
+	self assert: (res = 0).
+
+	rs := db execute: 'insert into x values (NULL, :first, :two)'
+		with: (Dictionary newFromPairs: #(':first' 1 ':two' '2' ':nosuch' 3)).
+	self assert: (rs next isNil).
+	rs close.
+
+	res := db commitTransaction.
+	self assert: (res = 0).
+	
+	rd := (db execute: 'select * from x') rows first.
+	self assert: ((rd at: 'xk') = 1).
+	self assert: ((rd at: 'iv') = 1).
+	self assert: ((rd at: 'tv') = '2').
+	
 ]
 
 { #category : #tests }
