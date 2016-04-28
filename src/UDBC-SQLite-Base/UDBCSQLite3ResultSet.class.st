@@ -28,11 +28,11 @@ UDBCSQLite3ResultSet >> execute: anSQLText with: anObject on: aDb [
 
 	obj := anObject isNil ifTrue: [ #() ] ifFalse: [ anObject ].
 
-	(obj isCollection)
-		ifTrue: [ self execute: anSQLText withCollection: obj ]
+	(obj isDictionary)
+		ifTrue: [ self execute: anSQLText withKeysAndValues: obj ]
 		ifFalse: [
-			(anObject respondsTo: #keysAndValuesDo:)
-				ifTrue: [ self execute: anSQLText withKeysAndValues: obj ]
+			(obj isCollection)
+				ifTrue: [ self execute: anSQLText withCollection: obj ]
 				ifFalse: [ UDBCSQLite3Error signal: 'Unable to execute SQL on instance of ', obj class asString ]]
 	
 

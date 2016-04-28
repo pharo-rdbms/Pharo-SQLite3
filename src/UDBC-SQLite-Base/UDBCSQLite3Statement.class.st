@@ -48,6 +48,16 @@ UDBCSQLite3Statement >> basicExecute: aBlock [
 				ret := self step ]]
 ]
 
+{ #category : #'public - accessing' }
+UDBCSQLite3Statement >> bindParameterCount [
+	^ self library bindParameterCount: handle
+]
+
+{ #category : #'public - accessing' }
+UDBCSQLite3Statement >> bindParameterIndex: aName [
+	^ self library bindParameterIndex: handle for: aName
+]
+
 { #category : #public }
 UDBCSQLite3Statement >> clearBindings [
 	connection clearBindings: self

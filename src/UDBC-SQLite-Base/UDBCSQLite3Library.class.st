@@ -64,6 +64,11 @@ UDBCSQLite3Library class >> initializeTypeMap [
 	)
 ]
 
+{ #category : #factory }
+UDBCSQLite3Library class >> reset [
+	Current := nil
+]
+
 { #category : #'private - api' }
 UDBCSQLite3Library >> apiBindBlob: aStatement atColumn: aColumn with: aByteArray with: anInteger with: aPointer [
 	"int sqlite3_bind_blob(sqlite3_stmt*, int, const void *, int, void(*)(void*))"
@@ -89,6 +94,23 @@ UDBCSQLite3Library >> apiBindInteger: aStatement atColumn: aColumn with: anInteg
 	^ self
 		ffiCall: #(int sqlite3_bind_int64 (sqlite3_stmt* aStatement,int aColumn,sqlite3_int64 anInteger))
 		module: self library
+]
+
+{ #category : #'private - api' }
+UDBCSQLite3Library >> apiBindParameterCount: aStatement [
+	"int sqlite3_bind_parameter_count(sqlite3_stmt*)"
+
+	^ self ffiCall: #(int sqlite3_bind_parameter_count (sqlite3_stmt* aStatement))
+		module: self library
+]
+
+{ #category : #'private - api' }
+UDBCSQLite3Library >> apiBindParameterIndex: aStatement for: aName [
+	"int sqlite3_bind_parameter_index(sqlite3_stmt*, const char* zName)"
+
+	^ self ffiCall: #(int sqlite3_bind_parameter_index (sqlite3_stmt* aStatement, String aName))
+		module: self library
+
 ]
 
 { #category : #'private - api' }
@@ -283,6 +305,18 @@ UDBCSQLite3Library >> apiTrace: handle with: callback with: appdata [
 		options: #( optMayGC );
 		function: #(void* sqlite3_trace (sqlite3* handle, FFICallback callback, ExternalAddress appdata))
 		module: self library
+
+]
+
+{ #category : #operating }
+UDBCSQLite3Library >> bindParameterCount: aStatementHandle [
+	^ self apiBindParameterCount: aStatementHandle
+]
+
+{ #category : #operating }
+UDBCSQLite3Library >> bindParameterIndex: aStatementHandle for: aName [
+	^ self apiBindParameterIndex: aStatementHandle for: aName
+	
 
 ]
 
