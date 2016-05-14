@@ -97,6 +97,15 @@ UDBCSQLite3Library >> apiBindInteger: aStatement atColumn: aColumn with: anInteg
 ]
 
 { #category : #'private - api' }
+UDBCSQLite3Library >> apiBindNull: aStatement atColumn: aColumn [
+	"int sqlite3_bind_null(sqlite3_stmt*, int)"
+
+	^ self ffiCall: #(int sqlite3_bind_null (sqlite3_stmt* aStatement, int aColumn))
+		module: self library
+
+]
+
+{ #category : #'private - api' }
 UDBCSQLite3Library >> apiBindParameterCount: aStatement [
 	"int sqlite3_bind_parameter_count(sqlite3_stmt*)"
 
@@ -511,4 +520,10 @@ UDBCSQLite3Library >> with: aStatement at: aColumn putInteger: anInteger [
 { #category : #operating }
 UDBCSQLite3Library >> with: aStatement at: aColumn putString: aString [ 
 	^self apiBindString: aStatement atColumn: aColumn with: (self pharoStringToUTF8: aString) with: -1 with: -1 
+]
+
+{ #category : #operating }
+UDBCSQLite3Library >> with: aStatement putNullAt: aColumn [ 
+	^ self apiBindNull: aStatement atColumn: aColumn
+
 ]

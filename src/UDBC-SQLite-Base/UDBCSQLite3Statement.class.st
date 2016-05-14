@@ -26,6 +26,13 @@ UDBCSQLite3Statement >> at: aColumn putInteger: anInteger [
 ]
 
 { #category : #'public - accessing' }
+UDBCSQLite3Statement >> at: aColumn putNil: anObject [
+	"Goofy interface note - anObject is ignored here."
+	"When used by UDBCSQLite3Connection, anObject will always be nil."
+	^ self library with: handle putNullAt: aColumn
+]
+
+{ #category : #'public - accessing' }
 UDBCSQLite3Statement >> at: aColumn putObject: anObject [
 	^ self library with: handle at: aColumn putBlob: (FLSerializer serializeToByteArray: anObject)
 ]
@@ -141,6 +148,11 @@ UDBCSQLite3Statement >> library [
 { #category : #'public - accessing' }
 UDBCSQLite3Statement >> nameOfColumn: aColumn [
 	^ self library nameFor: handle at: aColumn
+]
+
+{ #category : #'public - accessing' }
+UDBCSQLite3Statement >> nilAt: aColumn [
+	^ nil  
 ]
 
 { #category : #'public - accessing' }

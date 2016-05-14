@@ -34,7 +34,12 @@ UDBCSQLite3Row >> data [
 
 { #category : #'reflective operations' }
 UDBCSQLite3Row >> doesNotUnderstand: aMessage [
-	^ self at: aMessage selector asString ifAbsent: [ super doesNotUnderstand: aMessage ]
+
+	^ self at: aMessage selector asString 
+			ifAbsent: [ 
+				"20160514: This bit, for Glorp integration, feels a bit iffy."
+				self at: aMessage selector asString asUppercase 
+					ifAbsent: [ super doesNotUnderstand: aMessage ]]
 ]
 
 { #category : #initialization }
