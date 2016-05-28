@@ -115,8 +115,11 @@ UDBCSQLiteConnectionTest >> testExecuteWithInsertArray [
 	
 	rd := (db execute: 'select * from x') rows first.
 	self assert: ((rd at: 'xk') = 1).
+	self assert: ((rd at: 0) = 1).
 	self assert: ((rd at: 'iv') = 1).
+	self assert: ((rd at: 1) = 1).
 	self assert: ((rd at: 'tv') = 'two').
+	self assert: ((rd at: 2) = 'two').
 	
 ]
 
@@ -176,9 +179,11 @@ UDBCSQLiteConnectionTest >> testExecuteWithInsertDictionary [
 	
 	rd := (db execute: 'select * from x') rows first.
 	self assert: ((rd at: 'xk') = 1).
+	self assert: ((rd at: 0) = 1).
 	self assert: ((rd at: 'iv') = 1).
+	self assert: ((rd at: 1) = 1).
 	self assert: ((rd at: 'tv') = '2').
-	
+	self assert: ((rd at: 2) = '2').
 ]
 
 { #category : #tests }
@@ -204,6 +209,7 @@ UDBCSQLiteConnectionTest >> testExecuteWithInsertNoDataThenSelect [
 	rs := db execute: 'select * from x'.	
 	row := rs next.
 	self assert: ((row at: 'xk') = 1).
+	self assert: ((row at: 0) = 1).
 	rs close.
 
 	 
@@ -234,6 +240,9 @@ UDBCSQLiteConnectionTest >> testExecuteWithInsertThenSelect [
 	self assert: ((row at: 'xk') = 1).
 	self assert: ((row at: 'iv') = 1).
 	self assert: ((row at: 'tv') = 'two').
+	self assert: ((row at: 0) = 1).
+	self assert: ((row at: 1) = 1).
+	self assert: ((row at: 2) = 'two').
 	self assert: (rs next isNil).
 	rs close.
 
@@ -269,10 +278,16 @@ UDBCSQLiteConnectionTest >> testExecuteWithInsertThenSelect2 [
 	self assert: ((row at: 'xk') = 1).
 	self assert: ((row at: 'iv') = 1).
 	self assert: ((row at: 'tv') = 'two').
+	self assert: ((row at: 0) = 1).
+	self assert: ((row at: 1) = 1).
+	self assert: ((row at: 2) = 'two').
 	row := rs next.
 	self assert: ((row at: 'xk') = 2).
 	self assert: ((row at: 'iv') = 2).
 	self assert: ((row at: 'tv') = 'three').
+	self assert: ((row at: 0) = 2).
+	self assert: ((row at: 1) = 2).
+	self assert: ((row at: 2) = 'three').
 	self assert: (rs next isNil).
 	rs close.
 
@@ -300,6 +315,11 @@ UDBCSQLiteConnectionTest >> testExecuteWithInsertThenSelectDateTime [
 	rs := db execute: 'select xv from x'.	
 	row := rs next.
 	data := row at: 'xv'.
+	self assert: (data class = DateAndTime).
+	self assert: (data year = 2015).
+	self assert: (data month = 4).
+	self assert: (data dayOfMonth = 1).
+	data := row at: 0.
 	self assert: (data class = DateAndTime).
 	self assert: (data year = 2015).
 	self assert: (data month = 4).
@@ -351,6 +371,31 @@ UDBCSQLiteConnectionTest >> testExecuteWithToFail2 [
 ]
 
 { #category : #tests }
+UDBCSQLiteConnectionTest >> testInsertThenSelectInTransaction [
+	"From GlorpDatabaseBasicTest>>testNameBinding."
+	
+	res := db basicExecute: 'create table if not exists x (id integer , tv text);'.
+	self assert: (res = 0).
+	
+	res := db basicExecute: 'delete from x;'.
+	self assert: (res = 0).	
+
+	res := db beginTransaction.
+	self assert: (res = 0).
+
+	db basicExecute: 'insert into x values (10, "abc")'.
+	db basicExecute: 'insert into x values (20, "def")'.
+	db basicExecute: 'insert into x values (30, "ghi")'.
+	
+	rs := db execute: 'select * from x where id = ? or id = ?' with: { 10. 30 }.
+	self assert: rs rows size = 2.
+
+	res := db rollbackTransaction.
+	self assert: (res = 0).
+	
+]
+
+{ #category : #tests }
 UDBCSQLiteConnectionTest >> testRows [
 	| rowCount rows any |
 	
@@ -371,4 +416,32 @@ UDBCSQLiteConnectionTest >> testRows [
 	self assert: (rows last at: 'rt') = (rowCount asString, '-ZZZ').
 		
 
+]
+
+{ #category : #tests }
+UDBCSQLiteConnectionTest >> untestStatementInProgress [
+	"XXX Doesn't work yet."
+	| s1 s2 |
+		
+	res := db basicExecute: 'create table if not exists x (xk integer primary key, iv integer);'.
+	self assert: (res = 0).
+	
+	
+	db beginTransaction.
+	s1 := db prepare: 'insert into x values (NULL, ?)'.
+	s1 at: 1 putInteger: 1.
+	"s1 step."
+
+	db execute: 'delete from x;'.
+	"self should: [ db rollbackTransaction ] raise: UDBCSQLite3Error."
+	db commitTransaction.
+
+	s1 reset.
+	s1 finalize.
+	
+	
+
+	
+
+  
 ]
