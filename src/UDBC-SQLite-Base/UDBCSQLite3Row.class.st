@@ -27,6 +27,11 @@ UDBCSQLite3Row >> at: aKey put: anObject [
 ]
 
 { #category : #accessing }
+UDBCSQLite3Row >> atIndex: anIndex [
+	^ self at: anIndex ifAbsent: [  ]
+]
+
+{ #category : #accessing }
 UDBCSQLite3Row >> data [
 
 	 ^data

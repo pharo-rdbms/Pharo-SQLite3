@@ -79,6 +79,12 @@ UDBCSQLite3ResultSet >> execute: anSQLText withKeysAndValues: anObject [
 
 ]
 
+{ #category : #private }
+UDBCSQLite3ResultSet >> fillRow: aRow atNameOrIndex: anObject withValue: aValue [
+	aRow at: anObject put: aValue
+
+]
+
 { #category : #initialization }
 UDBCSQLite3ResultSet >> initialize [
 	"Initializes the receiver"
@@ -90,7 +96,7 @@ UDBCSQLite3ResultSet >> initialize [
 
 { #category : #API }
 UDBCSQLite3ResultSet >> next [
-	| nc rr |
+	| nc rr rv |
 
 	statement ifNil: [ UDBCSQLite3Misuse signal: 'This result set does not contain a prepared statement.' ].	
 	
@@ -100,7 +106,10 @@ UDBCSQLite3ResultSet >> next [
 			ifTrue: [ ^ nil ] 
 			ifFalse: [ 
 				rr := UDBCSQLite3Row new.
-				0 to: nc - 1 do: [ :c | rr at: (statement nameOfColumn: c) put: (statement valueOfColumn: c) ].
+				0 to: nc - 1 do: [ :c | 
+					rv := statement valueOfColumn: c.
+					self fillRow: rr atNameOrIndex: c withValue: rv.
+					self fillRow: rr atNameOrIndex: (statement nameOfColumn: c) withValue: rv ].  
 				"statement clearBindings." "XXX With this, the Glorp result set fails its test..."
 				moreRows := (statement step) = 100. " == SQLITE_ROW "
 				^ rr ]].
@@ -120,7 +129,7 @@ UDBCSQLite3ResultSet >> prepareStatement: anSQLText [
 
 { #category : #API }
 UDBCSQLite3ResultSet >> rows [
-	| rows nc rr |
+	| rows nc rr rv |
 
 	statement ifNil: [ UDBCSQLite3Misuse signal: 'This result set does not contain a prepared statement.' ].	
 	
@@ -130,7 +139,10 @@ UDBCSQLite3ResultSet >> rows [
 		(nc = 0)
 			ifFalse: [ 
 				rr := UDBCSQLite3Row new.
-				0 to: nc - 1 do: [ :c | rr at: (statement nameOfColumn: c) put: (statement valueOfColumn: c) ].
+				0 to: nc - 1 do: [ :c | 
+					rv := statement valueOfColumn: c.
+					self fillRow: rr atNameOrIndex: c withValue: rv.
+					self fillRow: rr atNameOrIndex: (statement nameOfColumn: c) withValue: rv ].  
 				rows add: rr ].
 		moreRows := (statement step) = 100 " == SQLITE_ROW " ].
 	

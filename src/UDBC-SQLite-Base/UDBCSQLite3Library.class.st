@@ -445,7 +445,10 @@ UDBCSQLite3Library >> prepare: aStatementHandle on: aDBHandle with: anSQLText [
 
 { #category : #cleaning }
 UDBCSQLite3Library >> reset: aStatementHandle on: aDBHandle [	
-	^ self checkForOk: (self apiReset: aStatementHandle) on: aDBHandle
+	
+	^ aStatementHandle 
+		ifNil: [ 0 ]
+		ifNotNil: [ self checkForOk: (self apiReset: aStatementHandle) on: aDBHandle ]
 	
 
 ]
