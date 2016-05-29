@@ -12,11 +12,22 @@ Class {
 }
 
 { #category : #'public - accessing' }
+UDBCSQLite3Statement >> at: aColumn putByteArray: anObject [
+	^ self library with: handle at: aColumn putBlob: anObject
+]
+
+{ #category : #'public - accessing' }
 UDBCSQLite3Statement >> at: aColumn putDateTime: aDateTime [
 
 	| s |
 	s := UDBCSQLite3DateTimeString streamContents: [ :stream | aDateTime printOn: stream ].
 	^ self library with: handle at: aColumn putString: s
+]
+
+{ #category : #'public - accessing' }
+UDBCSQLite3Statement >> at: aColumn putFloat: aFloat [
+
+	^ self library with: handle at: aColumn putFloat: aFloat
 ]
 
 { #category : #'public - accessing' }
@@ -63,6 +74,12 @@ UDBCSQLite3Statement >> bindParameterCount [
 { #category : #'public - accessing' }
 UDBCSQLite3Statement >> bindParameterIndex: aName [
 	^ self library bindParameterIndex: handle for: aName
+]
+
+{ #category : #'public - accessing' }
+UDBCSQLite3Statement >> byteArrayAt: aColumn [
+	^ self library blobFrom: handle at: aColumn
+
 ]
 
 { #category : #public }

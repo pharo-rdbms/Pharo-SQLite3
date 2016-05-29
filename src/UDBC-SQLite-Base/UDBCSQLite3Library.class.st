@@ -521,8 +521,11 @@ UDBCSQLite3Library >> with: aStatement at: aColumn putInteger: anInteger [
 ]
 
 { #category : #operating }
-UDBCSQLite3Library >> with: aStatement at: aColumn putString: aString [ 
-	^self apiBindString: aStatement atColumn: aColumn with: (self pharoStringToUTF8: aString) with: -1 with: -1 
+UDBCSQLite3Library >> with: aStatement at: aColumn putString: aString [
+	| s |
+	
+	s := self pharoStringToUTF8: aString.
+	^self apiBindString: aStatement atColumn: aColumn with: s with: s size with: -1 
 ]
 
 { #category : #operating }

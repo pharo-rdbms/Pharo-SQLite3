@@ -8,7 +8,8 @@ Class {
 	#instVars : [
 		'db',
 		'statement',
-		'moreRows'
+		'moreRows',
+		'rowClass'
 	],
 	#category : #'UDBC-SQLite-Base-Database'
 }
@@ -79,23 +80,24 @@ UDBCSQLite3ResultSet >> execute: anSQLText withKeysAndValues: anObject [
 
 ]
 
-{ #category : #private }
-UDBCSQLite3ResultSet >> fillRow: aRow atNameOrIndex: anObject withValue: aValue [
-	aRow at: anObject put: aValue
-
-]
-
 { #category : #initialization }
 UDBCSQLite3ResultSet >> initialize [
 	"Initializes the receiver"
 	
 	super initialize.
-	moreRows := true
+	moreRows := true.
+	rowClass := UDBCSQLite3Row
 
 ]
 
 { #category : #API }
 UDBCSQLite3ResultSet >> next [
+	^ self nextOfClass: self rowClass
+
+]
+
+{ #category : #API }
+UDBCSQLite3ResultSet >> nextOfClass: aRowClass [
 	| nc rr rv |
 
 	statement ifNil: [ UDBCSQLite3Misuse signal: 'This result set does not contain a prepared statement.' ].	
@@ -105,11 +107,12 @@ UDBCSQLite3ResultSet >> next [
 		(nc = 0)
 			ifTrue: [ ^ nil ] 
 			ifFalse: [ 
-				rr := UDBCSQLite3Row new.
+				rr := aRowClass new.
 				0 to: nc - 1 do: [ :c | 
 					rv := statement valueOfColumn: c.
-					self fillRow: rr atNameOrIndex: c withValue: rv.
-					self fillRow: rr atNameOrIndex: (statement nameOfColumn: c) withValue: rv ].  
+					rr atIndex: c + 1 put: rv.
+					rr atName: (statement nameOfColumn: c) put: rv ]. 
+				rr dataCount: nc. 
 				"statement clearBindings." "XXX With this, the Glorp result set fails its test..."
 				moreRows := (statement step) = 100. " == SQLITE_ROW "
 				^ rr ]].
@@ -127,8 +130,24 @@ UDBCSQLite3ResultSet >> prepareStatement: anSQLText [
 
 ]
 
+{ #category : #accessing }
+UDBCSQLite3ResultSet >> rowClass [
+	^ rowClass
+]
+
+{ #category : #accessing }
+UDBCSQLite3ResultSet >> rowClass: anObject [
+	rowClass := anObject
+]
+
 { #category : #API }
 UDBCSQLite3ResultSet >> rows [
+	^ self rowsOfClass: self rowClass
+
+]
+
+{ #category : #API }
+UDBCSQLite3ResultSet >> rowsOfClass: aRowClass [
 	| rows nc rr rv |
 
 	statement ifNil: [ UDBCSQLite3Misuse signal: 'This result set does not contain a prepared statement.' ].	
@@ -138,11 +157,12 @@ UDBCSQLite3ResultSet >> rows [
 		nc := statement dataValuesAvailable.
 		(nc = 0)
 			ifFalse: [ 
-				rr := UDBCSQLite3Row new.
+				rr := aRowClass new.
 				0 to: nc - 1 do: [ :c | 
 					rv := statement valueOfColumn: c.
-					self fillRow: rr atNameOrIndex: c withValue: rv.
-					self fillRow: rr atNameOrIndex: (statement nameOfColumn: c) withValue: rv ].  
+					rr atIndex: c + 1 put: rv.
+					rr atName: (statement nameOfColumn: c) put: rv ].   
+				rr dataCount: nc. 
 				rows add: rr ].
 		moreRows := (statement step) = 100 " == SQLITE_ROW " ].
 	
