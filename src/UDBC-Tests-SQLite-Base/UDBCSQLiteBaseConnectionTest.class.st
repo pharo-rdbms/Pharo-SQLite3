@@ -205,6 +205,27 @@ UDBCSQLiteBaseConnectionTest >> testFloat [
 ]
 
 { #category : #tests }
+UDBCSQLiteBaseConnectionTest >> testInteger [
+	"The large integer comes from Glorp's testInt8."
+	| s |	
+		
+	res := db basicExecute: 'create table x (xk integer primary key, xv integer);'.
+	self assert: (res = 0).
+
+	s := db prepare: 'insert into x values (NULL, ?)'.
+	s at: 1 putInteger: 3212321555.
+	s step. 		
+	s finalize.	
+	
+	s := db prepare: 'select * from x'.
+	s basicExecute: [ :row |
+		self assert: (row nameOfColumn: 1) equals: 'xv'.
+		self assert: (row integerAt: 1) equals: 3212321555 ].
+	s finalize.
+
+]
+
+{ #category : #tests }
 UDBCSQLiteBaseConnectionTest >> testObjectBlob [
 	| data s | 
 	
