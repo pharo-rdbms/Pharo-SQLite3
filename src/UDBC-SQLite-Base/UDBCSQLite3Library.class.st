@@ -197,7 +197,7 @@ UDBCSQLite3Library >> apiColumnDouble: aStatement atColumn: aColumn [
 UDBCSQLite3Library >> apiColumnInt: aStatement atColumn: aColumn [
 	"int sqlite3_column_int(sqlite3_stmt*, int)"
 	 
-	^ self ffiCall: #(int sqlite3_column_int (sqlite3_stmt* aStatement, int aColumn))
+	^ self ffiCall: #(sqlite3_int64 sqlite3_column_int64 (sqlite3_stmt* aStatement, int aColumn))
 		module: self library
 
 ]
