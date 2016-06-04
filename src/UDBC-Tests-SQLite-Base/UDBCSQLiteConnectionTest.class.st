@@ -383,6 +383,31 @@ UDBCSQLiteConnectionTest >> testExecuteWithToFail2 [
 ]
 
 { #category : #tests }
+UDBCSQLiteConnectionTest >> testGlorpAutoID [
+	| schema rows |
+	
+	schema := 'CREATE TABLE BOOK (ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, STUFF TEXT NOT NULL);'.
+	
+	db basicExecute: schema.
+	db beginTransaction.
+	db execute: 'insert into BOOK (STUFF) values (?)' 
+		with: #('The Bad Beginning').
+	db execute: 'insert into BOOK (STUFF) values (?)' 
+		with: #('Better Now').
+	db commitTransaction.	
+	
+	rows := (db execute: 'select last_insert_rowid() as lid') rows.
+	self assert: (rows first at: 'lid') = 2.
+	
+	rows := (db execute: 'select * from BOOK') rows.
+	self assert: (rows size = 2).
+	self assert: (rows first at: 'ID') = 1.
+	self assert: (rows first at: 'STUFF') = 'The Bad Beginning'.
+	
+
+]
+
+{ #category : #tests }
 UDBCSQLiteConnectionTest >> testGlorpCompositeKey [
 	| schema rows |
 	
@@ -401,6 +426,30 @@ UDBCSQLiteConnectionTest >> testGlorpCompositeKey [
 	self assert: (rows size = 2).
 	self assert: (rows first at: 'ID') = 1.
 	self assert: (rows first at: 'NAME') = 'User One'.
+	
+
+]
+
+{ #category : #tests }
+UDBCSQLiteConnectionTest >> testGlorpUpdate [
+	| schema rows |
+	
+	schema := 'CREATE TABLE BOOK (ID INTEGER PRIMARY KEY AUTOINCREMENT  NOT NULL ,TITLE text  NULL ,DESCRIPTION text  NULL ,COPIES_IN_STOCK int  NULL ,VERSION int  NULL );'.
+	
+	db basicExecute: schema.
+	db beginTransaction.
+	db execute: 'insert into BOOK (TITLE,COPIES_IN_STOCK,VERSION) values (?, ?, ?)' 
+		with: #('The Bad Beginning' 3 6).
+	db execute: 'UPDATE BOOK SET TITLE = ?,COPIES_IN_STOCK = ?,VERSION = ? WHERE ID = ? AND BOOK.VERSION = ?'
+		with: #('The Bad Beginning' 6 7 1 6).
+	db commitTransaction.	
+	
+	rs := db execute: 'select * from BOOK'.
+	rows := rs rows.
+	
+	self assert: (rows size = 1).
+	self assert: (rows first at: 'ID') = 1.
+	self assert: (rows first at: 'TITLE') = 'The Bad Beginning'.
 	
 
 ]

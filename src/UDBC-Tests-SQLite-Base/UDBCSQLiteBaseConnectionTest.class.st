@@ -304,6 +304,30 @@ UDBCSQLiteBaseConnectionTest >> testResultSetColumnIntrospection [
 ]
 
 { #category : #tests }
+UDBCSQLiteBaseConnectionTest >> testScaledDecimal [
+	"This test is a simplified version of GlorpNumericTest>>tesNumeric."
+	| s number float |
+	
+	number := Number readFrom: '12345678s'.
+	float := number asFloat.
+
+	res := db basicExecute: 'create table x (xk integer primary key, xv real);'.
+	self assert: (res = 0).
+	
+	s := db prepare: 'insert into x values (NULL, ?)'.
+	s at: 1 putFloat: number.
+	s step. 		
+	s finalize.	
+	
+	s := db prepare: 'select * from x'.
+	s basicExecute: [ :row |
+		self assert: (row nameOfColumn: 1) equals: 'xv'.
+		self assert: (row floatAt: 1) equals: float ].
+	s finalize.
+
+]
+
+{ #category : #tests }
 UDBCSQLiteBaseConnectionTest >> testTableNames [
 	| tables |
 	
@@ -314,6 +338,39 @@ UDBCSQLiteBaseConnectionTest >> testTableNames [
 	self assert: (tables first = 'x')
 	
 
+]
+
+{ #category : #tests }
+UDBCSQLiteBaseConnectionTest >> testTime [
+	"UDBCSQLite3 converts a given Time instance into a DateAndTime and stores that."
+	| data today s | 
+	
+	data := Time noon.
+	today := DateAndTime today.
+	
+	res := db basicExecute: 'create table x (xv time);'.
+	self assert: (res = 0).
+
+	res := db basicExecute: 'begin'.
+	self assert: (res = 0).
+	s := db prepare: 'insert into x values (?)'.
+	s at: 1 putDateTime: data.
+	s step. s finalize.
+	res := db basicExecute: 'commit'.
+	self assert: (res = 0).
+	
+	s := db prepare: 'select xv from x'.
+	s basicExecute: [  :row |
+		| v |
+		v := row dateTimeAt: 0.
+		self assert: ((v year) = today year).
+		self assert: ((v month) = today month).
+		self assert: ((v dayOfMonth) = today dayOfMonth).
+		self assert: ((v hour) = data hour). 
+		self assert: ((v minute) = data minute). 
+		self assert: ((v second) = data second) ].
+	s finalize.
+	
 ]
 
 { #category : #tests }
