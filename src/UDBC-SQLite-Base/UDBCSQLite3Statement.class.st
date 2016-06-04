@@ -18,16 +18,23 @@ UDBCSQLite3Statement >> at: aColumn putByteArray: anObject [
 
 { #category : #'public - accessing' }
 UDBCSQLite3Statement >> at: aColumn putDateTime: aDateTime [
-
-	| s |
-	s := UDBCSQLite3DateTimeString streamContents: [ :stream | aDateTime printOn: stream ].
+	| s dt |
+	
+	dt := (aDateTime isKindOf: Time)
+		ifTrue: [ aDateTime asDateAndTime ]
+		ifFalse: [ aDateTime ].
+	s := UDBCSQLite3DateTimeString streamContents: [ :stream | dt printOn: stream ].
 	^ self library with: handle at: aColumn putString: s
 ]
 
 { #category : #'public - accessing' }
 UDBCSQLite3Statement >> at: aColumn putFloat: aFloat [
-
-	^ self library with: handle at: aColumn putFloat: aFloat
+	| f |
+	
+	f := (aFloat isKindOf: Fraction)
+		ifTrue: [ aFloat asFloat ]
+		ifFalse: [ aFloat ].
+	^ self library with: handle at: aColumn putFloat: f
 ]
 
 { #category : #'public - accessing' }
@@ -100,7 +107,7 @@ UDBCSQLite3Statement >> dataTypeForObject: anObject [
 	(anObject isKindOf: Integer)
 		ifTrue: [ ^#at:putInteger: ].
 		
-	(anObject isKindOf: Float)
+	((anObject isKindOf: Float) or: [ anObject isKindOf: Fraction ])
 		ifTrue: [ ^#at:putFloat: ].
 		
 	(anObject isKindOf: String)
@@ -109,7 +116,7 @@ UDBCSQLite3Statement >> dataTypeForObject: anObject [
 	(anObject isKindOf: ByteArray)
 		ifTrue: [ ^#at:putByteArray: ].
 		
-	(anObject isKindOf: DateAndTime)
+	((anObject isKindOf: DateAndTime) or: [ anObject isKindOf: Time ])
 		ifTrue: [ ^#at:putDateTime: ].
 		
 	^ #at:putObject: 

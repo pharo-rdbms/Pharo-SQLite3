@@ -17,7 +17,7 @@ UDBCSQLite3Row >> asArray [
 	| c |
 
 	c := OrderedCollection new.
-	1 to: data values size do: [ :i |
+	1 to: self dataCount do: [ :i |
 		c add: (self atIndex: i) ].
 	^ c asArray
 ]

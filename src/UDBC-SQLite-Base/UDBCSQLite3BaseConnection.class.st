@@ -8,7 +8,8 @@ Class {
 		'dbFilename',
 		'dbHandle',
 		'isOpen',
-		'library'
+		'library',
+		'statementClass'
 	],
 	#category : #'UDBC-SQLite-Base-Connections'
 }
@@ -129,7 +130,8 @@ UDBCSQLite3BaseConnection >> initialize [
 	isOpen := false.
 	library := UDBCSQLite3Library current.
 	dbHandle := UDBCSQLite3DatabaseExternalObject new.
-	dbHandle autoRelease
+	dbHandle autoRelease.
+	statementClass := UDBCSQLite3Statement.
 ]
 
 { #category : #testing }
@@ -161,7 +163,7 @@ UDBCSQLite3BaseConnection >> open [
 UDBCSQLite3BaseConnection >> prepare: anSQLText [ 
 	| s |
 	
-	s := UDBCSQLite3Statement new.
+	s := self statementClass new.
 	s connection: self.
 	library prepare: s handle on: dbHandle with: anSQLText.
 	^ s
@@ -177,6 +179,11 @@ UDBCSQLite3BaseConnection >> reset: aStatement [
 { #category : #'public API - transactional' }
 UDBCSQLite3BaseConnection >> rollbackTransaction [
 	^ self basicExecute: 'rollback'	
+]
+
+{ #category : #accessing }
+UDBCSQLite3BaseConnection >> statementClass [
+	^ statementClass
 ]
 
 { #category : #'public API - introspection' }

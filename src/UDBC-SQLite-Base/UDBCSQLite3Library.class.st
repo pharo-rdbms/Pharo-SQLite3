@@ -23,7 +23,7 @@ UDBCSQLite3Library class >> current [
 
 { #category : #'private - accessing' }
 UDBCSQLite3Library class >> dateTimeTypes [
-	^ #('datetime' 'date' 'timestamp')
+	^ #('datetime' 'date' 'timestamp' 'time')
 ]
 
 { #category : #'unified FFI - binding' }

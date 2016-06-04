@@ -11,10 +11,17 @@ Class {
 	#category : #'UDBC-SQLite-Base-Connections'
 }
 
+{ #category : #'public API - open/close' }
+UDBCSQLite3ConnectionX >> close [
+
+	statements valuesDo: [ :s | s finalize ].
+	super close
+]
+
 { #category : #'public API - transactional' }
 UDBCSQLite3ConnectionX >> commitTransaction [
 
-	statements valuesDo: [ :s | s ifNotNil: [ s reset ]].
+	statements valuesDo: [ :s | s reset ].
 	^ super commitTransaction 
 ]
 
@@ -22,22 +29,17 @@ UDBCSQLite3ConnectionX >> commitTransaction [
 UDBCSQLite3ConnectionX >> initialize [
 
 	super initialize.
-	statements := WeakValueDictionary new
+	statements := Dictionary new
 ]
 
 { #category : #'public API - operating' }
 UDBCSQLite3ConnectionX >> prepare: anSQLText [
-	| s |
-	
-	s := statements at: anSQLText ifAbsent: [  ].
-	s ifNil: [ s := super prepare: anSQLText ].
-	s reset.
-	^ s
+	^ super prepare: anSQLText
 ]
 
 { #category : #'public API - transactional' }
 UDBCSQLite3ConnectionX >> rollbackTransaction [
 
-	statements valuesDo: [ :s | s ifNotNil: [ s reset ]].
+	statements valuesDo: [ :s | s reset ].
 	^ super rollbackTransaction 
 ]
