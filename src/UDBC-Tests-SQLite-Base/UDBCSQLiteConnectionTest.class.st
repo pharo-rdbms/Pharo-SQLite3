@@ -474,6 +474,33 @@ UDBCSQLiteConnectionTest >> testGlorpUpdate [
 	self assert: (rows size = 1).
 	self assert: (rows first at: 'ID') = 1.
 	self assert: (rows first at: 'TITLE') = 'The Bad Beginning'.
+	self assert: (rows first at: 'COPIES_IN_STOCK') = 6.
+	
+
+]
+
+{ #category : #tests }
+UDBCSQLiteConnectionTest >> testGlorpUpdateTwice [
+	| schema rows |
+	
+	schema := 'CREATE TABLE BOOK (ID INTEGER PRIMARY KEY AUTOINCREMENT  NOT NULL ,TITLE text  NULL ,DESCRIPTION text  NULL ,COPIES_IN_STOCK int  NULL ,VERSION int  NULL );'.
+	
+	db basicExecute: schema.
+	db beginTransaction.
+	db execute: 'insert into BOOK (TITLE,COPIES_IN_STOCK,VERSION) values (?, ?, ?)' 
+		with: #('The Bad Beginning' 3 6).
+	db execute: 'UPDATE BOOK SET COPIES_IN_STOCK = 7'.
+	db execute: 'UPDATE BOOK SET TITLE = ?,COPIES_IN_STOCK = ?,VERSION = ? WHERE ID = ? AND BOOK.VERSION = ?'
+		with: #('The Bad Beginning' 6 7 1 6).
+	db commitTransaction.	
+	
+	rs := db execute: 'select * from BOOK'.
+	rows := rs rows.
+	
+	self assert: (rows size = 1).
+	self assert: (rows first at: 'ID') = 1.
+	self assert: (rows first at: 'TITLE') = 'The Bad Beginning'.
+	self assert: (rows first at: 'COPIES_IN_STOCK') = 6.
 	
 
 ]
