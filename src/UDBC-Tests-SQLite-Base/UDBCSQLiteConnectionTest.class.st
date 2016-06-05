@@ -431,6 +431,30 @@ UDBCSQLiteConnectionTest >> testGlorpCompositeKey [
 ]
 
 { #category : #tests }
+UDBCSQLiteConnectionTest >> testGlorpDoubleInsertPrimaryKey [
+	| schema rows |
+	
+	schema := 'CREATE TABLE GR_USER (ID integer  NOT NULL ,NAME text  NULL , CONSTRAINT GR_USER_PK PRIMARY KEY  (ID), CONSTRAINT GR_USER_UNIQ UNIQUE  (ID));'.
+	
+	db basicExecute: schema.
+	db beginTransaction.
+	db execute: 'insert into GR_USER values (?, ?)' 
+		with: #(1 'Fred').
+	self should: [ db execute: 'insert into GR_USER values (?, ?)' with: #(1 'Barney') ]
+		raise: UDBCSQLite3Error.
+	db commitTransaction.	
+	
+	rs := db execute: 'select * from GR_USER'.
+	rows := rs rows.
+	
+	self assert: (rows size = 1).
+	self assert: (rows first at: 'ID') = 1.
+	self assert: (rows first at: 'NAME') = 'Fred'.
+	
+
+]
+
+{ #category : #tests }
 UDBCSQLiteConnectionTest >> testGlorpUpdate [
 	| schema rows |
 	
