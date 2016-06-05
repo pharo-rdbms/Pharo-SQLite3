@@ -8,6 +8,9 @@ Class {
 		'connection',
 		'handle'
 	],
+	#pools : [
+		'UDBCSQLite3Constants'
+	],
 	#category : #'UDBC-SQLite-Base-Database'
 }
 
@@ -18,12 +21,9 @@ UDBCSQLite3Statement >> at: aColumn putByteArray: anObject [
 
 { #category : #'public - accessing' }
 UDBCSQLite3Statement >> at: aColumn putDateTime: aDateTime [
-	| s dt |
+	| s |
 	
-	dt := (aDateTime isKindOf: Time)
-		ifTrue: [ aDateTime asDateAndTime ]
-		ifFalse: [ aDateTime ].
-	s := UDBCSQLite3DateTimeString streamContents: [ :stream | dt printOn: stream ].
+	s := UDBCSQLite3DateTimeString streamContents: [ :stream | aDateTime asDateAndTime printOn: stream ].
 	^ self library with: handle at: aColumn putString: s
 ]
 
@@ -107,7 +107,7 @@ UDBCSQLite3Statement >> dataTypeForObject: anObject [
 	(anObject isKindOf: Integer)
 		ifTrue: [ ^#at:putInteger: ].
 		
-	((anObject isKindOf: Float) or: [ anObject isKindOf: Fraction ])
+	(self isFloatLike: anObject)
 		ifTrue: [ ^#at:putFloat: ].
 		
 	(anObject isKindOf: String)
@@ -116,7 +116,7 @@ UDBCSQLite3Statement >> dataTypeForObject: anObject [
 	(anObject isKindOf: ByteArray)
 		ifTrue: [ ^#at:putByteArray: ].
 		
-	((anObject isKindOf: DateAndTime) or: [ anObject isKindOf: Time ])
+	(self isDateAndTimeLike: anObject)
 		ifTrue: [ ^#at:putDateTime: ].
 		
 	^ #at:putObject: 
@@ -164,6 +164,22 @@ UDBCSQLite3Statement >> integerAt: aColumn [
 	^self library integerFrom: handle at: aColumn
 ]
 
+{ #category : #'private - testing' }
+UDBCSQLite3Statement >> isDateAndTimeLike: anObject [
+
+	^ ((anObject isKindOf: DateAndTime) or: [ anObject isKindOf: Date ])
+			or: [ anObject isKindOf: Time ]
+		
+
+]
+
+{ #category : #'private - testing' }
+UDBCSQLite3Statement >> isFloatLike: anObject [
+	^ (anObject isKindOf: Float) or: [ anObject isKindOf: Fraction ]
+		
+
+]
+
 { #category : #private }
 UDBCSQLite3Statement >> library [
 	^UDBCSQLite3Library current
@@ -189,9 +205,27 @@ UDBCSQLite3Statement >> reset [
 	connection reset: self
 ]
 
-{ #category : #private }
+{ #category : #public }
 UDBCSQLite3Statement >> step [
-	^ UDBCSQLite3Library current step: handle
+	^ self stepOk: (self library step: handle)
+]
+
+{ #category : #private }
+UDBCSQLite3Statement >> stepOk: aValue [
+
+	"These are normal conditions."	
+	(aValue = ROW) ifTrue: [ ^ ROW ].
+	(aValue = DONE) ifTrue: [ ^ DONE ].
+	
+	"These are error conditions."
+	(aValue = BUSY)
+		ifTrue: [ connection signal: UDBCSQLite3Busy with: aValue ].
+	(aValue = MISUSE)
+		ifTrue: [ connection signal: UDBCSQLite3Misuse with: aValue ].				
+
+	"Catch any error not specifically handled above."
+	connection signal: UDBCSQLite3Error with: aValue
+
 ]
 
 { #category : #operating }

@@ -181,6 +181,11 @@ UDBCSQLite3BaseConnection >> rollbackTransaction [
 	^ self basicExecute: 'rollback'	
 ]
 
+{ #category : #private }
+UDBCSQLite3BaseConnection >> signal: exceptionClass with: value [
+	library signal: exceptionClass with: value on: dbHandle
+]
+
 { #category : #accessing }
 UDBCSQLite3BaseConnection >> statementClass [
 	^ statementClass
