@@ -307,6 +307,44 @@ UDBCSQLiteConnectionTest >> testExecuteWithInsertThenSelect2 [
 ]
 
 { #category : #tests }
+UDBCSQLiteConnectionTest >> testExecuteWithInsertThenSelect3 [
+	| s row idx |
+	
+	res := db basicExecute: 'create table if not exists x (xk integer primary key, iv integer, tv text);'.
+	self assert: (res = 0).
+	
+	res := db basicExecute: 'delete from x;'.
+	self assert: (res = 0).	
+
+	res := db basicExecute: 'begin'.
+	self assert: (res = 0).
+	s := db prepare: 'insert into x values (NULL, ?, ?)'.
+	1 to: 10 do: [ :x |
+		s at: 1 putInteger: x * x.
+		s at: 2 putString: x asString, ' * ', x asString.
+		s step. s clearBindings. s reset. ].		
+	s finalize.
+	res := db basicExecute: 'commit'.
+	self assert: (res = 0).
+
+	idx := 1.	
+	rs := db execute: 'select * from x where iv < ?' with: #(27).	
+	[ (row := rs next) isNotNil ] whileTrue: [
+		self assert: ((row at: 'xk') = idx).
+		self assert: ((row at: 'iv') = (idx * idx)).
+		self assert: ((row at: 'tv') = (idx asString, ' * ', idx asString)).
+		self assert: ((row at: 1) = idx).
+		self assert: ((row at: 2) = (idx * idx)).
+		self assert: ((row at: 3) = (idx asString, ' * ', idx asString)).
+		self assert: (row first = idx).
+		self assert: (row last = (idx asString, ' * ', idx asString)).
+		idx := idx + 1 ].
+	rs close.
+	self assert: (idx = 6)
+	 
+]
+
+{ #category : #tests }
 UDBCSQLiteConnectionTest >> testExecuteWithInsertThenSelectDateTime [
 	| row data |
 	
