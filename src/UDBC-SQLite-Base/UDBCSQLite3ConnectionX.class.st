@@ -6,7 +6,7 @@ Class {
 	#name : #UDBCSQLite3ConnectionX,
 	#superclass : #UDBCSQLite3Connection,
 	#instVars : [
-		'statements'
+		'statementsCache'
 	],
 	#category : #'UDBC-SQLite-Base-Connections'
 }
@@ -14,32 +14,30 @@ Class {
 { #category : #'public API - open/close' }
 UDBCSQLite3ConnectionX >> close [
 
-	statements valuesDo: [ :s | s finalize ].
+	statementsCache valuesDo: [ :s | s finalize ].
 	super close
 ]
 
-{ #category : #'public API - transactional' }
-UDBCSQLite3ConnectionX >> commitTransaction [
+{ #category : #'public API - operating' }
+UDBCSQLite3ConnectionX >> finalize: anSQLText [
 
-	statements valuesDo: [ :s | s reset ].
-	^ super commitTransaction 
+	(statementsCache includesKey: anSQLText) ifTrue: [ 
+		statementsCache removeKey: anSQLText ]
+
 ]
 
 { #category : #initialization }
 UDBCSQLite3ConnectionX >> initialize [
 
 	super initialize.
-	statements := Dictionary new
+	statementsCache := Dictionary new
 ]
 
 { #category : #'public API - operating' }
 UDBCSQLite3ConnectionX >> prepare: anSQLText [
-	^ super prepare: anSQLText
-]
 
-{ #category : #'public API - transactional' }
-UDBCSQLite3ConnectionX >> rollbackTransaction [
+	(statementsCache includesKey: anSQLText) ifFalse: [ 
+			statementsCache at: anSQLText put: (super prepare: anSQLText) ].
+	^ statementsCache at: anSQLText
 
-	statements valuesDo: [ :s | s reset ].
-	^ super rollbackTransaction 
 ]

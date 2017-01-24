@@ -135,6 +135,7 @@ UDBCSQLite3Statement >> dateTimeAt: aColumn [
 { #category : #initialization }
 UDBCSQLite3Statement >> finalize [
 	
+	connection finalize: self sqlText.
 	"Let FFIExternalResourceManager take care."
 	"UDBCSQLite3Library current apiFinalize: handle."
 	handle := nil
@@ -205,6 +206,11 @@ UDBCSQLite3Statement >> reset [
 	connection reset: self
 ]
 
+{ #category : #operating }
+UDBCSQLite3Statement >> sqlText [ 
+	^ self library sqlText: handle
+]
+
 { #category : #public }
 UDBCSQLite3Statement >> step [
 	^ self stepOk: (self library step: handle)
@@ -230,7 +236,7 @@ UDBCSQLite3Statement >> stepOk: aValue [
 
 { #category : #operating }
 UDBCSQLite3Statement >> stringAt: aColumn [	 
-	^ UDBCSQLite3Library current stringFrom: handle at: aColumn
+	^ self library stringFrom: handle at: aColumn
 ]
 
 { #category : #public }

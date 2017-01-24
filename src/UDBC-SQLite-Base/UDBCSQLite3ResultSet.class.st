@@ -124,9 +124,9 @@ UDBCSQLite3ResultSet >> nextOfClass: aRowClass [
 { #category : #private }
 UDBCSQLite3ResultSet >> prepareStatement: anSQLText [
 
-	statement isNil
-		ifTrue: [ statement := db prepare: anSQLText ]
-		ifFalse: [ statement clearBindings; reset ].
+	statement := db prepare: anSQLText.
+	statement clearBindings.
+	statement	reset
 
 ]
 

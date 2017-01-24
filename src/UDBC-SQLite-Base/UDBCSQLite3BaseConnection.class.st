@@ -123,6 +123,11 @@ UDBCSQLite3BaseConnection >> commitTransaction [
 	^ self basicExecute: 'commit'	
 ]
 
+{ #category : #'public API - operating' }
+UDBCSQLite3BaseConnection >> finalize: anSQLText [ 
+	"no-op"	
+]
+
 { #category : #initialization }
 UDBCSQLite3BaseConnection >> initialize [
 	
@@ -200,7 +205,8 @@ UDBCSQLite3BaseConnection >> tableNames [
 		ifTrue: [ 
 			tables := OrderedCollection new.
 			s := self prepare: 'select tbl_name from sqlite_master where type = "table"'.
-	  		s basicExecute: [ :row | tables add: (row stringAt: 0) ].
+	  		s basicExecute: [ :row |
+				(row dataValuesAvailable > 0) ifTrue: [ tables add: (row stringAt: 0) ]].
 	  		s finalize.
 			^ tables ]
 ]

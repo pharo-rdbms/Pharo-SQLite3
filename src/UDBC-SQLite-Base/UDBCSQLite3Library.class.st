@@ -289,6 +289,15 @@ UDBCSQLite3Library >> apiReset: handle [
 ]
 
 { #category : #'private - api' }
+UDBCSQLite3Library >> apiSql: handle [
+	"const char *sqlite3_sql(sqlite3_stmt*)"
+	 
+	^ self ffiCall: #(String sqlite3_sql (sqlite3_stmt* handle))
+		module: self library
+
+]
+
+{ #category : #'private - api' }
 UDBCSQLite3Library >> apiStep: handle [
 	"int sqlite3_step(sqlite3_stmt*)"
 	 
@@ -458,6 +467,13 @@ UDBCSQLite3Library >> signal: exceptionClass with: value on: handle [
 	(exceptionClass new)
 		resultCode: value; 
 		signal: (self apiErrorMessage: handle)
+]
+
+{ #category : #stepping }
+UDBCSQLite3Library >> sqlText: aStatementHandle [	
+	^ self apiSql: aStatementHandle
+	
+
 ]
 
 { #category : #stepping }
