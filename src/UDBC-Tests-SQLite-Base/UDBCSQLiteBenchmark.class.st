@@ -5,23 +5,35 @@ Class {
 	#name : #UDBCSQLiteBenchmark,
 	#superclass : #Object,
 	#instVars : [
-		'db'
+		'db',
+		'stmt'
 	],
 	#category : #'UDBC-Tests-SQLite-Base-Connections'
 }
 
-{ #category : #processing }
+{ #category : #running }
+UDBCSQLiteBenchmark >> basicExecute: anSQLText times: aCount [
+	
+	db beginTransaction.
+	1 to: aCount do: [ :i |
+		db basicExecute: anSQLText ].
+	db commitTransaction.
+
+
+]
+
+{ #category : #'connecting-disconnecting' }
 UDBCSQLiteBenchmark >> connectBy: aConnectionClass [
 	db := aConnectionClass openOn: ':memory:'
 ]
 
-{ #category : #processing }
+{ #category : #'connecting-disconnecting' }
 UDBCSQLiteBenchmark >> disconnect [
 	db close
 ]
 
-{ #category : #processing }
-UDBCSQLiteBenchmark >> run: anSQLText times: aCount bindingsBlock: bindingsBlock [
+{ #category : #running }
+UDBCSQLiteBenchmark >> execute: anSQLText times: aCount bindingsBlock: bindingsBlock [
 	
 	db beginTransaction.
 	1 to: aCount do: [ :i |
@@ -31,7 +43,27 @@ UDBCSQLiteBenchmark >> run: anSQLText times: aCount bindingsBlock: bindingsBlock
 
 ]
 
-{ #category : #processing }
+{ #category : #running }
+UDBCSQLiteBenchmark >> finalizeStatement [
+	stmt ifNotNil: [ stmt finalize ]
+
+
+]
+
+{ #category : #running }
+UDBCSQLiteBenchmark >> prepStep: anSQLText times: aCount bindingsBlock: bindingsBlock [
+	
+	stmt := db prepare: anSQLText.
+	db beginTransaction.
+	1 to: aCount do: [ :i |
+		bindingsBlock value: stmt value: i.
+		stmt step; clearBindings; reset ].
+	db commitTransaction.
+
+
+]
+
+{ #category : #running }
 UDBCSQLiteBenchmark >> runBlock: aBlock [
 	
 	db beginTransaction.
