@@ -123,6 +123,16 @@ UDBCSQLite3BaseConnection >> commitTransaction [
 	^ self basicExecute: 'commit'	
 ]
 
+{ #category : #'public API - extensions' }
+UDBCSQLite3BaseConnection >> disableExtensions [
+	^ library disableLoadExtension: dbHandle 
+]
+
+{ #category : #'public API - extensions' }
+UDBCSQLite3BaseConnection >> enableExtensions [
+	^ library enableLoadExtension: dbHandle 
+]
+
 { #category : #'public API - operating' }
 UDBCSQLite3BaseConnection >> finalize: anSQLText [ 
 	"no-op"	
@@ -142,6 +152,11 @@ UDBCSQLite3BaseConnection >> initialize [
 { #category : #testing }
 UDBCSQLite3BaseConnection >> isOpen [
 	^ isOpen
+]
+
+{ #category : #'public API - extensions' }
+UDBCSQLite3BaseConnection >> loadExtension: aFilename [
+	^ library loadExtension: dbHandle with: aFilename 
 ]
 
 { #category : #private }

@@ -230,6 +230,19 @@ UDBCSQLite3Library >> apiColumnType: aStatement atColumn: aColumn [
 ]
 
 { #category : #'private - api' }
+UDBCSQLite3Library >> apiConfigLoadExtension: dbHandle with: op with: onoff with: retpointer [
+	"This is a specific invocation of sqlite3_db_config(sqlite3*, int, ...)."
+
+	^self ffiCall: #(int sqlite3_db_config (sqlite3 *dbHandle, int op, int onoff, int *retpointer))
+		module: self library
+
+"Notes from https://www.sqlite.org/c3ref/c_dbconfig_enable_fkey.html:
+op == SQLITE_DBCONFIG_ENABLE_LOAD_EXTENSION
+This option is used to enable or disable the sqlite3_load_extension() interface independently of the load_extension() SQL function. The sqlite3_enable_load_extension() API enables or disables both the C-API sqlite3_load_extension() and the SQL function load_extension(). There should be two additional arguments. When the first argument to this interface is 1, then only the C-API is enabled and the SQL function remains disabled. If the first argument to this interface is 0, then both the C-API and the SQL function are disabled. If the first argument is -1, then no changes are made to state of either the C-API or the SQL function. The second parameter is a pointer to an integer into which is written 0 or 1 to indicate whether sqlite3_load_extension() interface is disabled or enabled following this call. The second parameter may be a NULL pointer, in which case the new setting is not reported back. 
+"	
+]
+
+{ #category : #'private - api' }
 UDBCSQLite3Library >> apiDataCount: handle [
 	"int sqlite3_data_count(sqlite3_stmt*)"
 	
@@ -260,6 +273,15 @@ UDBCSQLite3Library >> apiFinalize: handle [
 	 
 	^self ffiCall: #(int sqlite3_finalize(sqlite3_stmt *handle)) module: self library.
 	 
+]
+
+{ #category : #'private - api' }
+UDBCSQLite3Library >> apiLoadExtension: dbHandle with: zFile with: zProc with: pzErrMsg [
+	"int sqlite3_load_extension(sqlite3*, const char*, const char*, char **)."
+
+	^self ffiCall: #(int sqlite3_load_extension (sqlite3 *dbHandle, String zFile, const char *zProc, char **pzErrMsg))
+		module: self library
+
 ]
 
 { #category : #'private - api' }
@@ -391,6 +413,26 @@ UDBCSQLite3Library >> dataValuesAvailable: aStatementHandle [
 
 ]
 
+{ #category : #configuring }
+UDBCSQLite3Library >> disableLoadExtension: aHandle [
+	^ self checkForOk: (self apiConfigLoadExtension: aHandle with: 1005 with: 0 with: ExternalAddress new) 
+		on: aHandle
+		
+"Magic number 1005 = SQLITE_DBCONFIG_ENABLE_LOAD_EXTENSION.
+See comment in #apiConfigLoadExtension:with:with:with:."
+
+]
+
+{ #category : #configuring }
+UDBCSQLite3Library >> enableLoadExtension: aHandle [
+	^ self checkForOk: (self apiConfigLoadExtension: aHandle with: 1005 with: 1 with: ExternalAddress new) 
+		on: aHandle
+		
+"Magic number 1005 = SQLITE_DBCONFIG_ENABLE_LOAD_EXTENSION.
+See comment in #apiConfigLoadExtension:with:with:with:."
+
+]
+
 { #category : #operating }
 UDBCSQLite3Library >> execute: anSQLText on: aDBHandle [
 	| null |	
@@ -420,6 +462,16 @@ UDBCSQLite3Library >> library [
 
 	Smalltalk os isMacOS ifTrue: [ ^ #sqlite3 ].
 	^ 'sqlite3'
+]
+
+{ #category : #'private - api' }
+UDBCSQLite3Library >> loadExtension: dbHandle with: aFilename [
+
+	^ self checkForOk: (self apiLoadExtension: dbHandle 
+										with: aFilename
+										with: ExternalAddress new
+										with: ExternalAddress new)
+		on: dbHandle
 ]
 
 { #category : #accessing }
