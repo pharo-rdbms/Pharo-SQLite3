@@ -22,3 +22,8 @@ UDBCSQLite3Connection >> execute: anSQLText with: anObject [
 	^ UDBCSQLite3ResultSet new execute: anSQLText with: anObject on: self	
 
 ]
+
+{ #category : #accessing }
+UDBCSQLite3Connection >> queryEncoding [
+	^ #utf8
+]

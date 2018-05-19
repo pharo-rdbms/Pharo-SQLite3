@@ -15,6 +15,21 @@ Class {
 	#category : #'UDBC-SQLite-Base-UFFI'
 }
 
+{ #category : #'private - accessing' }
+UDBCSQLite3Library class >> booleanSQLFalseWords [
+	^ #('false' 'f')
+]
+
+{ #category : #'private - accessing' }
+UDBCSQLite3Library class >> booleanSQLTrueWords [
+	^ #('true' 't')
+]
+
+{ #category : #'private - accessing' }
+UDBCSQLite3Library class >> booleanTypes [
+	^ #('boolean' 'bool')
+]
+
 { #category : #factory }
 UDBCSQLite3Library class >> current [
 
@@ -376,17 +391,18 @@ UDBCSQLite3Library >> booleanFrom: aStatement at: aColumn [
 	| declared selector value |
 	
 	declared := self apiColumnDeclaredType: aStatement atColumn: aColumn.
-	(#('boolean' 'bool') includes: declared asLowercase) ifFalse: [ 
+	(self class booleanTypes includes: declared asLowercase) ifFalse: [ 
 		UDBCSQLite3Error signal: 'Column is not declared as a boolean.' ].
 
 	selector := DataTypeMap at: (self apiColumnType: aStatement atColumn: aColumn).
+	(selector = #nilAt:) ifTrue: [ ^ nil ].
 	(selector = #stringAt:) 
 		ifTrue: [
 			value := self apiColumnText: aStatement atColumn: aColumn.
-			(#('true' 't') includes: value asLowercase) 
+			(self class booleanSQLTrueWords includes: value asLowercase) 
 				ifTrue: [ ^ true ]
 				ifFalse: [
-					(#('false' 'f') includes: value asLowercase)
+					(self class booleanSQLFalseWords includes: value asLowercase)
 						ifTrue: [ ^ false ]
 						ifFalse: [ UDBCSQLite3Error signal: 'Column value cannot be read as a boolean.' ]]].
 	(selector = #integerAt:) 
@@ -588,10 +604,15 @@ UDBCSQLite3Library >> trace: handle with: callback with: appdata [
 UDBCSQLite3Library >> typeFor: aStatement at: aColumn [
 	| selector declared |
 	
+	declared := (self apiColumnDeclaredType: aStatement atColumn: aColumn).
+	declared notNil ifTrue: [
+		"Handle column type of boolean as a special case."
+		(self class booleanTypes includes: declared) ifTrue: [ ^ #booleanAt: ]].
+	
 	selector := DataTypeMap at: (self apiColumnType: aStatement atColumn: aColumn).
 	(selector = #stringAt:) ifTrue: [
-		declared := (self apiColumnDeclaredType: aStatement atColumn: aColumn).
 		declared notNil ifTrue: [ 
+			"Handle column type of date/time as a special case."
 			(self class dateTimeTypes includes: declared asLowercase) ifTrue: [ ^ #dateTimeAt: ]]].
 	^ selector
 
