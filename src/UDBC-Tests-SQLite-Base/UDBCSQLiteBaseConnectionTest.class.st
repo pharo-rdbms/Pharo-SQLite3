@@ -60,6 +60,208 @@ UDBCSQLiteBaseConnectionTest >> testBasicExecuteSyntaxError [
 ]
 
 { #category : #tests }
+UDBCSQLiteBaseConnectionTest >> testBooleanColumnTypeMismatch [
+	| s | 
+	
+	res := db basicExecute: 'create table x (xk integer primary key, xv notboolean);'.
+	self assert: (res = 0).
+
+	s := db prepare: 'select xv from x'.
+	s basicExecute: [  :row |
+		self should: [ row booleanAt: 0 ] raise: UDBCSQLite3Error ].
+	s finalize.
+	
+]
+
+{ #category : #tests }
+UDBCSQLiteBaseConnectionTest >> testBooleanObject [
+	| s | 
+	
+	res := db basicExecute: 'create table x (xk integer primary key, xv boolean);'.
+	self assert: (res = 0).
+
+	res := db basicExecute: 'begin'.
+	self assert: (res = 0).
+	s := db prepare: 'insert into x values (NULL, ?)'.
+	s at: 1 putObject: true.
+	s step. s finalize.
+	res := db basicExecute: 'commit'.
+	self assert: (res = 0).
+	
+	s := db prepare: 'select xv from x'.
+	s basicExecute: [  :row |
+		| v |
+		v := row objectAt: 0.
+		self assert: v equals: true ].
+	s finalize.
+	
+]
+
+{ #category : #tests }
+UDBCSQLiteBaseConnectionTest >> testBooleanWriteIntegerOneThenRead [
+	| s | 
+	
+	res := db basicExecute: 'create table x (xk integer primary key, xv boolean);'.
+	self assert: (res = 0).
+
+	res := db basicExecute: 'begin'.
+	self assert: (res = 0).
+	s := db prepare: 'insert into x values (NULL, ?)'.
+	s at: 1 putInteger: 1.
+	s step. s finalize.
+	res := db basicExecute: 'commit'.
+	self assert: (res = 0).
+	
+	s := db prepare: 'select xv from x'.
+	s basicExecute: [  :row |
+		| v |
+		v := row booleanAt: 0.
+		self assert: v equals: true ].
+	s finalize.
+	
+]
+
+{ #category : #tests }
+UDBCSQLiteBaseConnectionTest >> testBooleanWriteIntegerTwoThenRead [
+	| s | 
+	
+	res := db basicExecute: 'create table x (xk integer primary key, xv boolean);'.
+	self assert: (res = 0).
+
+	res := db basicExecute: 'begin'.
+	self assert: (res = 0).
+	s := db prepare: 'insert into x values (NULL, ?)'.
+	s at: 1 putInteger: 2.
+	s step. s finalize.
+	res := db basicExecute: 'commit'.
+	self assert: (res = 0).
+	
+	s := db prepare: 'select xv from x'.
+	s basicExecute: [  :row |
+		self should: [ row booleanAt: 0 ] raise: UDBCSQLite3Error ].
+	s finalize.
+	
+]
+
+{ #category : #tests }
+UDBCSQLiteBaseConnectionTest >> testBooleanWriteIntegerZeroThenRead [
+	| s | 
+	
+	res := db basicExecute: 'create table x (xk integer primary key, xv boolean);'.
+	self assert: (res = 0).
+
+	res := db basicExecute: 'begin'.
+	self assert: (res = 0).
+	s := db prepare: 'insert into x values (NULL, ?)'.
+	s at: 1 putInteger: 0.
+	s step. s finalize.
+	res := db basicExecute: 'commit'.
+	self assert: (res = 0).
+	
+	s := db prepare: 'select xv from x'.
+	s basicExecute: [  :row |
+		| v |
+		v := row booleanAt: 0.
+		self assert: v equals: false ].
+	s finalize.
+	
+]
+
+{ #category : #tests }
+UDBCSQLiteBaseConnectionTest >> testBooleanWriteStringFalseThenRead [
+	| s | 
+	
+	res := db basicExecute: 'create table x (xk integer primary key, xv boolean);'.
+	self assert: (res = 0).
+
+	res := db basicExecute: 'begin'.
+	self assert: (res = 0).
+	s := db prepare: 'insert into x values (NULL, ?)'.
+	s at: 1 putString: 'false'.
+	s step. s finalize.
+	res := db basicExecute: 'commit'.
+	self assert: (res = 0).
+	
+	s := db prepare: 'select xv from x'.
+	s basicExecute: [  :row |
+		| v |
+		v := row booleanAt: 0.
+		self assert: v equals: false ].
+	s finalize.
+	
+]
+
+{ #category : #tests }
+UDBCSQLiteBaseConnectionTest >> testBooleanWriteStringTrueThenRead [
+	| s | 
+	
+	res := db basicExecute: 'create table x (xk integer primary key, xv boolean);'.
+	self assert: (res = 0).
+
+	res := db basicExecute: 'begin'.
+	self assert: (res = 0).
+	s := db prepare: 'insert into x values (NULL, ?)'.
+	s at: 1 putString: 'true'.
+	s step. s finalize.
+	res := db basicExecute: 'commit'.
+	self assert: (res = 0).
+	
+	s := db prepare: 'select xv from x'.
+	s basicExecute: [  :row |
+		| v |
+		v := row booleanAt: 0.
+		self assert: v equals: true ].
+	s finalize.
+	
+]
+
+{ #category : #tests }
+UDBCSQLiteBaseConnectionTest >> testBooleanWriteStringTwoThenRead [
+	| s | 
+	
+	res := db basicExecute: 'create table x (xk integer primary key, xv boolean);'.
+	self assert: (res = 0).
+
+	res := db basicExecute: 'begin'.
+	self assert: (res = 0).
+	s := db prepare: 'insert into x values (NULL, ?)'.
+	s at: 1 putString: '2'.
+	s step. s finalize.
+	res := db basicExecute: 'commit'.
+	self assert: (res = 0).
+	
+	s := db prepare: 'select xv from x'.
+	s basicExecute: [  :row |
+		self should: [ row booleanAt: 0 ] raise: UDBCSQLite3Error ].
+	s finalize.
+	
+]
+
+{ #category : #tests }
+UDBCSQLiteBaseConnectionTest >> testBooleanWriteThenRead [
+	| s | 
+	
+	res := db basicExecute: 'create table x (xk integer primary key, xv boolean);'.
+	self assert: (res = 0).
+
+	res := db basicExecute: 'begin'.
+	self assert: (res = 0).
+	s := db prepare: 'insert into x values (NULL, ?)'.
+	s at: 1 putBoolean: true.
+	s step. s finalize.
+	res := db basicExecute: 'commit'.
+	self assert: (res = 0).
+	
+	s := db prepare: 'select xv from x'.
+	s basicExecute: [  :row |
+		| v |
+		v := row booleanAt: 0.
+		self assert: v equals: true ].
+	s finalize.
+	
+]
+
+{ #category : #tests }
 UDBCSQLiteBaseConnectionTest >> testColumnNames [
 	| columns |
 	
@@ -178,6 +380,21 @@ UDBCSQLiteBaseConnectionTest >> testDateAndTime [
 		self assert: ((v dayOfMonth) = 1) ].
 	s finalize.
 	
+]
+
+{ #category : #tests }
+UDBCSQLiteBaseConnectionTest >> testDeclaredColumnTypes [
+	| columns |
+	
+	res := db basicExecute: 'create table x (xk integer, xv blob, xb boolean);'.
+	self assert: (res = 0).
+	columns := db declaredColumnTypesFor: 'x'.
+	self assert: (columns size = 3).
+	self assert: (columns first = 'integer').
+	self assert: (columns second = 'blob').
+	self assert: (columns third = 'boolean').
+	
+
 ]
 
 { #category : #tests }
