@@ -168,6 +168,53 @@ UDBCSQLiteBaseConnectionTest >> testBooleanWriteIntegerZeroThenRead [
 ]
 
 { #category : #tests }
+UDBCSQLiteBaseConnectionTest >> testBooleanWriteNilThenRead [
+	| s | 
+	
+	res := db basicExecute: 'create table x (xk integer primary key, xv boolean);'.
+	self assert: (res = 0).
+
+	res := db basicExecute: 'begin'.
+	self assert: (res = 0).
+	s := db prepare: 'insert into x values (NULL, ?)'.
+	s at: 1 putNil: nil.
+	s step. s finalize.
+	res := db basicExecute: 'commit'.
+	self assert: (res = 0).
+	
+	s := db prepare: 'select xv from x'.
+	s basicExecute: [  :row |
+		| v |
+		v := row booleanAt: 0.
+		self assert: v equals: nil ].
+	s finalize.
+	
+]
+
+{ #category : #tests }
+UDBCSQLiteBaseConnectionTest >> testBooleanWriteSQLNullThenRead [
+	| s | 
+	
+	res := db basicExecute: 'create table x (xk integer primary key, xv boolean);'.
+	self assert: (res = 0).
+
+	res := db basicExecute: 'begin'.
+	self assert: (res = 0).
+	s := db prepare: 'insert into x values (NULL, NULL)'.
+	s step. s finalize.
+	res := db basicExecute: 'commit'.
+	self assert: (res = 0).
+	
+	s := db prepare: 'select xv from x'.
+	s basicExecute: [  :row |
+		| v |
+		v := row booleanAt: 0.
+		self assert: v equals: nil ].
+	s finalize.
+	
+]
+
+{ #category : #tests }
 UDBCSQLiteBaseConnectionTest >> testBooleanWriteStringFalseThenRead [
 	| s | 
 	

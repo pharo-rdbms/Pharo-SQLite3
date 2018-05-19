@@ -126,6 +126,108 @@ UDBCSQLiteConnectionTest >> testExecuteWithInsertArray [
 ]
 
 { #category : #tests }
+UDBCSQLiteConnectionTest >> testExecuteWithInsertBooleanNilThenSelect [
+	| row |
+	
+	res := db basicExecute: 'create table if not exists x (xk integer primary key, bv boolean);'.
+	self assert: (res = 0).
+	
+	res := db basicExecute: 'delete from x;'.
+	self assert: (res = 0).	
+
+	res := db beginTransaction.
+	self assert: (res = 0).
+
+	rs := db execute: 'insert into x values (NULL, ?)' with: (Array with: nil).
+	self assert: (rs next isNil).
+	rs close.
+
+	res := db commitTransaction.
+	self assert: (res = 0).
+
+	rs := db execute: 'select * from x'.	
+	row := rs next.
+	self assert: ((row at: 'xk') = 1).
+	self assert: ((row at: 'bv') = nil).
+	self assert: ((row at: 1) = 1).
+	self assert: ((row at: 2) = nil).
+	self assert: (row first = 1).
+	self assert: (row last = nil).
+	self assert: (rs next isNil).
+	rs close.
+
+	 
+]
+
+{ #category : #tests }
+UDBCSQLiteConnectionTest >> testExecuteWithInsertBooleanSQLNullThenSelect [
+	| row |
+	
+	res := db basicExecute: 'create table if not exists x (xk integer primary key, bv boolean);'.
+	self assert: (res = 0).
+	
+	res := db basicExecute: 'delete from x;'.
+	self assert: (res = 0).	
+
+	res := db beginTransaction.
+	self assert: (res = 0).
+
+	rs := db execute: 'insert into x values (NULL, NULL)'.
+	self assert: (rs next isNil).
+	rs close.
+
+	res := db commitTransaction.
+	self assert: (res = 0).
+
+	rs := db execute: 'select * from x'.	
+	row := rs next.
+	self assert: ((row at: 'xk') = 1).
+	self assert: ((row at: 'bv') = nil).
+	self assert: ((row at: 1) = 1).
+	self assert: ((row at: 2) = nil).
+	self assert: (row first = 1).
+	self assert: (row last = nil).
+	self assert: (rs next isNil).
+	rs close.
+
+	 
+]
+
+{ #category : #tests }
+UDBCSQLiteConnectionTest >> testExecuteWithInsertBooleanThenSelect [
+	| row |
+	
+	res := db basicExecute: 'create table if not exists x (xk integer primary key, bv boolean);'.
+	self assert: (res = 0).
+	
+	res := db basicExecute: 'delete from x;'.
+	self assert: (res = 0).	
+
+	res := db beginTransaction.
+	self assert: (res = 0).
+
+	rs := db execute: 'insert into x values (NULL, ?)' with: (Array with: true).
+	self assert: (rs next isNil).
+	rs close.
+
+	res := db commitTransaction.
+	self assert: (res = 0).
+
+	rs := db execute: 'select * from x'.	
+	row := rs next.
+	self assert: ((row at: 'xk') = 1).
+	self assert: ((row at: 'bv') = true).
+	self assert: ((row at: 1) = 1).
+	self assert: ((row at: 2) = true).
+	self assert: (row first = 1).
+	self assert: (row last = true).
+	self assert: (rs next isNil).
+	rs close.
+
+	 
+]
+
+{ #category : #tests }
 UDBCSQLiteConnectionTest >> testExecuteWithInsertChanges [
 
 	res := db basicExecute: 'create table if not exists x (xk integer primary key, iv integer, tv text);'.
