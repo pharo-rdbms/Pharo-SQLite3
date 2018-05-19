@@ -123,6 +123,28 @@ UDBCSQLite3BaseConnection >> commitTransaction [
 	^ self basicExecute: 'commit'	
 ]
 
+{ #category : #'public API - introspection' }
+UDBCSQLite3BaseConnection >> declaredColumnTypesFor: aTableName [
+	
+	self isOpen
+		ifFalse: [ UDBCSQLite3NotOpen signal ]
+		ifTrue: [ 
+			| s tableExists |
+			s := self prepare: 'select count(*) from sqlite_master where type = "table" and tbl_name = ?'.
+			s at: 1 putString: aTableName.
+	  		s basicExecute: [ :row | tableExists := ((row integerAt: 0) = 1) ].
+	  		s finalize.
+			tableExists ifTrue: [ 
+				| columns |
+				columns := OrderedCollection new.
+				s := self prepare: 'pragma table_info(', aTableName, ')'.
+				s basicExecute: [ :row | columns add: (row stringAt: 2) ].
+				s finalize.
+				^ columns ].
+			^ nil ]
+		
+]
+
 { #category : #'public API - extensions' }
 UDBCSQLite3BaseConnection >> disableExtensions [
 	^ library disableLoadExtension: dbHandle 

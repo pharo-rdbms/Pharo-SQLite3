@@ -15,6 +15,17 @@ Class {
 }
 
 { #category : #'public - accessing' }
+UDBCSQLite3Statement >> at: aColumn putBoolean: aBoolean [
+
+	^ self library 
+		with: handle 
+		at: aColumn 
+		putInteger: (aBoolean ifTrue: [ 1 ] ifFalse: [ 0 ])
+		
+"See http://www.sqlite.org/datatype3.html."
+]
+
+{ #category : #'public - accessing' }
 UDBCSQLite3Statement >> at: aColumn putByteArray: anObject [
 	^ self library with: handle at: aColumn putBlob: anObject
 ]
@@ -84,6 +95,11 @@ UDBCSQLite3Statement >> bindParameterIndex: aName [
 ]
 
 { #category : #'public - accessing' }
+UDBCSQLite3Statement >> booleanAt: aColumn [ 
+	^self library booleanFrom: handle at: aColumn
+]
+
+{ #category : #'public - accessing' }
 UDBCSQLite3Statement >> byteArrayAt: aColumn [
 	^ self library blobFrom: handle at: aColumn
 
@@ -103,6 +119,9 @@ UDBCSQLite3Statement >> connection: anObject [
 UDBCSQLite3Statement >> dataTypeForObject: anObject [
 
 	anObject ifNil: [ ^#at:putNil: ].
+
+	(anObject isKindOf: Boolean)
+		ifTrue: [ ^#at:putBoolean: ].
 
 	(anObject isKindOf: Integer)
 		ifTrue: [ ^#at:putInteger: ].

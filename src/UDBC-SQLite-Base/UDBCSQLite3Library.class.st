@@ -371,6 +371,37 @@ UDBCSQLite3Library >> blobFrom: aStatement at: aColumn [
 	 
 ]
 
+{ #category : #accessing }
+UDBCSQLite3Library >> booleanFrom: aStatement at: aColumn [
+	| declared selector value |
+	
+	declared := self apiColumnDeclaredType: aStatement atColumn: aColumn.
+	(#('boolean' 'bool') includes: declared asLowercase) ifFalse: [ 
+		UDBCSQLite3Error signal: 'Column is not declared as a boolean.' ].
+
+	selector := DataTypeMap at: (self apiColumnType: aStatement atColumn: aColumn).
+	(selector = #stringAt:) 
+		ifTrue: [
+			value := self apiColumnText: aStatement atColumn: aColumn.
+			(#('true' 't') includes: value asLowercase) 
+				ifTrue: [ ^ true ]
+				ifFalse: [
+					(#('false' 'f') includes: value asLowercase)
+						ifTrue: [ ^ false ]
+						ifFalse: [ UDBCSQLite3Error signal: 'Column value cannot be read as a boolean.' ]]].
+	(selector = #integerAt:) 
+		ifTrue: [
+			value := self apiColumnInt: aStatement atColumn: aColumn.
+			(value = 1)
+				ifTrue: [ ^ true ]
+				ifFalse: [ 
+					(value = 0) 
+						ifTrue: [ ^ false ]
+						ifFalse: [ UDBCSQLite3Error signal: 'Column value cannot be read as a boolean.' ]]]	
+ 
+ 
+]
+
 { #category : #introspection }
 UDBCSQLite3Library >> changes: aHandle [	
 	^ self apiChanges: aHandle
