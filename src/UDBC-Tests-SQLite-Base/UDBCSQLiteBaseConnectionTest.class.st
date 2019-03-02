@@ -763,6 +763,9 @@ UDBCSQLiteBaseConnectionTest >> testTime [
 UDBCSQLiteBaseConnectionTest >> testTracing [
 	| sql callback expected actual  |
 	
+	(SystemVersion current major >= 7) ifTrue: [ self skip ].
+	"This test invokes a callback from SQLite to Pharo. It works in Pharo 6 and earlier but not in Pharo 7."
+	
 	sql := #('create table if not exists x (xk integer primary key, iv integer, tv text)'
 			'insert into x values (NULL, 1, ''two'')'
 			'drop table x').
