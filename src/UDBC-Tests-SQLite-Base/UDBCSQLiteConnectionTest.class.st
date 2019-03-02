@@ -480,6 +480,39 @@ UDBCSQLiteConnectionTest >> testExecuteWithInsertThenSelect3 [
 ]
 
 { #category : #tests }
+UDBCSQLiteConnectionTest >> testExecuteWithInsertThenSelectChineseTableName [
+	| data s row idx |
+	
+	data := OrderedCollection with: 'English' with: '中文' with: 'にほんご', 'áěšřčá'.
+
+	res := db basicExecute: 'create table if not exists 表一 (xk integer primary key, tv text);'.
+	self assert: (res = 0).
+	
+	res := db basicExecute: 'delete from 表一;'.
+	self assert: (res = 0).	
+
+	res := db basicExecute: 'begin'.
+	self assert: (res = 0).
+	s := db prepare: 'insert into 表一 values (NULL, ?)'.
+	data do: [ :x |
+ 		s at: 1 putString: x.
+		s step. s clearBindings. s reset. ].		
+	s finalize.
+	res := db basicExecute: 'commit'.
+	self assert: (res = 0).
+
+	idx := 1.	
+	rs := db execute: 'select xk, tv from 表一 order by xk asc'.	
+	[ (row := rs next) isNotNil ] whileTrue: [
+		self assert: (row at: 'xk') equals: idx.
+		self assert: (row at: 'tv') equals: (data at: idx).
+		idx := idx + 1 ].
+	rs close.
+	self assert: (idx = 4)
+	 
+]
+
+{ #category : #tests }
 UDBCSQLiteConnectionTest >> testExecuteWithInsertThenSelectDateTime [
 	| row data |
 	
@@ -512,6 +545,39 @@ UDBCSQLiteConnectionTest >> testExecuteWithInsertThenSelectDateTime [
 	self assert: (rs next isNil).
 	rs close.
 
+	 
+]
+
+{ #category : #tests }
+UDBCSQLiteConnectionTest >> testExecuteWithInsertThenSelectJapaneseTableName [
+	| data s row idx |
+	
+	data := OrderedCollection with: 'English' with: '中文' with: 'にほんご', 'áěšřčá'.
+
+	res := db basicExecute: 'create table if not exists テーブル一 (xk integer primary key, tv text);'.
+	self assert: (res = 0).
+	
+	res := db basicExecute: 'delete from テーブル一;'.
+	self assert: (res = 0).	
+
+	res := db basicExecute: 'begin'.
+	self assert: (res = 0).
+	s := db prepare: 'insert into テーブル一 values (NULL, ?)'.
+	data do: [ :x |
+ 		s at: 1 putString: x.
+		s step. s clearBindings. s reset. ].		
+	s finalize.
+	res := db basicExecute: 'commit'.
+	self assert: (res = 0).
+
+	idx := 1.	
+	rs := db execute: 'select xk, tv from テーブル一 order by xk asc'.	
+	[ (row := rs next) isNotNil ] whileTrue: [
+		self assert: (row at: 'xk') equals: idx.
+		self assert: (row at: 'tv') equals: (data at: idx).
+		idx := idx + 1 ].
+	rs close.
+	self assert: (idx = 4)
 	 
 ]
 

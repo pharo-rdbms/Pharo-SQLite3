@@ -542,6 +542,28 @@ UDBCSQLiteBaseConnectionTest >> testMultilingualStrings [
 ]
 
 { #category : #tests }
+UDBCSQLiteBaseConnectionTest >> testMultilingualTableName [
+	| s | 
+	
+	res := db basicExecute: 'create table 表一 (xk integer primary key, xm1 text default ''中文'');'.
+	self assert: (res = 0).
+
+	res := db basicExecute: 'begin'.
+	self assert: (res = 0).
+	(db prepare: 'insert into 表一 (xk) values (NULL)')
+		step;
+		finalize.
+	res := db basicExecute: 'commit'.
+	self assert: (res = 0).
+	
+	s := db prepare: 'select xm1 from 表一 order by xk'.
+	s basicExecute: [  :row |
+		self assert: (row stringAt: 0) equals: '中文' ].
+	s finalize.
+	
+]
+
+{ #category : #tests }
 UDBCSQLiteBaseConnectionTest >> testObjectBlob [
 	| data s | 
 	
