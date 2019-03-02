@@ -293,6 +293,39 @@ UDBCSQLiteConnectionTest >> testExecuteWithInsertDictionary [
 ]
 
 { #category : #tests }
+UDBCSQLiteConnectionTest >> testExecuteWithInsertMultilingualStringsThenSelect [
+	| data s row idx |
+	
+	data := OrderedCollection with: 'English' with: '中文' with: 'にほんご', 'áěšřčá'.
+
+	res := db basicExecute: 'create table if not exists x (xk integer primary key, tv text);'.
+	self assert: (res = 0).
+	
+	res := db basicExecute: 'delete from x;'.
+	self assert: (res = 0).	
+
+	res := db basicExecute: 'begin'.
+	self assert: (res = 0).
+	s := db prepare: 'insert into x values (NULL, ?)'.
+	data do: [ :x |
+ 		s at: 1 putString: x.
+		s step. s clearBindings. s reset. ].		
+	s finalize.
+	res := db basicExecute: 'commit'.
+	self assert: (res = 0).
+
+	idx := 1.	
+	rs := db execute: 'select xk, tv from x order by xk asc'.	
+	[ (row := rs next) isNotNil ] whileTrue: [
+		self assert: (row at: 'xk') equals: idx.
+		self assert: (row at: 'tv') equals: (data at: idx).
+		idx := idx + 1 ].
+	rs close.
+	self assert: (idx = 4)
+	 
+]
+
+{ #category : #tests }
 UDBCSQLiteConnectionTest >> testExecuteWithInsertNoDataThenSelect [
 	| row |
 	

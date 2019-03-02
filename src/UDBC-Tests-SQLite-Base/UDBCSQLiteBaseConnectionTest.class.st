@@ -13,6 +13,33 @@ Class {
 	#category : #'UDBC-Tests-SQLite-Base-Connections'
 }
 
+{ #category : #tests }
+UDBCSQLiteBaseConnectionTest >> noTestColumnNamesBobbyGo [
+	"In this test, Bobby Tables strikes naive SQL string construction."
+	"20190302, pierce: #basicExecute: uses prepare/step/finalize internally and is no longer susceptible to injection attacks. "
+	| tables bobby |
+	
+	res := db basicExecute: 'create table x (xk integer, xv integer);'.
+	self assert: (res = 0).
+	res := db basicExecute: 'create table students (sk integer, sname varchar);'.
+	self assert: (res = 0).
+
+	tables := db tableNames.
+	self assert: (tables size = 2).
+	self assert: (tables first = 'x').	
+	self assert: (tables second = 'students').	
+
+	bobby := 'x); drop table students; --'.	
+	res := db basicExecute: 'pragma table_info(', bobby, ')'.
+	self assert: (res = 0).
+
+	tables := db tableNames.
+	self assert: (tables size = 1).
+	self assert: (tables first = 'x').	
+
+
+]
+
 { #category : #running }
 UDBCSQLiteBaseConnectionTest >> setUp [ 
 
@@ -323,32 +350,6 @@ UDBCSQLiteBaseConnectionTest >> testColumnNames [
 ]
 
 { #category : #tests }
-UDBCSQLiteBaseConnectionTest >> testColumnNamesBobbyGo [
-	"In this test, Bobby Tables strikes naive SQL string construction."
-	| tables bobby |
-	
-	res := db basicExecute: 'create table x (xk integer, xv integer);'.
-	self assert: (res = 0).
-	res := db basicExecute: 'create table students (sk integer, sname varchar);'.
-	self assert: (res = 0).
-
-	tables := db tableNames.
-	self assert: (tables size = 2).
-	self assert: (tables first = 'x').	
-	self assert: (tables second = 'students').	
-
-	bobby := 'x); drop table students; --'.	
-	res := db basicExecute: 'pragma table_info(', bobby, ')'.
-	self assert: (res = 0).
-
-	tables := db tableNames.
-	self assert: (tables size = 1).
-	self assert: (tables first = 'x').	
-
-
-]
-
-{ #category : #tests }
 UDBCSQLiteBaseConnectionTest >> testColumnNamesBobbyStop [
 	"In this test, Bobby Tables strikes again, but fails, because #columnNamesFor: uses parameter binding."
 	| columns tables |
@@ -445,6 +446,29 @@ UDBCSQLiteBaseConnectionTest >> testDeclaredColumnTypes [
 ]
 
 { #category : #tests }
+UDBCSQLiteBaseConnectionTest >> testDefaultMultilingualStrings [
+	| s idx | 
+	
+	res := db basicExecute: 'create table x (xk integer primary key, xm1 text default ''中文'', xm2 text default ''áěšřčá'');'.
+	self assert: (res = 0).
+
+	res := db basicExecute: 'begin'.
+	self assert: (res = 0).
+	(db prepare: 'insert into x (xk) values (NULL)')
+		step;
+		finalize.
+	res := db basicExecute: 'commit'.
+	self assert: (res = 0).
+	
+	s := db prepare: 'select xm1, xm2 from x order by xk'.
+	s basicExecute: [  :row |
+		self assert: (row stringAt: 0) equals: '中文' .
+		self assert: (row stringAt: 1) equals: 'áěšřčá' ].
+	s finalize.
+	
+]
+
+{ #category : #tests }
 UDBCSQLiteBaseConnectionTest >> testDoubleClose [
 	
 	db close.
@@ -487,6 +511,34 @@ UDBCSQLiteBaseConnectionTest >> testInteger [
 		self assert: (row integerAt: 1) equals: 3212321555 ].
 	s finalize.
 
+]
+
+{ #category : #tests }
+UDBCSQLiteBaseConnectionTest >> testMultilingualStrings [
+	| data s idx | 
+	
+	data := OrderedCollection with: 'English' with: '中文' with: 'にほんご', 'áěšřčá'.
+	
+	res := db basicExecute: 'create table x (xk integer primary key, xv varchar);'.
+	self assert: (res = 0).
+
+	res := db basicExecute: 'begin'.
+	self assert: (res = 0).
+	s := db prepare: 'insert into x values (NULL, ?)'.
+	data do: [ :ea |
+		s at: 1 putString: ea.
+		s step; clearBindings; reset ].
+	s finalize.
+	res := db basicExecute: 'commit'.
+	self assert: (res = 0).
+	
+	idx := 1.
+	s := db prepare: 'select xv from x order by xk asc'.
+	s basicExecute: [  :row |
+		self assert: (row stringAt: 0) equals: (data at: idx).
+		idx := idx + 1 ].
+	s finalize.
+	
 ]
 
 { #category : #tests }
