@@ -540,10 +540,12 @@ UDBCSQLite3Library >> pharoStringToUTF8: aPharoString [
 
 { #category : #operating }
 UDBCSQLite3Library >> prepare: aStatementHandle on: aDBHandle with: anSQLText [
-
+	| utf8SQL |
+	
+	utf8SQL := self pharoStringToUTF8: anSQLText.
 	^ self checkForOk: (self apiPrepare: aDBHandle 
-							withSQLText: anSQLText
-							with: (anSQLText size)
+							withSQLText: utf8SQL
+							with: utf8SQL size
 							with: aStatementHandle
 							with: (ExternalAddress new))
 		 on: aDBHandle

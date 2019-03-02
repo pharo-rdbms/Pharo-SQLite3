@@ -153,11 +153,13 @@ UDBCSQLite3Statement >> dateTimeAt: aColumn [
 
 { #category : #initialization }
 UDBCSQLite3Statement >> finalize [
+	| result |
 	
-	connection finalize: self sqlText.
+	result := connection finalize: self sqlText.
 	"Let FFIExternalResourceManager take care."
 	"UDBCSQLite3Library current apiFinalize: handle."
-	handle := nil
+	handle := nil.
+	^ 0
 ]
 
 { #category : #'public - accessing' }

@@ -67,7 +67,9 @@ UDBCSQLite3BaseConnection >> asBackupSource: backupObject forDatabase: databaseN
 
 { #category : #'public API - operating' }
 UDBCSQLite3BaseConnection >> basicExecute: anSQLText [ 
-	^ library execute: anSQLText on: dbHandle.
+	^ (self prepare: anSQLText) step; finalize
+
+"20190302, pierce: This used to invoke sqlite3_exec() which is an SQLite-internal convenience wrapper around prepare/step/finalize. It is now rewritten as seen to handle UTF8-encoded input properly. Rewriting this method breaks the Bobby Tables test which relies on naive SQL string construction to work."
 	
 ]
 
