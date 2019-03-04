@@ -1,2 +1,10 @@
 # Pharo-UDBC
-Pharo Universal Databse Connectivity
+Pharo Universal Database Connectivity
+
+
+```Smalltalk
+Metacello new 
+	repository: 'github://astares/Pharo-UDBC/src';
+	baseline: 'UDBC';
+	load
+```
