@@ -55,7 +55,7 @@ UDBCSQLiteConnectionTest >> tearDown [
 UDBCSQLiteConnectionTest >> testExecuteDelete [
 	
 	res := db basicExecute: 'create table if not exists x (xk integer primary key, iv integer, tv text);'.
-	self assert: (res = 0).
+	self assert: res equals: 0.
 	
 	rs := db execute: 'delete from x;'.
 	self assert: (rs next isNil).
@@ -67,7 +67,7 @@ UDBCSQLiteConnectionTest >> testExecuteDelete [
 UDBCSQLiteConnectionTest >> testExecuteDrop [
 	
 	res := db basicExecute: 'create table if not exists x (xk integer primary key, iv integer, tv text);'.
-	self assert: (res = 0).
+	self assert: res equals: 0.
 	
 	rs := db execute: 'drop table x;'.
 	self assert: (rs next isNil).
@@ -98,31 +98,30 @@ UDBCSQLiteConnectionTest >> testExecuteWithInsertArray [
 	| rd |
 		
 	res := db basicExecute: 'create table if not exists x (xk integer primary key, iv integer, tv text);'.
-	self assert: (res = 0).
+	self assert: res equals: 0.
 	
 	res := db basicExecute: 'delete from x;'.
-	self assert: (res = 0).	
+	self assert: res equals: 0.	
 
 	res := db beginTransaction.
-	self assert: (res = 0).
+	self assert: res equals: 0.
 
 	rs := db execute: 'insert into x values (NULL, ?, ?)' with: #(1 'two').
 	self assert: (rs next isNil).
 	rs close.
 
 	res := db commitTransaction.
-	self assert: (res = 0).
+	self assert: res equals: 0.
 	
 	rd := (db execute: 'select * from x') rows first.
-	self assert: ((rd at: 'xk') = 1).
-	self assert: ((rd at: 'iv') = 1).
-	self assert: ((rd at: 'tv') = 'two').
-	self assert: ((rd at: 1) = 1).
-	self assert: ((rd at: 2) = 1).
-	self assert: ((rd at: 3) = 'two').
-	self assert: (rd first = 1).	
-	self assert: (rd last = 'two').
-	
+	self assert: (rd at: 'xk') equals: 1.
+	self assert: (rd at: 'iv') equals: 1.
+	self assert: (rd at: 'tv') equals: 'two'.
+	self assert: (rd at: 1) equals: 1.
+	self assert: (rd at: 2) equals: 1.
+	self assert: (rd at: 3) equals: 'two'.
+	self assert: rd first equals: 1.	
+	self assert: rd last equals: 'two'
 ]
 
 { #category : #tests }
@@ -130,30 +129,30 @@ UDBCSQLiteConnectionTest >> testExecuteWithInsertBooleanNilThenSelect [
 	| row |
 	
 	res := db basicExecute: 'create table if not exists x (xk integer primary key, bv boolean);'.
-	self assert: (res = 0).
+	self assert: res equals: 0.
 	
 	res := db basicExecute: 'delete from x;'.
-	self assert: (res = 0).	
+	self assert: res equals: 0.	
 
 	res := db beginTransaction.
-	self assert: (res = 0).
+	self assert: res equals: 0.
 
 	rs := db execute: 'insert into x values (NULL, ?)' with: (Array with: nil).
-	self assert: (rs next isNil).
+	self assert: rs next isNil.
 	rs close.
 
 	res := db commitTransaction.
-	self assert: (res = 0).
+	self assert: res equals: 0.
 
 	rs := db execute: 'select * from x'.	
 	row := rs next.
-	self assert: ((row at: 'xk') = 1).
-	self assert: ((row at: 'bv') = nil).
-	self assert: ((row at: 1) = 1).
-	self assert: ((row at: 2) = nil).
-	self assert: (row first = 1).
-	self assert: (row last = nil).
-	self assert: (rs next isNil).
+	self assert: (row at: 'xk') equals: 1.
+	self assert: (row at: 'bv') equals: nil.
+	self assert: (row at: 1) equals: 1.
+	self assert: (row at: 2) equals: nil.
+	self assert: row first equals: 1.
+	self assert: row last equals: nil.
+	self assert: rs next isNil.
 	rs close.
 
 	 
@@ -164,33 +163,31 @@ UDBCSQLiteConnectionTest >> testExecuteWithInsertBooleanSQLNullThenSelect [
 	| row |
 	
 	res := db basicExecute: 'create table if not exists x (xk integer primary key, bv boolean);'.
-	self assert: (res = 0).
+	self assert: res equals: 0.
 	
 	res := db basicExecute: 'delete from x;'.
-	self assert: (res = 0).	
+	self assert: res equals: 0.	
 
 	res := db beginTransaction.
-	self assert: (res = 0).
+	self assert: res equals: 0.
 
 	rs := db execute: 'insert into x values (NULL, NULL)'.
-	self assert: (rs next isNil).
+	self assert: rs next isNil.
 	rs close.
 
 	res := db commitTransaction.
-	self assert: (res = 0).
+	self assert: res equals: 0.
 
 	rs := db execute: 'select * from x'.	
 	row := rs next.
-	self assert: ((row at: 'xk') = 1).
-	self assert: ((row at: 'bv') = nil).
-	self assert: ((row at: 1) = 1).
-	self assert: ((row at: 2) = nil).
-	self assert: (row first = 1).
-	self assert: (row last = nil).
-	self assert: (rs next isNil).
-	rs close.
-
-	 
+	self assert: (row at: 'xk') equals: 1.
+	self assert: (row at: 'bv') equals: nil.
+	self assert: (row at: 1) equals: 1.
+	self assert: (row at: 2) equals: nil.
+	self assert: row first equals: 1.
+	self assert: row last equals: nil.
+	self assert: rs next isNil.
+	rs close	 
 ]
 
 { #category : #tests }
@@ -198,66 +195,63 @@ UDBCSQLiteConnectionTest >> testExecuteWithInsertBooleanThenSelect [
 	| row |
 	
 	res := db basicExecute: 'create table if not exists x (xk integer primary key, bv boolean);'.
-	self assert: (res = 0).
+	self assert: res equals: 0.
 	
 	res := db basicExecute: 'delete from x;'.
-	self assert: (res = 0).	
+	self assert: res equals: 0.	
 
 	res := db beginTransaction.
-	self assert: (res = 0).
+	self assert: res equals: 0.
 
 	rs := db execute: 'insert into x values (NULL, ?)' with: (Array with: true).
-	self assert: (rs next isNil).
+	self assert: rs next isNil.
 	rs close.
 
 	res := db commitTransaction.
-	self assert: (res = 0).
+	self assert: res equals: 0.
 
 	rs := db execute: 'select * from x'.	
 	row := rs next.
-	self assert: ((row at: 'xk') = 1).
-	self assert: ((row at: 'bv') = true).
-	self assert: ((row at: 1) = 1).
-	self assert: ((row at: 2) = true).
-	self assert: (row first = 1).
-	self assert: (row last = true).
-	self assert: (rs next isNil).
-	rs close.
-
-	 
+	self assert: (row at: 'xk') equals: 1.
+	self assert: (row at: 'bv') equals: true.
+	self assert: (row at: 1) equals: 1.
+	self assert: (row at: 2) equals: true.
+	self assert: row first equals: 1.
+	self assert: row last equals: true.
+	self assert: rs next isNil.
+	rs close
 ]
 
 { #category : #tests }
 UDBCSQLiteConnectionTest >> testExecuteWithInsertChanges [
 
 	res := db basicExecute: 'create table if not exists x (xk integer primary key, iv integer, tv text);'.
-	self assert: (res = 0).
+	self assert: res equals: 0.
 	
 	res := db basicExecute: 'delete from x;'.
-	self assert: (res = 0).	
+	self assert: res equals: 0.	
 
 	res := db beginTransaction.
-	self assert: (res = 0).
+	self assert: res equals: 0.
 	rs := db execute: 'insert into x values (NULL, ?, ?)' with: #(1 'two').
-	self assert: (rs next isNil).
+	self assert: rs next isNil.
 	rs close.
 	res := db commitTransaction.
-	self assert: (res = 0).
+	self assert: res equals: 0.
 	
-	self assert: (db changes = 1).
-	self assert: (db totalChanges = 1).
+	self assert: db changes equals: 1.
+	self assert: db totalChanges equals: 1.
 
 	res := db beginTransaction.
-	self assert: (res = 0).
+	self assert: res equals: 0.
 	rs := db execute: 'insert into x values (NULL, ?, ?)' with: #(2 'too').
 	self assert: (rs next isNil).
 	rs close.
 	res := db commitTransaction.
-	self assert: (res = 0).
+	self assert: res equals: 0.
 	
-	self assert: (db changes = 1).
-	self assert: (db totalChanges = 2).
-
+	self assert: db changes equals: 1.
+	self assert: db totalChanges equals: 2
 ]
 
 { #category : #tests }
@@ -265,13 +259,13 @@ UDBCSQLiteConnectionTest >> testExecuteWithInsertDictionary [
 	| rd |
 	
 	res := db basicExecute: 'create table if not exists x (xk integer primary key, iv integer, tv text);'.
-	self assert: (res = 0).
+	self assert: res equals: 0.
 	
 	res := db basicExecute: 'delete from x;'.
-	self assert: (res = 0).	
+	self assert: res equals: 0.	
 
 	res := db beginTransaction.
-	self assert: (res = 0).
+	self assert: res equals: 0.
 
 	rs := db execute: 'insert into x values (NULL, :first, :two)'
 		with: (Dictionary newFromPairs: #(':first' 1 ':two' '2' ':nosuch' 3)).
@@ -279,17 +273,17 @@ UDBCSQLiteConnectionTest >> testExecuteWithInsertDictionary [
 	rs close.
 
 	res := db commitTransaction.
-	self assert: (res = 0).
+	self assert: res equals: 0.
 	
 	rd := (db execute: 'select * from x') rows first.
-	self assert: ((rd at: 'xk') = 1).
-	self assert: ((rd at: 'iv') = 1).
-	self assert: ((rd at: 'tv') = '2').
-	self assert: ((rd at: 1) = 1).
-	self assert: ((rd at: 2) = 1).
-	self assert: ((rd at: 3) = '2').
-	self assert: (rd first = 1).	
-	self assert: (rd last = '2').
+	self assert: (rd at: 'xk') equals: 1.
+	self assert: (rd at: 'iv') equals: 1.
+	self assert: (rd at: 'tv') equals: '2'.
+	self assert: (rd at: 1) equals: 1.
+	self assert: (rd at: 2) equals: 1.
+	self assert: (rd at: 3) equals: '2'.
+	self assert: rd first equals: 1.	
+	self assert: rd last equals: '2'
 ]
 
 { #category : #tests }
@@ -299,20 +293,20 @@ UDBCSQLiteConnectionTest >> testExecuteWithInsertMultilingualStringsThenSelect [
 	data := OrderedCollection with: 'English' with: '中文' with: 'にほんご', 'áěšřčá'.
 
 	res := db basicExecute: 'create table if not exists x (xk integer primary key, tv text);'.
-	self assert: (res = 0).
+	self assert: res equals: 0.
 	
 	res := db basicExecute: 'delete from x;'.
-	self assert: (res = 0).	
+	self assert: res equals: 0.	
 
 	res := db basicExecute: 'begin'.
-	self assert: (res = 0).
+	self assert: res equals: 0.
 	s := db prepare: 'insert into x values (NULL, ?)'.
 	data do: [ :x |
  		s at: 1 putString: x.
 		s step. s clearBindings. s reset. ].		
 	s finalize.
 	res := db basicExecute: 'commit'.
-	self assert: (res = 0).
+	self assert: res equals: 0.
 
 	idx := 1.	
 	rs := db execute: 'select xk, tv from x order by xk asc'.	
@@ -321,8 +315,7 @@ UDBCSQLiteConnectionTest >> testExecuteWithInsertMultilingualStringsThenSelect [
 		self assert: (row at: 'tv') equals: (data at: idx).
 		idx := idx + 1 ].
 	rs close.
-	self assert: (idx = 4)
-	 
+	self assert: idx equals: 4
 ]
 
 { #category : #tests }
@@ -330,28 +323,28 @@ UDBCSQLiteConnectionTest >> testExecuteWithInsertNoDataThenSelect [
 	| row |
 	
 	res := db basicExecute: 'create table if not exists x (xk integer primary key);'.
-	self assert: (res = 0).
+	self assert: res equals: 0.
 	
 	res := db basicExecute: 'delete from x;'.
-	self assert: (res = 0).	
+	self assert: res equals: 0.	
 
 	res := db beginTransaction.
-	self assert: (res = 0).
+	self assert: res equals: 0.
 
 	rs := db execute: 'insert into x values (NULL)' with: #().
-	self assert: (rs next isNil).
+	self assert: rs next isNil.
 	rs close.
 
 	res := db commitTransaction.
-	self assert: (res = 0).
+	self assert: res equals: 0.
 
 	rs := db execute: 'select * from x'.	
 	row := rs next.
-	self assert: ((row at: 'xk') = 1).
-	self assert: ((row at: 1) = 1).
-	self assert: (row first = 1).
-	self assert: (row last = 1).
-	rs close.
+	self assert: (row at: 'xk') equals: 1.
+	self assert: (row at: 1) equals: 1.
+	self assert: row first equals: 1.
+	self assert: row last equals: 1.
+	rs close
 
 	 
 ]
@@ -361,35 +354,33 @@ UDBCSQLiteConnectionTest >> testExecuteWithInsertThenSelect [
 	| row |
 	
 	res := db basicExecute: 'create table if not exists x (xk integer primary key, iv integer, tv text);'.
-	self assert: (res = 0).
+	self assert: res equals: 0.
 	
 	res := db basicExecute: 'delete from x;'.
-	self assert: (res = 0).	
+	self assert: res equals: 0.	
 
 	res := db beginTransaction.
-	self assert: (res = 0).
+	self assert: res equals: 0.
 
 	rs := db execute: 'insert into x values (NULL, ?, ?)' with: #(1 'two').
 	self assert: (rs next isNil).
 	rs close.
 
 	res := db commitTransaction.
-	self assert: (res = 0).
+	self assert: res equals: 0.
 
 	rs := db execute: 'select * from x'.	
 	row := rs next.
-	self assert: ((row at: 'xk') = 1).
-	self assert: ((row at: 'iv') = 1).
-	self assert: ((row at: 'tv') = 'two').
-	self assert: ((row at: 1) = 1).
-	self assert: ((row at: 2) = 1).
-	self assert: ((row at: 3) = 'two').
-	self assert: (row first = 1).
-	self assert: (row last = 'two').
-	self assert: (rs next isNil).
-	rs close.
-
-	 
+	self assert: (row at: 'xk') equals: 1.
+	self assert: (row at: 'iv') equals: 1.
+	self assert: (row at: 'tv') equals: 'two'.
+	self assert: (row at: 1) equals: 1.
+	self assert: (row at: 2) equals: 1.
+	self assert: (row at: 3) equals: 'two'.
+	self assert: row first equals: 1.
+	self assert: row last equals: 'two'.
+	self assert: rs next isNil.
+	rs close	 
 ]
 
 { #category : #tests }
@@ -397,13 +388,13 @@ UDBCSQLiteConnectionTest >> testExecuteWithInsertThenSelect2 [
 	| row |
 	
 	res := db basicExecute: 'create table if not exists x (xk integer primary key, iv integer, tv text);'.
-	self assert: (res = 0).
+	self assert: res equals: 0.
 	
 	res := db basicExecute: 'delete from x;'.
-	self assert: (res = 0).	
+	self assert: res equals: 0.	
 
 	res := db beginTransaction.
-	self assert: (res = 0).
+	self assert: res equals: 0.
 
 	rs := db execute: 'insert into x values (NULL, ?, ?)' with: #(1 'two').
 	self assert: (rs next isNil).
@@ -414,31 +405,29 @@ UDBCSQLiteConnectionTest >> testExecuteWithInsertThenSelect2 [
 	rs close.
 
 	res := db commitTransaction.
-	self assert: (res = 0).
+	self assert: res equals: 0.
 
 	rs := db execute: 'select * from x'.	
 	row := rs next.
-	self assert: ((row at: 'xk') = 1).
-	self assert: ((row at: 'iv') = 1).
-	self assert: ((row at: 'tv') = 'two').
-	self assert: ((row at: 1) = 1).
-	self assert: ((row at: 2) = 1).
-	self assert: ((row at: 3) = 'two').
-	self assert: (row first = 1).
-	self assert: (row last = 'two').
+	self assert: (row at: 'xk') equals: 1.
+	self assert: (row at: 'iv') equals: 1.
+	self assert: (row at: 'tv') equals: 'two'.
+	self assert: (row at: 1) equals: 1.
+	self assert: (row at: 2) equals: 1.
+	self assert: (row at: 3) equals: 'two'.
+	self assert: row first equals: 1.
+	self assert: row last equals: 'two'.
 	row := rs next.
-	self assert: ((row at: 'xk') = 2).
-	self assert: ((row at: 'iv') = 2).
-	self assert: ((row at: 'tv') = 'three').
-	self assert: ((row at: 1) = 2).
-	self assert: ((row at: 2) = 2).
-	self assert: ((row at: 3) = 'three').
-	self assert: (row first = 2).
-	self assert: (row last = 'three').
-	self assert: (rs next isNil).
-	rs close.
-
-	 
+	self assert: (row at: 'xk') equals: 2.
+	self assert: (row at: 'iv') equals: 2.
+	self assert: (row at: 'tv') equals: 'three'.
+	self assert: (row at: 1) equals: 2.
+	self assert: (row at: 2) equals: 2.
+	self assert: (row at: 3) equals: 'three'.
+	self assert: row first equals: 2.
+	self assert: row last equals: 'three'.
+	self assert: rs next isNil.
+	rs close
 ]
 
 { #category : #tests }
@@ -446,13 +435,13 @@ UDBCSQLiteConnectionTest >> testExecuteWithInsertThenSelect3 [
 	| s row idx |
 	
 	res := db basicExecute: 'create table if not exists x (xk integer primary key, iv integer, tv text);'.
-	self assert: (res = 0).
+	self assert: res equals: 0.
 	
 	res := db basicExecute: 'delete from x;'.
-	self assert: (res = 0).	
+	self assert: res equals: 0.	
 
 	res := db basicExecute: 'begin'.
-	self assert: (res = 0).
+	self assert: res equals: 0.
 	s := db prepare: 'insert into x values (NULL, ?, ?)'.
 	1 to: 10 do: [ :x |
 		s at: 1 putInteger: x * x.
@@ -460,22 +449,22 @@ UDBCSQLiteConnectionTest >> testExecuteWithInsertThenSelect3 [
 		s step. s clearBindings. s reset. ].		
 	s finalize.
 	res := db basicExecute: 'commit'.
-	self assert: (res = 0).
+	self assert: res equals: 0.
 
 	idx := 1.	
 	rs := db execute: 'select * from x where iv < ?' with: #(27).	
 	[ (row := rs next) isNotNil ] whileTrue: [
-		self assert: ((row at: 'xk') = idx).
-		self assert: ((row at: 'iv') = (idx * idx)).
-		self assert: ((row at: 'tv') = (idx asString, ' * ', idx asString)).
-		self assert: ((row at: 1) = idx).
-		self assert: ((row at: 2) = (idx * idx)).
-		self assert: ((row at: 3) = (idx asString, ' * ', idx asString)).
-		self assert: (row first = idx).
-		self assert: (row last = (idx asString, ' * ', idx asString)).
+		self assert: (row at: 'xk') equals: idx.
+		self assert: (row at: 'iv') equals: (idx * idx).
+		self assert: (row at: 'tv') equals: (idx asString, ' * ', idx asString).
+		self assert: (row at: 1) equals: idx.
+		self assert: (row at: 2) equals: (idx * idx).
+		self assert: (row at: 3) equals: (idx asString, ' * ', idx asString).
+		self assert: row first equals: idx.
+		self assert: row last equals: (idx asString, ' * ', idx asString).
 		idx := idx + 1 ].
 	rs close.
-	self assert: (idx = 6)
+	self assert: idx equals: 6
 	 
 ]
 
@@ -486,20 +475,20 @@ UDBCSQLiteConnectionTest >> testExecuteWithInsertThenSelectChineseTableName [
 	data := OrderedCollection with: 'English' with: '中文' with: 'にほんご', 'áěšřčá'.
 
 	res := db basicExecute: 'create table if not exists 表一 (xk integer primary key, tv text);'.
-	self assert: (res = 0).
+	self assert: res equals: 0.
 	
 	res := db basicExecute: 'delete from 表一;'.
-	self assert: (res = 0).	
+	self assert: res equals: 0.	
 
 	res := db basicExecute: 'begin'.
-	self assert: (res = 0).
+	self assert: res equals: 0.
 	s := db prepare: 'insert into 表一 values (NULL, ?)'.
 	data do: [ :x |
  		s at: 1 putString: x.
 		s step. s clearBindings. s reset. ].		
 	s finalize.
 	res := db basicExecute: 'commit'.
-	self assert: (res = 0).
+	self assert: res equals: 0.
 
 	idx := 1.	
 	rs := db execute: 'select xk, tv from 表一 order by xk asc'.	
@@ -508,7 +497,7 @@ UDBCSQLiteConnectionTest >> testExecuteWithInsertThenSelectChineseTableName [
 		self assert: (row at: 'tv') equals: (data at: idx).
 		idx := idx + 1 ].
 	rs close.
-	self assert: (idx = 4)
+	self assert: idx equals: 4
 	 
 ]
 
@@ -517,10 +506,10 @@ UDBCSQLiteConnectionTest >> testExecuteWithInsertThenSelectDateTime [
 	| row data |
 	
 	res := db basicExecute: 'create table if not exists x (xv datetime);'.
-	self assert: (res = 0).
+	self assert: res equals: 0.
 	
 	res := db beginTransaction.
-	self assert: (res = 0).
+	self assert: res equals: 0.
 
 	data := DateAndTime year: 2015 month: 4 day: 1.
 	rs := db execute: 'insert into x values (?)' with: (Array with: data).
@@ -528,24 +517,22 @@ UDBCSQLiteConnectionTest >> testExecuteWithInsertThenSelectDateTime [
 	rs close.
 
 	res := db commitTransaction.
-	self assert: (res = 0).
+	self assert: res equals: 0.
 
 	rs := db execute: 'select xv from x'.	
 	row := rs next.
 	data := row at: 'xv'.
-	self assert: (data class = DateAndTime).
-	self assert: (data year = 2015).
-	self assert: (data month = 4).
-	self assert: (data dayOfMonth = 1).
+	self assert: data class equals: DateAndTime.
+	self assert: data year equals: 2015.
+	self assert: data month equals: 4.
+	self assert: data dayOfMonth equals: 1.
 	data := row at: 1.
-	self assert: (data class = DateAndTime).
-	self assert: (data year = 2015).
-	self assert: (data month = 4).
-	self assert: (data dayOfMonth = 1).
-	self assert: (rs next isNil).
-	rs close.
-
-	 
+	self assert: data class equals: DateAndTime.
+	self assert: data year equals: 2015.
+	self assert: data month equals: 4.
+	self assert: data dayOfMonth equals: 1.
+	self assert: rs next isNil.
+	rs close
 ]
 
 { #category : #tests }
@@ -555,20 +542,20 @@ UDBCSQLiteConnectionTest >> testExecuteWithInsertThenSelectJapaneseTableName [
 	data := OrderedCollection with: 'English' with: '中文' with: 'にほんご', 'áěšřčá'.
 
 	res := db basicExecute: 'create table if not exists テーブル一 (xk integer primary key, tv text);'.
-	self assert: (res = 0).
+	self assert: res equals: 0.
 	
 	res := db basicExecute: 'delete from テーブル一;'.
-	self assert: (res = 0).	
+	self assert: res equals: 0.	
 
 	res := db basicExecute: 'begin'.
-	self assert: (res = 0).
+	self assert: res equals: 0.
 	s := db prepare: 'insert into テーブル一 values (NULL, ?)'.
 	data do: [ :x |
  		s at: 1 putString: x.
 		s step. s clearBindings. s reset. ].		
 	s finalize.
 	res := db basicExecute: 'commit'.
-	self assert: (res = 0).
+	self assert: res equals: 0.
 
 	idx := 1.	
 	rs := db execute: 'select xk, tv from テーブル一 order by xk asc'.	
@@ -577,7 +564,7 @@ UDBCSQLiteConnectionTest >> testExecuteWithInsertThenSelectJapaneseTableName [
 		self assert: (row at: 'tv') equals: (data at: idx).
 		idx := idx + 1 ].
 	rs close.
-	self assert: (idx = 4)
+	self assert: idx equals: 4
 	 
 ]
 
@@ -585,40 +572,38 @@ UDBCSQLiteConnectionTest >> testExecuteWithInsertThenSelectJapaneseTableName [
 UDBCSQLiteConnectionTest >> testExecuteWithToFail [
 	
 	res := db basicExecute: 'create table if not exists x (xk integer primary key, iv integer, tv text);'.
-	self assert: (res = 0).
+	self assert: res equals: 0.
 	
 	res := db basicExecute: 'delete from x;'.
-	self assert: (res = 0).	
+	self assert: res equals: 0.	
 
 	res := db beginTransaction.
-	self assert: (res = 0).
+	self assert: res equals: 0.
 
 	self should: [ db execute: 'insert into x values (NULL, ?, ?)' with: 42 ]
 		raise: UDBCSQLite3Error.
 
 	res := db rollbackTransaction.
-	self assert: (res = 0).
-	
+	self assert: res equals: 0
 ]
 
 { #category : #tests }
 UDBCSQLiteConnectionTest >> testExecuteWithToFail2 [
 	
 	res := db basicExecute: 'create table if not exists x (xk integer primary key, iv integer, tv text);'.
-	self assert: (res = 0).
+	self assert: res equals: 0.
 	
 	res := db basicExecute: 'delete from x;'.
-	self assert: (res = 0).	
+	self assert: res equals: 0.	
 
 	res := db beginTransaction.
-	self assert: (res = 0).
+	self assert: res equals: 0.
 
 	self should: [ db execute: 'insert into x values (NULL, ?, ?)' with: '42' ]
 		raise: UDBCSQLite3Error.
 
 	res := db rollbackTransaction.
-	self assert: (res = 0).
-	
+	self assert: res equals: 0
 ]
 
 { #category : #tests }
@@ -636,12 +621,12 @@ UDBCSQLiteConnectionTest >> testGlorpAutoID [
 	db commitTransaction.	
 	
 	rows := (db execute: 'select last_insert_rowid() as lid') rows.
-	self assert: (rows first at: 'lid') = 2.
+	self assert: (rows first at: 'lid') equals: 2.
 	
 	rows := (db execute: 'select * from BOOK') rows.
-	self assert: (rows size = 2).
-	self assert: (rows first at: 'ID') = 1.
-	self assert: (rows first at: 'STUFF') = 'The Bad Beginning'.
+	self assert: rows size equals: 2.
+	self assert: (rows first at: 'ID') equals: 1.
+	self assert: (rows first at: 'STUFF') equals: 'The Bad Beginning'.
 	
 
 ]
@@ -662,10 +647,9 @@ UDBCSQLiteConnectionTest >> testGlorpCompositeKey [
 	rs := db execute: 'select ID,NAME from GR_USER'.
 	rows := rs rows.
 	
-	self assert: (rows size = 2).
-	self assert: (rows first at: 'ID') = 1.
-	self assert: (rows first at: 'NAME') = 'User One'.
-	
+	self assert: rows size equals: 2.
+	self assert: (rows first at: 'ID') equals: 1.
+	self assert: (rows first at: 'NAME') equals: 'User One'
 
 ]
 
@@ -686,9 +670,9 @@ UDBCSQLiteConnectionTest >> testGlorpDoubleInsertPrimaryKey [
 	rs := db execute: 'select * from GR_USER'.
 	rows := rs rows.
 	
-	self assert: (rows size = 1).
-	self assert: (rows first at: 'ID') = 1.
-	self assert: (rows first at: 'NAME') = 'Fred'.
+	self assert: rows size equals: 1.
+	self assert: (rows first at: 'ID') equals: 1.
+	self assert: (rows first at: 'NAME') equals: 'Fred'.
 	
 
 ]
@@ -710,12 +694,10 @@ UDBCSQLiteConnectionTest >> testGlorpUpdate [
 	rs := db execute: 'select * from BOOK'.
 	rows := rs rows.
 	
-	self assert: (rows size = 1).
-	self assert: (rows first at: 'ID') = 1.
-	self assert: (rows first at: 'TITLE') = 'The Bad Beginning'.
-	self assert: (rows first at: 'COPIES_IN_STOCK') = 6.
-	
-
+	self assert: rows size equals: 1.
+	self assert: (rows first at: 'ID') equals: 1.
+	self assert: (rows first at: 'TITLE') equals: 'The Bad Beginning'.
+	self assert: (rows first at: 'COPIES_IN_STOCK') equals: 6
 ]
 
 { #category : #tests }
@@ -736,12 +718,10 @@ UDBCSQLiteConnectionTest >> testGlorpUpdateTwice [
 	rs := db execute: 'select * from BOOK'.
 	rows := rs rows.
 	
-	self assert: (rows size = 1).
-	self assert: (rows first at: 'ID') = 1.
-	self assert: (rows first at: 'TITLE') = 'The Bad Beginning'.
-	self assert: (rows first at: 'COPIES_IN_STOCK') = 6.
-	
-
+	self assert: rows size equals: 1.
+	self assert: (rows first at: 'ID') equals: 1.
+	self assert: (rows first at: 'TITLE') equals: 'The Bad Beginning'.
+	self assert: (rows first at: 'COPIES_IN_STOCK') equals: 6
 ]
 
 { #category : #tests }
@@ -749,24 +729,23 @@ UDBCSQLiteConnectionTest >> testInsertThenSelectInTransaction [
 	"From GlorpDatabaseBasicTest>>testNameBinding."
 	
 	res := db basicExecute: 'create table if not exists x (id integer , tv text);'.
-	self assert: (res = 0).
+	self assert: res equals: 0.
 	
 	res := db basicExecute: 'delete from x;'.
-	self assert: (res = 0).	
+	self assert: res equals: 0.	
 
 	res := db beginTransaction.
-	self assert: (res = 0).
+	self assert: res equals: 0.
 
 	db basicExecute: 'insert into x values (10, "abc")'.
 	db basicExecute: 'insert into x values (20, "def")'.
 	db basicExecute: 'insert into x values (30, "ghi")'.
 	
 	rs := db execute: 'select * from x where id = ? or id = ?' with: { 10. 30 }.
-	self assert: rs rows size = 2.
+	self assert: rs rows size equals: 2.
 
 	res := db rollbackTransaction.
-	self assert: (res = 0).
-	
+	self assert: res equals: 0	
 ]
 
 { #category : #tests }
@@ -779,25 +758,25 @@ UDBCSQLiteConnectionTest >> testRows [
 	rs rowClass: UDBCSQLite3Row.
 	rows := rs rows.
 	
-	self assert: (rows size = rowCount).
-	self assert: (rows first at: 'rk') = 1.
-	self assert: (rows first at: 'rt') = '1-ZZZ'.
-	self assert: (rows first at: 1) = 1.
-	self assert: (rows first at: 3) = '1-ZZZ'.
+	self assert: rows size equals: rowCount.
+	self assert: (rows first at: 'rk') equals: 1.
+	self assert: (rows first at: 'rt') equals: '1-ZZZ'.
+	self assert: (rows first at: 1) equals: 1.
+	self assert: (rows first at: 3) equals: '1-ZZZ'.
 	
 	1 to: 5 do: [ :x |
 		any := Random new nextInt: rowCount.
-		self assert: ((rows at: any) at: 'rk') = any.
-		self assert: ((rows at: any) at: 'rt') = (any asString, '-ZZZ').
-		self assert: (((rows at: any) at: 'rn') \\ any) = 0.
-		self assert: ((rows at: any) at: 1) = any.
-		self assert: (((rows at: any) at: 2) \\ any) = 0.
-		self assert: ((rows at: any) at: 3) = (any asString, '-ZZZ') ].
+		self assert: ((rows at: any) at: 'rk') equals: any.
+		self assert: ((rows at: any) at: 'rt') equals: (any asString, '-ZZZ').
+		self assert: (((rows at: any) at: 'rn') \\ any) equals: 0.
+		self assert: ((rows at: any) at: 1) equals: any.
+		self assert: (((rows at: any) at: 2) \\ any) equals: 0.
+		self assert: ((rows at: any) at: 3) equals: (any asString, '-ZZZ') ].
 			
-	self assert: (rows last at: 'rk') = rowCount.
-	self assert: (rows last at: 'rt') = (rowCount asString, '-ZZZ').
-	self assert: (rows last at: 1) = rowCount.
-	self assert: (rows last at: 3) = (rowCount asString, '-ZZZ').
+	self assert: (rows last at: 'rk') equals: rowCount.
+	self assert: (rows last at: 'rt') equals: (rowCount asString, '-ZZZ').
+	self assert: (rows last at: 1) equals: rowCount.
+	self assert: (rows last at: 3) equals: (rowCount asString, '-ZZZ').
 		
 
 ]
@@ -808,7 +787,7 @@ UDBCSQLiteConnectionTest >> untestStatementInProgress [
 	| s1 s2 |
 		
 	res := db basicExecute: 'create table if not exists x (xk integer primary key, iv integer);'.
-	self assert: (res = 0).
+	self assert: res equals: 0.
 	
 	
 	db beginTransaction.
@@ -821,9 +800,7 @@ UDBCSQLiteConnectionTest >> untestStatementInProgress [
 	db commitTransaction.
 
 	s1 reset.
-	s1 finalize.
-	
-	
+	s1 finalize
 
 	
 

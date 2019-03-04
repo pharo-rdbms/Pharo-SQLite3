@@ -44,7 +44,7 @@ UDBCDriverManagerTest >> testAccessingAvailableDriversYieldsDriver [
 { #category : #tests }
 UDBCDriverManagerTest >> testAccessingUnavailableDriversRaisesError [
 
-	self should: [manager driverAt: 1 ] raise: Error
+	self should: [ manager driverAt: 1 ] raise: Error
 ]
 
 { #category : #tests }
