@@ -80,10 +80,10 @@ UDBCConnectionString >> optionAt: aString ifAbsent: aBlockClosure [
 { #category : #private }
 UDBCConnectionString >> options [
 	^ options
-		ifNil:
+		ifNotNil:
 			[ options := connectionStringURL query
 				ifNil: [ Dictionary new ]
-				ifNotNilDo: #asDictionary ]
+				ifNotNil: #asDictionary ]
 ]
 
 { #category : #accessing }
