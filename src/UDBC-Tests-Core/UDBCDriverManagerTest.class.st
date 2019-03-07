@@ -88,8 +88,10 @@ UDBCDriverManagerTest >> testSubscribeIsWeak [
 	id := driver driverId.
 	manager subscribeDriver: driver.
 	
+	"Dereference the driver and run GC"
 	driver := nil.
 	Smalltalk garbageCollect.
+	
 	self assert: (manager isAvailable: id) not
 ]
 

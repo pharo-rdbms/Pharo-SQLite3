@@ -49,8 +49,10 @@ UDBCDriverManager >> initialize [
 UDBCDriverManager >> isAvailable: aDriverId [
 	"Tests if a driver is available with the id given as argument."
 
+	| driver |
 	self cleanUp.
-	^ drivers includesKey: aDriverId asLowercase asSymbol
+	driver := drivers at: aDriverId asLowercase asSymbol ifAbsent: [ nil ].
+   	^driver notNil
 ]
 
 { #category : #'accessing - drivers' }
