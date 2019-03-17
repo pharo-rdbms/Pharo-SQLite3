@@ -121,6 +121,27 @@ UDBCSQLite3ResultSet >> nextOfClass: aRowClass [
 
 ]
 
+{ #category : #API }
+UDBCSQLite3ResultSet >> onlyRow [
+	^ self onlyRow: [ ]
+
+"For the common case where there is exactly one row expected. Returns nil if there is no row."
+
+]
+
+{ #category : #API }
+UDBCSQLite3ResultSet >> onlyRow: ifNoneBlock [
+	| rows |
+	
+	rows := self rows.
+	^ (rows isEmpty)
+		ifTrue: [ ifNoneBlock value ]
+		ifFalse: [ rows first ]
+
+"For the common case where there is exactly one row expected. Returns the evaluation of ifNoneBlock if there is no row."
+
+]
+
 { #category : #private }
 UDBCSQLite3ResultSet >> prepareStatement: anSQLText [
 

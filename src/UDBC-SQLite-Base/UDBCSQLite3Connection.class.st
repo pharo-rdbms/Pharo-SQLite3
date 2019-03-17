@@ -14,6 +14,42 @@ UDBCSQLite3Connection >> execute: anSQLText [
 ]
 
 { #category : #'public API - operating' }
+UDBCSQLite3Connection >> execute: anSQLText value: anObject [
+
+	^ UDBCSQLite3ResultSet new execute: anSQLText 
+		with: (Array with: anObject) 
+		on: self	
+
+]
+
+{ #category : #'public API - operating' }
+UDBCSQLite3Connection >> execute: anSQLText value: object1 value: object2 [
+
+	^ UDBCSQLite3ResultSet new execute: anSQLText 
+		with: (Array with: object1 with: object2) 
+		on: self	
+
+]
+
+{ #category : #'public API - operating' }
+UDBCSQLite3Connection >> execute: anSQLText value: object1 value: object2 value: object3 [
+
+	^ UDBCSQLite3ResultSet new execute: anSQLText 
+		with: (Array with: object1 with: object2 with: object3) 
+		on: self	
+
+]
+
+{ #category : #'public API - operating' }
+UDBCSQLite3Connection >> execute: anSQLText value: object1 value: object2 value: object3 value: object4 [
+
+	^ UDBCSQLite3ResultSet new execute: anSQLText 
+		with: (Array with: object1 with: object2 with: object3 with: object4) 
+		on: self	
+
+]
+
+{ #category : #'public API - operating' }
 UDBCSQLite3Connection >> execute: anSQLText with: anObject [
 
 	anObject isString
