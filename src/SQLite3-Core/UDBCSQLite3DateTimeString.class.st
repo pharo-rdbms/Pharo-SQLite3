@@ -5,5 +5,5 @@ Class {
 	#name : #UDBCSQLite3DateTimeString,
 	#superclass : #ByteString,
 	#type : #bytes,
-	#category : #'UDBC-SQLite-Base-Types'
+	#category : #'SQLite3-Core-Types'
 }

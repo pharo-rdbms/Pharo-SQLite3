@@ -8,7 +8,7 @@ Class {
 	#instVars : [
 		'statementsCache'
 	],
-	#category : #'UDBC-SQLite-Base-Connections'
+	#category : #'SQLite3-Core-Connections'
 }
 
 { #category : #'public API - open/close' }

@@ -12,7 +12,7 @@ Class {
 	#pools : [
 		'UDBCSQLite3Constants'
 	],
-	#category : #'UDBC-SQLite-Base-UFFI'
+	#category : #'SQLite3-Core-UFFI'
 }
 
 { #category : #'private - accessing' }

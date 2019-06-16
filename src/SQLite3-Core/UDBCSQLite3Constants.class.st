@@ -19,7 +19,7 @@ Class {
 		'ROW',
 		'TEXT'
 	],
-	#category : #'UDBC-SQLite-Base-UFFI-Support'
+	#category : #'SQLite3-Core-UFFI-Support'
 }
 
 { #category : #initialization }

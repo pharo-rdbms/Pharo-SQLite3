@@ -9,7 +9,7 @@ Class {
 		'res',
 		'rs'
 	],
-	#category : #'UDBC-Tests-SQLite-Base-Connections'
+	#category : #'SQLite3-Core-Tests-Connections'
 }
 
 { #category : #utilities }

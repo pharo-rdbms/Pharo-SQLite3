@@ -7,7 +7,7 @@ Class {
 	#instVars : [
 		'resultCode'
 	],
-	#category : #'UDBC-SQLite-Base-Errors'
+	#category : #'SQLite3-Core-Errors'
 }
 
 { #category : #accessing }

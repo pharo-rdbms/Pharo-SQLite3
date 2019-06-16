@@ -5,7 +5,7 @@ I represent a connection to an SQLite database.
 Class {
 	#name : #UDBCSQLite3Connection,
 	#superclass : #UDBCSQLite3BaseConnection,
-	#category : #'UDBC-SQLite-Base-Connections'
+	#category : #'SQLite3-Core-Connections'
 }
 
 { #category : #'public API - operating' }

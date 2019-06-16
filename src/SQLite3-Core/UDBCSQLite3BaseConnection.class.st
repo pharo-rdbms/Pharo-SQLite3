@@ -11,7 +11,7 @@ Class {
 		'library',
 		'statementClass'
 	],
-	#category : #'UDBC-SQLite-Base-Connections'
+	#category : #'SQLite3-Core-Connections'
 }
 
 { #category : #examples }

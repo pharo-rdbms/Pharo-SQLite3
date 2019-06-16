@@ -11,7 +11,7 @@ Class {
 		'moreRows',
 		'rowClass'
 	],
-	#category : #'UDBC-SQLite-Base-Database'
+	#category : #'SQLite3-Core-Database'
 }
 
 { #category : #API }
