@@ -702,7 +702,7 @@ SQLiteBaseConnectionTest >> testTableNamesOfEmptyDatabase [
 
 { #category : #tests }
 SQLiteBaseConnectionTest >> testTime [
-	"UDBCSQLite3 converts a given Time instance into a DateAndTime and stores that."
+	"SQLite3 converts a given Time instance into a DateAndTime and stores that."
 	| data today s | 
 	
 	data := Time noon.

@@ -1090,7 +1090,7 @@ SQLiteConnectionTest >> untestStatementInProgress [
 	"s1 step."
 
 	db execute: 'delete from x;'.
-	"self should: [ db rollbackTransaction ] raise: UDBCSQLite3Error."
+	"self should: [ db rollbackTransaction ] raise: SQLite3Error."
 	db commitTransaction.
 
 	s1 reset.
