@@ -2,7 +2,7 @@
 I represent a connection to an SQLite database. I provide a thin wrapper over the SQLite C API.
 "
 Class {
-	#name : #UDBCSQLite3BaseConnection,
+	#name : #SQLite3BaseConnection,
 	#superclass : #Object,
 	#instVars : [
 		'dbFilename',
@@ -15,13 +15,13 @@ Class {
 }
 
 { #category : #examples }
-UDBCSQLite3BaseConnection class >> memory [
+SQLite3BaseConnection class >> memory [
 
 	^self on: ':memory:'
 ]
 
 { #category : #'instance creation' }
-UDBCSQLite3BaseConnection class >> on: aFilename [
+SQLite3BaseConnection class >> on: aFilename [
 
 	^(self new) 
 		on: aFilename;
@@ -30,7 +30,7 @@ UDBCSQLite3BaseConnection class >> on: aFilename [
 ]
 
 { #category : #'instance creation' }
-UDBCSQLite3BaseConnection class >> openOn: aFilename [
+SQLite3BaseConnection class >> openOn: aFilename [
 
 	^(self new) 
 		on: aFilename; 
@@ -40,12 +40,12 @@ UDBCSQLite3BaseConnection class >> openOn: aFilename [
 ]
 
 { #category : #'public API - backups' }
-UDBCSQLite3BaseConnection >> asBackupDestination: backupObject [
+SQLite3BaseConnection >> asBackupDestination: backupObject [
 	self asBackupDestination: backupObject forDatabase: 'main'
 ]
 
 { #category : #'public API - backups' }
-UDBCSQLite3BaseConnection >> asBackupDestination: backupObject forDatabase: databaseName [
+SQLite3BaseConnection >> asBackupDestination: backupObject forDatabase: databaseName [
 	
 	backupObject destinationHandle: dbHandle.
 	backupObject destinationDatabaseName: databaseName
@@ -53,12 +53,12 @@ UDBCSQLite3BaseConnection >> asBackupDestination: backupObject forDatabase: data
 ]
 
 { #category : #'public API - backups' }
-UDBCSQLite3BaseConnection >> asBackupSource: backupObject [
+SQLite3BaseConnection >> asBackupSource: backupObject [
 	self asBackupSource: backupObject forDatabase: 'main'
 ]
 
 { #category : #'public API - backups' }
-UDBCSQLite3BaseConnection >> asBackupSource: backupObject forDatabase: databaseName [
+SQLite3BaseConnection >> asBackupSource: backupObject forDatabase: databaseName [
 	
 	backupObject sourceHandle: dbHandle.
 	backupObject sourceDatabaseName: databaseName
@@ -66,7 +66,7 @@ UDBCSQLite3BaseConnection >> asBackupSource: backupObject forDatabase: databaseN
 ]
 
 { #category : #'public API - operating' }
-UDBCSQLite3BaseConnection >> basicExecute: anSQLText [ 
+SQLite3BaseConnection >> basicExecute: anSQLText [ 
 	^ (self prepare: anSQLText) step; finalize
 
 "20190302, pierce: This used to invoke sqlite3_exec() which is an SQLite-internal convenience wrapper around prepare/step/finalize. It is now rewritten as seen to handle UTF8-encoded input properly. Rewriting this method breaks the Bobby Tables test which relies on naive SQL string construction to work."
@@ -74,23 +74,23 @@ UDBCSQLite3BaseConnection >> basicExecute: anSQLText [
 ]
 
 { #category : #'public API - transactional' }
-UDBCSQLite3BaseConnection >> beginTransaction [
+SQLite3BaseConnection >> beginTransaction [
 	^ self basicExecute: 'begin'	
 ]
 
 { #category : #'public API - introspection' }
-UDBCSQLite3BaseConnection >> changes [
+SQLite3BaseConnection >> changes [
 	^ library changes: dbHandle
 ]
 
 { #category : #'public API - operating' }
-UDBCSQLite3BaseConnection >> clearBindings: aStatement [
+SQLite3BaseConnection >> clearBindings: aStatement [
 	library clearBindings: aStatement handle on: dbHandle
 	
 ]
 
 { #category : #'public API - open/close' }
-UDBCSQLite3BaseConnection >> close [
+SQLite3BaseConnection >> close [
 
 	"Let FFIExternalResourceManager take care."
 	"dbHandle ifNotNil: [ library close: dbHandle ]."
@@ -99,10 +99,10 @@ UDBCSQLite3BaseConnection >> close [
 ]
 
 { #category : #'public API - introspection' }
-UDBCSQLite3BaseConnection >> columnNamesFor: aTableName [
+SQLite3BaseConnection >> columnNamesFor: aTableName [
 	
 	self isOpen
-		ifFalse: [ UDBCSQLite3NotOpen signal ]
+		ifFalse: [ SQLite3NotOpen signal ]
 		ifTrue: [ 
 			| s tableExists |
 			s := self prepare: 'select count(*) from sqlite_master where type = "table" and tbl_name = ?'.
@@ -121,15 +121,15 @@ UDBCSQLite3BaseConnection >> columnNamesFor: aTableName [
 ]
 
 { #category : #'public API - transactional' }
-UDBCSQLite3BaseConnection >> commitTransaction [
+SQLite3BaseConnection >> commitTransaction [
 	^ self basicExecute: 'commit'	
 ]
 
 { #category : #'public API - introspection' }
-UDBCSQLite3BaseConnection >> declaredColumnTypesFor: aTableName [
+SQLite3BaseConnection >> declaredColumnTypesFor: aTableName [
 	
 	self isOpen
-		ifFalse: [ UDBCSQLite3NotOpen signal ]
+		ifFalse: [ SQLite3NotOpen signal ]
 		ifTrue: [ 
 			| s tableExists |
 			s := self prepare: 'select count(*) from sqlite_master where type = "table" and tbl_name = ?'.
@@ -148,50 +148,50 @@ UDBCSQLite3BaseConnection >> declaredColumnTypesFor: aTableName [
 ]
 
 { #category : #'public API - extensions' }
-UDBCSQLite3BaseConnection >> disableExtensions [
+SQLite3BaseConnection >> disableExtensions [
 	^ library disableLoadExtension: dbHandle 
 ]
 
 { #category : #'public API - extensions' }
-UDBCSQLite3BaseConnection >> enableExtensions [
+SQLite3BaseConnection >> enableExtensions [
 	^ library enableLoadExtension: dbHandle 
 ]
 
 { #category : #'public API - operating' }
-UDBCSQLite3BaseConnection >> finalize: anSQLText [ 
+SQLite3BaseConnection >> finalize: anSQLText [ 
 	"no-op"	
 ]
 
 { #category : #initialization }
-UDBCSQLite3BaseConnection >> initialize [
+SQLite3BaseConnection >> initialize [
 	
 	super initialize.
 	isOpen := false.
-	library := UDBCSQLite3Library current.
-	dbHandle := UDBCSQLite3DatabaseExternalObject new.
+	library := SQLite3Library current.
+	dbHandle := SQLite3DatabaseExternalObject new.
 	dbHandle autoRelease.
-	statementClass := UDBCSQLite3Statement.
+	statementClass := SQLite3Statement.
 ]
 
 { #category : #testing }
-UDBCSQLite3BaseConnection >> isOpen [
+SQLite3BaseConnection >> isOpen [
 	^ isOpen
 ]
 
 { #category : #'public API - extensions' }
-UDBCSQLite3BaseConnection >> loadExtension: aFilename [
+SQLite3BaseConnection >> loadExtension: aFilename [
 	^ library loadExtension: dbHandle with: aFilename 
 ]
 
 { #category : #private }
-UDBCSQLite3BaseConnection >> on: aFilename [
+SQLite3BaseConnection >> on: aFilename [
 
 	dbFilename := aFilename.
 	^ self
 ]
 
 { #category : #'public API - open/close' }
-UDBCSQLite3BaseConnection >> open [
+SQLite3BaseConnection >> open [
 	 ((library open: dbFilename via: dbHandle) == 0)
 		ifTrue: [ 
 			isOpen := true.
@@ -200,11 +200,11 @@ UDBCSQLite3BaseConnection >> open [
 			| err |
 			err := library apiErrorMessage: dbHandle.
 			library apiClose: dbHandle.
-			UDBCSQLite3Error signal: err ]
+			SQLite3Error signal: err ]
 ]
 
 { #category : #'public API - operating' }
-UDBCSQLite3BaseConnection >> prepare: anSQLText [ 
+SQLite3BaseConnection >> prepare: anSQLText [ 
 	| s |
 	
 	s := self statementClass new.
@@ -215,32 +215,32 @@ UDBCSQLite3BaseConnection >> prepare: anSQLText [
 ]
 
 { #category : #'public API - cleaning' }
-UDBCSQLite3BaseConnection >> reset: aStatement [ 
+SQLite3BaseConnection >> reset: aStatement [ 
 	library reset: aStatement handle on: dbHandle
 	
 ]
 
 { #category : #'public API - transactional' }
-UDBCSQLite3BaseConnection >> rollbackTransaction [
+SQLite3BaseConnection >> rollbackTransaction [
 	^ self basicExecute: 'rollback'	
 ]
 
 { #category : #private }
-UDBCSQLite3BaseConnection >> signal: exceptionClass with: value [
+SQLite3BaseConnection >> signal: exceptionClass with: value [
 	library signal: exceptionClass with: value on: dbHandle
 ]
 
 { #category : #accessing }
-UDBCSQLite3BaseConnection >> statementClass [
+SQLite3BaseConnection >> statementClass [
 	^ statementClass
 ]
 
 { #category : #'public API - introspection' }
-UDBCSQLite3BaseConnection >> tableNames [
+SQLite3BaseConnection >> tableNames [
 	| tables s |
 	
 	self isOpen
-		ifFalse: [ UDBCSQLite3NotOpen signal ]
+		ifFalse: [ SQLite3NotOpen signal ]
 		ifTrue: [ 
 			tables := OrderedCollection new.
 			s := self prepare: 'select tbl_name from sqlite_master where type = "table"'.
@@ -251,12 +251,12 @@ UDBCSQLite3BaseConnection >> tableNames [
 ]
 
 { #category : #'public API - introspection' }
-UDBCSQLite3BaseConnection >> totalChanges [
+SQLite3BaseConnection >> totalChanges [
 	^ library totalChanges: dbHandle
 ]
 
 { #category : #'public API - tracing' }
-UDBCSQLite3BaseConnection >> traceUsing: callback with: appdata [
+SQLite3BaseConnection >> traceUsing: callback with: appdata [
 	library trace: dbHandle with: callback with: appdata
 	
 ]

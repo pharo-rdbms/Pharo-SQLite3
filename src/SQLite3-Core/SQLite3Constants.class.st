@@ -2,7 +2,7 @@
 I provide SQLIte's constants.
 "
 Class {
-	#name : #UDBCSQLite3Constants,
+	#name : #SQLite3Constants,
 	#superclass : #SharedPool,
 	#classVars : [
 		'BLOB',
@@ -23,7 +23,7 @@ Class {
 }
 
 { #category : #initialization }
-UDBCSQLite3Constants class >> initialize [
+SQLite3Constants class >> initialize [
 
 	"C function return codes."
 	OK := 0.	

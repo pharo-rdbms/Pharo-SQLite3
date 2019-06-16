@@ -2,20 +2,20 @@
 I represent an SQLite prepared statement.
 "
 Class {
-	#name : #UDBCSQLite3Statement,
+	#name : #SQLite3Statement,
 	#superclass : #Object,
 	#instVars : [
 		'connection',
 		'handle'
 	],
 	#pools : [
-		'UDBCSQLite3Constants'
+		'SQLite3Constants'
 	],
 	#category : #'SQLite3-Core-Database'
 }
 
 { #category : #'public - accessing' }
-UDBCSQLite3Statement >> at: aColumn putBoolean: aBoolean [
+SQLite3Statement >> at: aColumn putBoolean: aBoolean [
 
 	^ self library 
 		with: handle 
@@ -26,20 +26,20 @@ UDBCSQLite3Statement >> at: aColumn putBoolean: aBoolean [
 ]
 
 { #category : #'public - accessing' }
-UDBCSQLite3Statement >> at: aColumn putByteArray: anObject [
+SQLite3Statement >> at: aColumn putByteArray: anObject [
 	^ self library with: handle at: aColumn putBlob: anObject
 ]
 
 { #category : #'public - accessing' }
-UDBCSQLite3Statement >> at: aColumn putDateTime: aDateTime [
+SQLite3Statement >> at: aColumn putDateTime: aDateTime [
 	| s |
 	
-	s := UDBCSQLite3DateTimeString streamContents: [ :stream | aDateTime asDateAndTime printOn: stream ].
+	s := SQLite3DateTimeString streamContents: [ :stream | aDateTime asDateAndTime printOn: stream ].
 	^ self library with: handle at: aColumn putString: s
 ]
 
 { #category : #'public - accessing' }
-UDBCSQLite3Statement >> at: aColumn putFloat: aFloat [
+SQLite3Statement >> at: aColumn putFloat: aFloat [
 	| f |
 	
 	f := (aFloat isKindOf: Fraction)
@@ -49,30 +49,30 @@ UDBCSQLite3Statement >> at: aColumn putFloat: aFloat [
 ]
 
 { #category : #'public - accessing' }
-UDBCSQLite3Statement >> at: aColumn putInteger: anInteger [
+SQLite3Statement >> at: aColumn putInteger: anInteger [
 
 	^ self library with: handle at: aColumn putInteger: anInteger
 ]
 
 { #category : #'public - accessing' }
-UDBCSQLite3Statement >> at: aColumn putNil: anObject [
+SQLite3Statement >> at: aColumn putNil: anObject [
 	"Goofy interface note - anObject is ignored here."
 	"When used by UDBCSQLite3Connection, anObject will always be nil."
 	^ self library with: handle putNullAt: aColumn
 ]
 
 { #category : #'public - accessing' }
-UDBCSQLite3Statement >> at: aColumn putObject: anObject [
+SQLite3Statement >> at: aColumn putObject: anObject [
 	^ self library with: handle at: aColumn putBlob: (FLSerializer serializeToByteArray: anObject)
 ]
 
 { #category : #'public - accessing' }
-UDBCSQLite3Statement >> at: aColumn putString: aString [
+SQLite3Statement >> at: aColumn putString: aString [
 	^ self library with: handle at: aColumn putString: aString
 ]
 
 { #category : #public }
-UDBCSQLite3Statement >> basicExecute: aBlock [
+SQLite3Statement >> basicExecute: aBlock [
 	| ret |
 	
 	ret := self step. 
@@ -85,38 +85,38 @@ UDBCSQLite3Statement >> basicExecute: aBlock [
 ]
 
 { #category : #'public - accessing' }
-UDBCSQLite3Statement >> bindParameterCount [
+SQLite3Statement >> bindParameterCount [
 	^ self library bindParameterCount: handle
 ]
 
 { #category : #'public - accessing' }
-UDBCSQLite3Statement >> bindParameterIndex: aName [
+SQLite3Statement >> bindParameterIndex: aName [
 	^ self library bindParameterIndex: handle for: aName
 ]
 
 { #category : #'public - accessing' }
-UDBCSQLite3Statement >> booleanAt: aColumn [ 
+SQLite3Statement >> booleanAt: aColumn [ 
 	^self library booleanFrom: handle at: aColumn
 ]
 
 { #category : #'public - accessing' }
-UDBCSQLite3Statement >> byteArrayAt: aColumn [
+SQLite3Statement >> byteArrayAt: aColumn [
 	^ self library blobFrom: handle at: aColumn
 
 ]
 
 { #category : #public }
-UDBCSQLite3Statement >> clearBindings [
+SQLite3Statement >> clearBindings [
 	connection clearBindings: self
 ]
 
 { #category : #'private - accessing' }
-UDBCSQLite3Statement >> connection: anObject [
+SQLite3Statement >> connection: anObject [
 	connection := anObject
 ]
 
 { #category : #'public - accessing' }
-UDBCSQLite3Statement >> dataTypeForObject: anObject [
+SQLite3Statement >> dataTypeForObject: anObject [
 
 	anObject ifNil: [ ^#at:putNil: ].
 
@@ -142,17 +142,17 @@ UDBCSQLite3Statement >> dataTypeForObject: anObject [
 ]
 
 { #category : #'public - accessing' }
-UDBCSQLite3Statement >> dataValuesAvailable [
+SQLite3Statement >> dataValuesAvailable [
 	^ self library dataValuesAvailable: handle
 ]
 
 { #category : #'public - accessing' }
-UDBCSQLite3Statement >> dateTimeAt: aColumn [	
+SQLite3Statement >> dateTimeAt: aColumn [	
 	^ DateAndTime fromString: (self library stringFrom: handle at: aColumn)
 ]
 
 { #category : #initialization }
-UDBCSQLite3Statement >> finalize [
+SQLite3Statement >> finalize [
 	| result |
 	
 	result := connection finalize: self sqlText.
@@ -163,31 +163,31 @@ UDBCSQLite3Statement >> finalize [
 ]
 
 { #category : #'public - accessing' }
-UDBCSQLite3Statement >> floatAt: aColumn [
+SQLite3Statement >> floatAt: aColumn [
 
 	^self library floatFrom: handle at: aColumn
 ]
 
 { #category : #'private - accessing' }
-UDBCSQLite3Statement >> handle [
+SQLite3Statement >> handle [
 	^ handle
 ]
 
 { #category : #initialization }
-UDBCSQLite3Statement >> initialize [
+SQLite3Statement >> initialize [
 
 	super initialize.
-	handle := UDBCSQLite3StatementExternalObject new.
+	handle := SQLite3StatementExternalObject new.
 	handle autoRelease
 ]
 
 { #category : #'public - accessing' }
-UDBCSQLite3Statement >> integerAt: aColumn [ 
+SQLite3Statement >> integerAt: aColumn [ 
 	^self library integerFrom: handle at: aColumn
 ]
 
 { #category : #'private - testing' }
-UDBCSQLite3Statement >> isDateAndTimeLike: anObject [
+SQLite3Statement >> isDateAndTimeLike: anObject [
 
 	^ ((anObject isKindOf: DateAndTime) or: [ anObject isKindOf: Date ])
 			or: [ anObject isKindOf: Time ]
@@ -196,49 +196,49 @@ UDBCSQLite3Statement >> isDateAndTimeLike: anObject [
 ]
 
 { #category : #'private - testing' }
-UDBCSQLite3Statement >> isFloatLike: anObject [
+SQLite3Statement >> isFloatLike: anObject [
 	^ (anObject isKindOf: Float) or: [ anObject isKindOf: Fraction ]
 		
 
 ]
 
 { #category : #private }
-UDBCSQLite3Statement >> library [
-	^UDBCSQLite3Library current
+SQLite3Statement >> library [
+	^SQLite3Library current
 ]
 
 { #category : #'public - accessing' }
-UDBCSQLite3Statement >> nameOfColumn: aColumn [
+SQLite3Statement >> nameOfColumn: aColumn [
 	^ self library nameFor: handle at: aColumn
 ]
 
 { #category : #'public - accessing' }
-UDBCSQLite3Statement >> nilAt: aColumn [
+SQLite3Statement >> nilAt: aColumn [
 	^ nil  
 ]
 
 { #category : #'public - accessing' }
-UDBCSQLite3Statement >> objectAt: aColumn [
+SQLite3Statement >> objectAt: aColumn [
 	^ FLMaterializer materializeFromByteArray: (self library blobFrom: handle at: aColumn)  
 ]
 
 { #category : #public }
-UDBCSQLite3Statement >> reset [
+SQLite3Statement >> reset [
 	connection reset: self
 ]
 
 { #category : #operating }
-UDBCSQLite3Statement >> sqlText [ 
+SQLite3Statement >> sqlText [ 
 	^ self library sqlText: handle
 ]
 
 { #category : #public }
-UDBCSQLite3Statement >> step [
+SQLite3Statement >> step [
 	^ self stepOk: (self library step: handle)
 ]
 
 { #category : #private }
-UDBCSQLite3Statement >> stepOk: aValue [
+SQLite3Statement >> stepOk: aValue [
 
 	"These are normal conditions."	
 	(aValue = ROW) ifTrue: [ ^ ROW ].
@@ -246,27 +246,27 @@ UDBCSQLite3Statement >> stepOk: aValue [
 	
 	"These are error conditions."
 	(aValue = BUSY)
-		ifTrue: [ connection signal: UDBCSQLite3Busy with: aValue ].
+		ifTrue: [ connection signal: SQLite3Busy with: aValue ].
 	(aValue = MISUSE)
-		ifTrue: [ connection signal: UDBCSQLite3Misuse with: aValue ].				
+		ifTrue: [ connection signal: SQLite3Misuse with: aValue ].				
 
 	"Catch any error not specifically handled above."
-	connection signal: UDBCSQLite3Error with: aValue
+	connection signal: SQLite3Error with: aValue
 
 ]
 
 { #category : #operating }
-UDBCSQLite3Statement >> stringAt: aColumn [	 
+SQLite3Statement >> stringAt: aColumn [	 
 	^ self library stringFrom: handle at: aColumn
 ]
 
 { #category : #public }
-UDBCSQLite3Statement >> typeOfColumn: aColumn [
+SQLite3Statement >> typeOfColumn: aColumn [
 	^ self library typeFor: handle at: aColumn
 ]
 
 { #category : #public }
-UDBCSQLite3Statement >> valueOfColumn: aColumn [
+SQLite3Statement >> valueOfColumn: aColumn [
 	^ self perform: (self typeOfColumn: aColumn) with: aColumn
 
 ]

@@ -3,7 +3,7 @@ I represent a row of results returned by the database.
 
 "
 Class {
-	#name : #UDBCSQLite3Row,
+	#name : #SQLite3Row,
 	#superclass : #Object,
 	#instVars : [
 		'data',
@@ -13,7 +13,7 @@ Class {
 }
 
 { #category : #accessing }
-UDBCSQLite3Row >> asArray [
+SQLite3Row >> asArray [
 	| c |
 
 	c := OrderedCollection new.
@@ -23,58 +23,58 @@ UDBCSQLite3Row >> asArray [
 ]
 
 { #category : #accessing }
-UDBCSQLite3Row >> at: aKey [ 
+SQLite3Row >> at: aKey [ 
 	^ self at: aKey ifAbsent: [  ]
 ]
 
 { #category : #accessing }
-UDBCSQLite3Row >> at: aKey ifAbsent: aBlock [
+SQLite3Row >> at: aKey ifAbsent: aBlock [
 	^ data at: aKey ifAbsent: aBlock
 ]
 
 { #category : #accessing }
-UDBCSQLite3Row >> at: aKey put: anObject [
+SQLite3Row >> at: aKey put: anObject [
 	^ data at: aKey put: anObject
 ]
 
 { #category : #accessing }
-UDBCSQLite3Row >> atIndex: anIndex [
+SQLite3Row >> atIndex: anIndex [
 	^ self at: anIndex ifAbsent: [  ]
 ]
 
 { #category : #accessing }
-UDBCSQLite3Row >> atIndex: anIndex put: anObject [
+SQLite3Row >> atIndex: anIndex put: anObject [
 	^ data at: anIndex put: anObject
 ]
 
 { #category : #accessing }
-UDBCSQLite3Row >> atName: aKey [ 
+SQLite3Row >> atName: aKey [ 
 	^ self at: aKey ifAbsent: [  ]
 ]
 
 { #category : #accessing }
-UDBCSQLite3Row >> atName: aKey put: anObject [
+SQLite3Row >> atName: aKey put: anObject [
 	^ data at: aKey put: anObject
 ]
 
 { #category : #accessing }
-UDBCSQLite3Row >> data [
+SQLite3Row >> data [
 
 	 ^data
 ]
 
 { #category : #accessing }
-UDBCSQLite3Row >> dataCount [
+SQLite3Row >> dataCount [
 	^ dataCount
 ]
 
 { #category : #accessing }
-UDBCSQLite3Row >> dataCount: anObject [
+SQLite3Row >> dataCount: anObject [
 	dataCount := anObject
 ]
 
 { #category : #'reflective operations' }
-UDBCSQLite3Row >> doesNotUnderstand: aMessage [
+SQLite3Row >> doesNotUnderstand: aMessage [
 
 	^ self at: aMessage selector asString 
 			ifAbsent: [ 
@@ -84,13 +84,13 @@ UDBCSQLite3Row >> doesNotUnderstand: aMessage [
 ]
 
 { #category : #accessing }
-UDBCSQLite3Row >> first [
+SQLite3Row >> first [
 	^ self atIndex: 1
 
 ]
 
 { #category : #initialization }
-UDBCSQLite3Row >> initialize [
+SQLite3Row >> initialize [
 	"Initializes the receiver"
 	
 	super initialize.
@@ -98,12 +98,12 @@ UDBCSQLite3Row >> initialize [
 ]
 
 { #category : #accessing }
-UDBCSQLite3Row >> last [
+SQLite3Row >> last [
 	^ self atIndex: self dataCount
 
 ]
 
 { #category : #accessing }
-UDBCSQLite3Row >> size [
+SQLite3Row >> size [
 	^ dataCount
 ]

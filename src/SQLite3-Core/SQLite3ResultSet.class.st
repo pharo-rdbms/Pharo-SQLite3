@@ -3,7 +3,7 @@ I represent a set of results returned by the database. I produce UDBCSQLite3Row 
 
 "
 Class {
-	#name : #UDBCSQLite3ResultSet,
+	#name : #SQLite3ResultSet,
 	#superclass : #Object,
 	#instVars : [
 		'db',
@@ -15,14 +15,14 @@ Class {
 }
 
 { #category : #API }
-UDBCSQLite3ResultSet >> close [
+SQLite3ResultSet >> close [
 
 	statement ifNotNil: [ statement finalize ].
 	statement := nil
 ]
 
 { #category : #private }
-UDBCSQLite3ResultSet >> execute: anSQLText with: anObject on: aDb [
+SQLite3ResultSet >> execute: anSQLText with: anObject on: aDb [
 	| obj |
 
 	db := aDb.
@@ -34,14 +34,14 @@ UDBCSQLite3ResultSet >> execute: anSQLText with: anObject on: aDb [
 		ifFalse: [
 			(obj isCollection)
 				ifTrue: [ self execute: anSQLText withCollection: obj ]
-				ifFalse: [ UDBCSQLite3Error signal: 'Unable to execute SQL on instance of ', obj class asString ]]
+				ifFalse: [ SQLite3Error signal: 'Unable to execute SQL on instance of ', obj class asString ]]
 	
 
 
 ]
 
 { #category : #private }
-UDBCSQLite3ResultSet >> execute: anSQLText withCollection: aCollection [
+SQLite3ResultSet >> execute: anSQLText withCollection: aCollection [
 	| i |
 	self prepareStatement: anSQLText.
 	i := 1.
@@ -50,7 +50,7 @@ UDBCSQLite3ResultSet >> execute: anSQLText withCollection: aCollection [
 ]
 
 { #category : #private }
-UDBCSQLite3ResultSet >> execute: aStatement withIndex: anInteger withValue: anObject [
+SQLite3ResultSet >> execute: aStatement withIndex: anInteger withValue: anObject [
 		
 	aStatement perform: (aStatement dataTypeForObject: anObject) with: anInteger with: anObject.
 	^ anInteger + 1
@@ -59,7 +59,7 @@ UDBCSQLite3ResultSet >> execute: aStatement withIndex: anInteger withValue: anOb
 ]
 
 { #category : #private }
-UDBCSQLite3ResultSet >> execute: aStatement withKey: keyObject withValue: valueObject [
+SQLite3ResultSet >> execute: aStatement withKey: keyObject withValue: valueObject [
 	| col |
 
 	col := aStatement bindParameterIndex: keyObject.
@@ -71,7 +71,7 @@ UDBCSQLite3ResultSet >> execute: aStatement withKey: keyObject withValue: valueO
 ]
 
 { #category : #private }
-UDBCSQLite3ResultSet >> execute: anSQLText withKeysAndValues: anObject [
+SQLite3ResultSet >> execute: anSQLText withKeysAndValues: anObject [
 	
 	self prepareStatement: anSQLText.
 	anObject keysAndValuesDo: [ :k :v | 
@@ -81,26 +81,26 @@ UDBCSQLite3ResultSet >> execute: anSQLText withKeysAndValues: anObject [
 ]
 
 { #category : #initialization }
-UDBCSQLite3ResultSet >> initialize [
+SQLite3ResultSet >> initialize [
 	"Initializes the receiver"
 	
 	super initialize.
 	moreRows := true.
-	rowClass := UDBCSQLite3Row
+	rowClass := SQLite3Row
 
 ]
 
 { #category : #API }
-UDBCSQLite3ResultSet >> next [
+SQLite3ResultSet >> next [
 	^ self nextOfClass: self rowClass
 
 ]
 
 { #category : #API }
-UDBCSQLite3ResultSet >> nextOfClass: aRowClass [
+SQLite3ResultSet >> nextOfClass: aRowClass [
 	| nc rr rv |
 
-	statement ifNil: [ UDBCSQLite3Misuse signal: 'This result set does not contain a prepared statement.' ].	
+	statement ifNil: [ SQLite3Misuse signal: 'This result set does not contain a prepared statement.' ].	
 	
 	moreRows ifTrue: [	
 		nc := statement dataValuesAvailable.
@@ -122,7 +122,7 @@ UDBCSQLite3ResultSet >> nextOfClass: aRowClass [
 ]
 
 { #category : #API }
-UDBCSQLite3ResultSet >> onlyRow [
+SQLite3ResultSet >> onlyRow [
 	^ self onlyRow: [ ]
 
 "For the common case where there is exactly one row expected. Returns nil if there is no row."
@@ -130,7 +130,7 @@ UDBCSQLite3ResultSet >> onlyRow [
 ]
 
 { #category : #API }
-UDBCSQLite3ResultSet >> onlyRow: ifNoneBlock [
+SQLite3ResultSet >> onlyRow: ifNoneBlock [
 	| rows |
 	
 	rows := self rows.
@@ -143,7 +143,7 @@ UDBCSQLite3ResultSet >> onlyRow: ifNoneBlock [
 ]
 
 { #category : #private }
-UDBCSQLite3ResultSet >> prepareStatement: anSQLText [
+SQLite3ResultSet >> prepareStatement: anSQLText [
 
 	statement := db prepare: anSQLText.
 	statement clearBindings.
@@ -152,26 +152,26 @@ UDBCSQLite3ResultSet >> prepareStatement: anSQLText [
 ]
 
 { #category : #accessing }
-UDBCSQLite3ResultSet >> rowClass [
+SQLite3ResultSet >> rowClass [
 	^ rowClass
 ]
 
 { #category : #accessing }
-UDBCSQLite3ResultSet >> rowClass: anObject [
+SQLite3ResultSet >> rowClass: anObject [
 	rowClass := anObject
 ]
 
 { #category : #API }
-UDBCSQLite3ResultSet >> rows [
+SQLite3ResultSet >> rows [
 	^ self rowsOfClass: self rowClass
 
 ]
 
 { #category : #API }
-UDBCSQLite3ResultSet >> rowsOfClass: aRowClass [
+SQLite3ResultSet >> rowsOfClass: aRowClass [
 	| rows nc rr rv |
 
-	statement ifNil: [ UDBCSQLite3Misuse signal: 'This result set does not contain a prepared statement.' ].	
+	statement ifNil: [ SQLite3Misuse signal: 'This result set does not contain a prepared statement.' ].	
 	
 	rows := OrderedCollection new.
 	[ moreRows ] whileTrue: [	
@@ -192,11 +192,11 @@ UDBCSQLite3ResultSet >> rowsOfClass: aRowClass [
 ]
 
 { #category : #accessing }
-UDBCSQLite3ResultSet >> statement [
+SQLite3ResultSet >> statement [
 	^ statement
 ]
 
 { #category : #accessing }
-UDBCSQLite3ResultSet >> statement: anObject [
+SQLite3ResultSet >> statement: anObject [
 	statement := anObject
 ]

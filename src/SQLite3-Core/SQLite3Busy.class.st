@@ -2,7 +2,7 @@
 I represent the SQLITE_BUSY condition.
 "
 Class {
-	#name : #UDBCSQLite3Busy,
-	#superclass : #UDBCSQLite3Error,
+	#name : #SQLite3Busy,
+	#superclass : #SQLite3Error,
 	#category : #'SQLite3-Core-Errors'
 }

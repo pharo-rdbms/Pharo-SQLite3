@@ -2,7 +2,7 @@
 Benchmarking harness.
 "
 Class {
-	#name : #UDBCSQLiteBenchmark,
+	#name : #SQLiteBenchmark,
 	#superclass : #Object,
 	#instVars : [
 		'db',
@@ -12,7 +12,7 @@ Class {
 }
 
 { #category : #running }
-UDBCSQLiteBenchmark >> basicExecute: anSQLText times: aCount [
+SQLiteBenchmark >> basicExecute: anSQLText times: aCount [
 	
 	db beginTransaction.
 	1 to: aCount do: [ :i |
@@ -23,17 +23,17 @@ UDBCSQLiteBenchmark >> basicExecute: anSQLText times: aCount [
 ]
 
 { #category : #'connecting-disconnecting' }
-UDBCSQLiteBenchmark >> connectBy: aConnectionClass [
+SQLiteBenchmark >> connectBy: aConnectionClass [
 	db := aConnectionClass openOn: ':memory:'
 ]
 
 { #category : #'connecting-disconnecting' }
-UDBCSQLiteBenchmark >> disconnect [
+SQLiteBenchmark >> disconnect [
 	db close
 ]
 
 { #category : #running }
-UDBCSQLiteBenchmark >> execute: anSQLText times: aCount bindingsBlock: bindingsBlock [
+SQLiteBenchmark >> execute: anSQLText times: aCount bindingsBlock: bindingsBlock [
 	
 	db beginTransaction.
 	1 to: aCount do: [ :i |
@@ -44,14 +44,14 @@ UDBCSQLiteBenchmark >> execute: anSQLText times: aCount bindingsBlock: bindingsB
 ]
 
 { #category : #running }
-UDBCSQLiteBenchmark >> finalizeStatement [
+SQLiteBenchmark >> finalizeStatement [
 	stmt ifNotNil: [ stmt finalize ]
 
 
 ]
 
 { #category : #running }
-UDBCSQLiteBenchmark >> prepStep: anSQLText times: aCount bindingsBlock: bindingsBlock [
+SQLiteBenchmark >> prepStep: anSQLText times: aCount bindingsBlock: bindingsBlock [
 	
 	stmt := db prepare: anSQLText.
 	db beginTransaction.
@@ -64,7 +64,7 @@ UDBCSQLiteBenchmark >> prepStep: anSQLText times: aCount bindingsBlock: bindings
 ]
 
 { #category : #running }
-UDBCSQLiteBenchmark >> runBlock: aBlock [
+SQLiteBenchmark >> runBlock: aBlock [
 	
 	db beginTransaction.
 	aBlock value: db.

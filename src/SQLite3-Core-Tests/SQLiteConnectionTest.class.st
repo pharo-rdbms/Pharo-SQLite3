@@ -2,7 +2,7 @@
 Unit tests for UDBCSQLiteConnection
 "
 Class {
-	#name : #UDBCSQLiteConnectionTest,
+	#name : #SQLiteConnectionTest,
 	#superclass : #TestCase,
 	#instVars : [
 		'db',
@@ -13,7 +13,7 @@ Class {
 }
 
 { #category : #utilities }
-UDBCSQLiteConnectionTest >> populateRowsInto: tableName of: database [
+SQLiteConnectionTest >> populateRowsInto: tableName of: database [
 	| rand rows schema insert rn rt |
 	 rand := Random new.	
 	rows := rand nextInt: 100.
@@ -36,23 +36,23 @@ UDBCSQLiteConnectionTest >> populateRowsInto: tableName of: database [
 ]
 
 { #category : #running }
-UDBCSQLiteConnectionTest >> setUp [ 
+SQLiteConnectionTest >> setUp [ 
 
 	super setUp.
-	db := UDBCSQLite3Connection on: ':memory:'.
+	db := SQLite3Connection on: ':memory:'.
 	db open.
 
 ]
 
 { #category : #running }
-UDBCSQLiteConnectionTest >> tearDown [
+SQLiteConnectionTest >> tearDown [
 	
-	[ db close ] on: UDBCSQLite3Misuse do: [ ].
+	[ db close ] on: SQLite3Misuse do: [ ].
 	super tearDown.
 ]
 
 { #category : #tests }
-UDBCSQLiteConnectionTest >> testExactlyOneRow [
+SQLiteConnectionTest >> testExactlyOneRow [
 	| row |
 	
 	self populateRowsInto: 'junk' of: db.
@@ -67,7 +67,7 @@ UDBCSQLiteConnectionTest >> testExactlyOneRow [
 ]
 
 { #category : #tests }
-UDBCSQLiteConnectionTest >> testExactlyOneRowGotNone [
+SQLiteConnectionTest >> testExactlyOneRowGotNone [
 	| row |
 	
 	self populateRowsInto: 'junk' of: db.
@@ -78,7 +78,7 @@ UDBCSQLiteConnectionTest >> testExactlyOneRowGotNone [
 ]
 
 { #category : #tests }
-UDBCSQLiteConnectionTest >> testExecuteDelete [
+SQLiteConnectionTest >> testExecuteDelete [
 	
 	res := db basicExecute: 'create table if not exists x (xk integer primary key, iv integer, tv text);'.
 	self assert: res equals: 0.
@@ -90,7 +90,7 @@ UDBCSQLiteConnectionTest >> testExecuteDelete [
 ]
 
 { #category : #tests }
-UDBCSQLiteConnectionTest >> testExecuteDrop [
+SQLiteConnectionTest >> testExecuteDrop [
 	
 	res := db basicExecute: 'create table if not exists x (xk integer primary key, iv integer, tv text);'.
 	self assert: res equals: 0.
@@ -102,7 +102,7 @@ UDBCSQLiteConnectionTest >> testExecuteDrop [
 ]
 
 { #category : #tests }
-UDBCSQLiteConnectionTest >> testExecuteNoResult [
+SQLiteConnectionTest >> testExecuteNoResult [
 	
 	rs := db execute: 'create table if not exists x (xk integer primary key, iv integer, tv text);'.
 	self assert: (rs next isNil).
@@ -120,7 +120,7 @@ UDBCSQLiteConnectionTest >> testExecuteNoResult [
 ]
 
 { #category : #tests }
-UDBCSQLiteConnectionTest >> testExecuteValueInsertArray [
+SQLiteConnectionTest >> testExecuteValueInsertArray [
 	| rd |
 		
 	res := db basicExecute: 'create table if not exists x (xk integer primary key, iv integer, tv text);'.
@@ -151,7 +151,7 @@ UDBCSQLiteConnectionTest >> testExecuteValueInsertArray [
 ]
 
 { #category : #tests }
-UDBCSQLiteConnectionTest >> testExecuteValueInsertBooleanNilThenSelect [
+SQLiteConnectionTest >> testExecuteValueInsertBooleanNilThenSelect [
 	| row |
 	
 	res := db basicExecute: 'create table if not exists x (xk integer primary key, bv boolean);'.
@@ -185,7 +185,7 @@ UDBCSQLiteConnectionTest >> testExecuteValueInsertBooleanNilThenSelect [
 ]
 
 { #category : #tests }
-UDBCSQLiteConnectionTest >> testExecuteValueInsertBooleanThenSelect [
+SQLiteConnectionTest >> testExecuteValueInsertBooleanThenSelect [
 	| row |
 	
 	res := db basicExecute: 'create table if not exists x (xk integer primary key, bv boolean);'.
@@ -217,7 +217,7 @@ UDBCSQLiteConnectionTest >> testExecuteValueInsertBooleanThenSelect [
 ]
 
 { #category : #tests }
-UDBCSQLiteConnectionTest >> testExecuteValueInsertChanges [
+SQLiteConnectionTest >> testExecuteValueInsertChanges [
 
 	res := db basicExecute: 'create table if not exists x (xk integer primary key, iv integer, tv text);'.
 	self assert: res equals: 0.
@@ -249,7 +249,7 @@ UDBCSQLiteConnectionTest >> testExecuteValueInsertChanges [
 ]
 
 { #category : #tests }
-UDBCSQLiteConnectionTest >> testExecuteValueInsertThenSelect [
+SQLiteConnectionTest >> testExecuteValueInsertThenSelect [
 	| row |
 	
 	res := db basicExecute: 'create table if not exists x (xk integer primary key, iv integer, tv text);'.
@@ -283,7 +283,7 @@ UDBCSQLiteConnectionTest >> testExecuteValueInsertThenSelect [
 ]
 
 { #category : #tests }
-UDBCSQLiteConnectionTest >> testExecuteValueInsertThenSelect2 [
+SQLiteConnectionTest >> testExecuteValueInsertThenSelect2 [
 	| row |
 	
 	res := db basicExecute: 'create table if not exists x (xk integer primary key, iv integer, tv text);'.
@@ -330,7 +330,7 @@ UDBCSQLiteConnectionTest >> testExecuteValueInsertThenSelect2 [
 ]
 
 { #category : #tests }
-UDBCSQLiteConnectionTest >> testExecuteValueInsertThenSelectDateTime [
+SQLiteConnectionTest >> testExecuteValueInsertThenSelectDateTime [
 	| row data |
 	
 	res := db basicExecute: 'create table if not exists x (xv datetime);'.
@@ -364,7 +364,7 @@ UDBCSQLiteConnectionTest >> testExecuteValueInsertThenSelectDateTime [
 ]
 
 { #category : #tests }
-UDBCSQLiteConnectionTest >> testExecuteWithInsertArray [
+SQLiteConnectionTest >> testExecuteWithInsertArray [
 	| rd |
 		
 	res := db basicExecute: 'create table if not exists x (xk integer primary key, iv integer, tv text);'.
@@ -395,7 +395,7 @@ UDBCSQLiteConnectionTest >> testExecuteWithInsertArray [
 ]
 
 { #category : #tests }
-UDBCSQLiteConnectionTest >> testExecuteWithInsertBooleanNilThenSelect [
+SQLiteConnectionTest >> testExecuteWithInsertBooleanNilThenSelect [
 	| row |
 	
 	res := db basicExecute: 'create table if not exists x (xk integer primary key, bv boolean);'.
@@ -429,7 +429,7 @@ UDBCSQLiteConnectionTest >> testExecuteWithInsertBooleanNilThenSelect [
 ]
 
 { #category : #tests }
-UDBCSQLiteConnectionTest >> testExecuteWithInsertBooleanSQLNullThenSelect [
+SQLiteConnectionTest >> testExecuteWithInsertBooleanSQLNullThenSelect [
 	| row |
 	
 	res := db basicExecute: 'create table if not exists x (xk integer primary key, bv boolean);'.
@@ -461,7 +461,7 @@ UDBCSQLiteConnectionTest >> testExecuteWithInsertBooleanSQLNullThenSelect [
 ]
 
 { #category : #tests }
-UDBCSQLiteConnectionTest >> testExecuteWithInsertBooleanThenSelect [
+SQLiteConnectionTest >> testExecuteWithInsertBooleanThenSelect [
 	| row |
 	
 	res := db basicExecute: 'create table if not exists x (xk integer primary key, bv boolean);'.
@@ -493,7 +493,7 @@ UDBCSQLiteConnectionTest >> testExecuteWithInsertBooleanThenSelect [
 ]
 
 { #category : #tests }
-UDBCSQLiteConnectionTest >> testExecuteWithInsertChanges [
+SQLiteConnectionTest >> testExecuteWithInsertChanges [
 
 	res := db basicExecute: 'create table if not exists x (xk integer primary key, iv integer, tv text);'.
 	self assert: res equals: 0.
@@ -525,7 +525,7 @@ UDBCSQLiteConnectionTest >> testExecuteWithInsertChanges [
 ]
 
 { #category : #tests }
-UDBCSQLiteConnectionTest >> testExecuteWithInsertDictionary [
+SQLiteConnectionTest >> testExecuteWithInsertDictionary [
 	| rd |
 	
 	res := db basicExecute: 'create table if not exists x (xk integer primary key, iv integer, tv text);'.
@@ -557,7 +557,7 @@ UDBCSQLiteConnectionTest >> testExecuteWithInsertDictionary [
 ]
 
 { #category : #tests }
-UDBCSQLiteConnectionTest >> testExecuteWithInsertMultilingualStringsThenSelect [
+SQLiteConnectionTest >> testExecuteWithInsertMultilingualStringsThenSelect [
 	| data s row idx |
 	
 	data := OrderedCollection with: 'English' with: '中文' with: 'にほんご', 'áěšřčá'.
@@ -589,7 +589,7 @@ UDBCSQLiteConnectionTest >> testExecuteWithInsertMultilingualStringsThenSelect [
 ]
 
 { #category : #tests }
-UDBCSQLiteConnectionTest >> testExecuteWithInsertNoDataThenSelect [
+SQLiteConnectionTest >> testExecuteWithInsertNoDataThenSelect [
 	| row |
 	
 	res := db basicExecute: 'create table if not exists x (xk integer primary key);'.
@@ -620,7 +620,7 @@ UDBCSQLiteConnectionTest >> testExecuteWithInsertNoDataThenSelect [
 ]
 
 { #category : #tests }
-UDBCSQLiteConnectionTest >> testExecuteWithInsertThenSelect [
+SQLiteConnectionTest >> testExecuteWithInsertThenSelect [
 	| row |
 	
 	res := db basicExecute: 'create table if not exists x (xk integer primary key, iv integer, tv text);'.
@@ -654,7 +654,7 @@ UDBCSQLiteConnectionTest >> testExecuteWithInsertThenSelect [
 ]
 
 { #category : #tests }
-UDBCSQLiteConnectionTest >> testExecuteWithInsertThenSelect2 [
+SQLiteConnectionTest >> testExecuteWithInsertThenSelect2 [
 	| row |
 	
 	res := db basicExecute: 'create table if not exists x (xk integer primary key, iv integer, tv text);'.
@@ -701,7 +701,7 @@ UDBCSQLiteConnectionTest >> testExecuteWithInsertThenSelect2 [
 ]
 
 { #category : #tests }
-UDBCSQLiteConnectionTest >> testExecuteWithInsertThenSelect3 [
+SQLiteConnectionTest >> testExecuteWithInsertThenSelect3 [
 	| s row idx |
 	
 	res := db basicExecute: 'create table if not exists x (xk integer primary key, iv integer, tv text);'.
@@ -739,7 +739,7 @@ UDBCSQLiteConnectionTest >> testExecuteWithInsertThenSelect3 [
 ]
 
 { #category : #tests }
-UDBCSQLiteConnectionTest >> testExecuteWithInsertThenSelectChineseTableName [
+SQLiteConnectionTest >> testExecuteWithInsertThenSelectChineseTableName [
 	| data s row idx |
 	
 	data := OrderedCollection with: 'English' with: '中文' with: 'にほんご', 'áěšřčá'.
@@ -772,7 +772,7 @@ UDBCSQLiteConnectionTest >> testExecuteWithInsertThenSelectChineseTableName [
 ]
 
 { #category : #tests }
-UDBCSQLiteConnectionTest >> testExecuteWithInsertThenSelectDateTime [
+SQLiteConnectionTest >> testExecuteWithInsertThenSelectDateTime [
 	| row data |
 	
 	res := db basicExecute: 'create table if not exists x (xv datetime);'.
@@ -806,7 +806,7 @@ UDBCSQLiteConnectionTest >> testExecuteWithInsertThenSelectDateTime [
 ]
 
 { #category : #tests }
-UDBCSQLiteConnectionTest >> testExecuteWithInsertThenSelectJapaneseTableName [
+SQLiteConnectionTest >> testExecuteWithInsertThenSelectJapaneseTableName [
 	| data s row idx |
 	
 	data := OrderedCollection with: 'English' with: '中文' with: 'にほんご', 'áěšřčá'.
@@ -839,7 +839,7 @@ UDBCSQLiteConnectionTest >> testExecuteWithInsertThenSelectJapaneseTableName [
 ]
 
 { #category : #tests }
-UDBCSQLiteConnectionTest >> testExecuteWithToFail [
+SQLiteConnectionTest >> testExecuteWithToFail [
 	
 	res := db basicExecute: 'create table if not exists x (xk integer primary key, iv integer, tv text);'.
 	self assert: res equals: 0.
@@ -851,14 +851,14 @@ UDBCSQLiteConnectionTest >> testExecuteWithToFail [
 	self assert: res equals: 0.
 
 	self should: [ db execute: 'insert into x values (NULL, ?, ?)' with: 42 ]
-		raise: UDBCSQLite3Error.
+		raise: SQLite3Error.
 
 	res := db rollbackTransaction.
 	self assert: res equals: 0
 ]
 
 { #category : #tests }
-UDBCSQLiteConnectionTest >> testExecuteWithToFail2 [
+SQLiteConnectionTest >> testExecuteWithToFail2 [
 	
 	res := db basicExecute: 'create table if not exists x (xk integer primary key, iv integer, tv text);'.
 	self assert: res equals: 0.
@@ -870,14 +870,14 @@ UDBCSQLiteConnectionTest >> testExecuteWithToFail2 [
 	self assert: res equals: 0.
 
 	self should: [ db execute: 'insert into x values (NULL, ?, ?)' with: '42' ]
-		raise: UDBCSQLite3Error.
+		raise: SQLite3Error.
 
 	res := db rollbackTransaction.
 	self assert: res equals: 0
 ]
 
 { #category : #tests }
-UDBCSQLiteConnectionTest >> testGlorpAutoID [
+SQLiteConnectionTest >> testGlorpAutoID [
 	| schema rows |
 	
 	schema := 'CREATE TABLE BOOK (ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, STUFF TEXT NOT NULL);'.
@@ -902,7 +902,7 @@ UDBCSQLiteConnectionTest >> testGlorpAutoID [
 ]
 
 { #category : #tests }
-UDBCSQLiteConnectionTest >> testGlorpCompositeKey [
+SQLiteConnectionTest >> testGlorpCompositeKey [
 	| schema rows |
 	
 	"This is the schema generated by Glorp."
@@ -924,7 +924,7 @@ UDBCSQLiteConnectionTest >> testGlorpCompositeKey [
 ]
 
 { #category : #tests }
-UDBCSQLiteConnectionTest >> testGlorpDoubleInsertPrimaryKey [
+SQLiteConnectionTest >> testGlorpDoubleInsertPrimaryKey [
 	| schema rows |
 	
 	schema := 'CREATE TABLE GR_USER (ID integer  NOT NULL ,NAME text  NULL , CONSTRAINT GR_USER_PK PRIMARY KEY  (ID), CONSTRAINT GR_USER_UNIQ UNIQUE  (ID));'.
@@ -934,7 +934,7 @@ UDBCSQLiteConnectionTest >> testGlorpDoubleInsertPrimaryKey [
 	db execute: 'insert into GR_USER values (?, ?)' 
 		with: #(1 'Fred').
 	self should: [ db execute: 'insert into GR_USER values (?, ?)' with: #(1 'Barney') ]
-		raise: UDBCSQLite3Error.
+		raise: SQLite3Error.
 	db commitTransaction.	
 	
 	rs := db execute: 'select * from GR_USER'.
@@ -948,7 +948,7 @@ UDBCSQLiteConnectionTest >> testGlorpDoubleInsertPrimaryKey [
 ]
 
 { #category : #tests }
-UDBCSQLiteConnectionTest >> testGlorpUpdate [
+SQLiteConnectionTest >> testGlorpUpdate [
 	| schema rows |
 	
 	schema := 'CREATE TABLE BOOK (ID INTEGER PRIMARY KEY AUTOINCREMENT  NOT NULL ,TITLE text  NULL ,DESCRIPTION text  NULL ,COPIES_IN_STOCK int  NULL ,VERSION int  NULL );'.
@@ -971,7 +971,7 @@ UDBCSQLiteConnectionTest >> testGlorpUpdate [
 ]
 
 { #category : #tests }
-UDBCSQLiteConnectionTest >> testGlorpUpdateTwice [
+SQLiteConnectionTest >> testGlorpUpdateTwice [
 	| schema rows |
 	
 	schema := 'CREATE TABLE BOOK (ID INTEGER PRIMARY KEY AUTOINCREMENT  NOT NULL ,TITLE text  NULL ,DESCRIPTION text  NULL ,COPIES_IN_STOCK int  NULL ,VERSION int  NULL );'.
@@ -995,7 +995,7 @@ UDBCSQLiteConnectionTest >> testGlorpUpdateTwice [
 ]
 
 { #category : #tests }
-UDBCSQLiteConnectionTest >> testInsertThenSelectInTransaction [
+SQLiteConnectionTest >> testInsertThenSelectInTransaction [
 	"From GlorpDatabaseBasicTest>>testNameBinding."
 	
 	res := db basicExecute: 'create table if not exists x (id integer , tv text);'.
@@ -1019,13 +1019,13 @@ UDBCSQLiteConnectionTest >> testInsertThenSelectInTransaction [
 ]
 
 { #category : #tests }
-UDBCSQLiteConnectionTest >> testRows [
+SQLiteConnectionTest >> testRows [
 	"SQLite uses 1-based column indexing for database rows."
 	| rowCount rows any |
 	
 	rowCount := self populateRowsInto: 'junk' of: db.
 	rs := db execute: 'select * from junk'.
-	rs rowClass: UDBCSQLite3Row.
+	rs rowClass: SQLite3Row.
 	rows := rs rows.
 	
 	self assert: rows size equals: rowCount.
@@ -1052,7 +1052,7 @@ UDBCSQLiteConnectionTest >> testRows [
 ]
 
 { #category : #tests }
-UDBCSQLiteConnectionTest >> testValueInsertThenSelectInTransaction [
+SQLiteConnectionTest >> testValueInsertThenSelectInTransaction [
 	"From GlorpDatabaseBasicTest>>testNameBinding."
 	
 	res := db basicExecute: 'create table if not exists x (id integer , tv text);'.
@@ -1076,7 +1076,7 @@ UDBCSQLiteConnectionTest >> testValueInsertThenSelectInTransaction [
 ]
 
 { #category : #tests }
-UDBCSQLiteConnectionTest >> untestStatementInProgress [
+SQLiteConnectionTest >> untestStatementInProgress [
 	"XXX Doesn't work yet."
 	| s1 s2 |
 		

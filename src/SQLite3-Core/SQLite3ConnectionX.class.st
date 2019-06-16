@@ -3,8 +3,8 @@ I represent a connection to an SQLite database. I am a test bed for experimental
 
 "
 Class {
-	#name : #UDBCSQLite3ConnectionX,
-	#superclass : #UDBCSQLite3Connection,
+	#name : #SQLite3ConnectionX,
+	#superclass : #SQLite3Connection,
 	#instVars : [
 		'statementsCache'
 	],
@@ -12,14 +12,14 @@ Class {
 }
 
 { #category : #'public API - open/close' }
-UDBCSQLite3ConnectionX >> close [
+SQLite3ConnectionX >> close [
 
 	statementsCache valuesDo: [ :s | s finalize ].
 	super close
 ]
 
 { #category : #'public API - operating' }
-UDBCSQLite3ConnectionX >> finalize: anSQLText [
+SQLite3ConnectionX >> finalize: anSQLText [
 
 	(statementsCache includesKey: anSQLText) ifTrue: [ 
 		statementsCache removeKey: anSQLText ]
@@ -27,14 +27,14 @@ UDBCSQLite3ConnectionX >> finalize: anSQLText [
 ]
 
 { #category : #initialization }
-UDBCSQLite3ConnectionX >> initialize [
+SQLite3ConnectionX >> initialize [
 
 	super initialize.
 	statementsCache := Dictionary new
 ]
 
 { #category : #'public API - operating' }
-UDBCSQLite3ConnectionX >> prepare: anSQLText [
+SQLite3ConnectionX >> prepare: anSQLText [
 
 	(statementsCache includesKey: anSQLText) ifFalse: [ 
 			statementsCache at: anSQLText put: (super prepare: anSQLText) ].
