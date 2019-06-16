@@ -9,7 +9,7 @@ Class {
 
 { #category : #'instance finalization' }
 SQLite3DatabaseExternalObject class >> finalizeResourceData: resourceData [
-	UDBCSQLite3Library current 
+	SQLite3Library current 
 		ffiCall: #(int sqlite3_close (ExternalAddress resourceData))
-		module: UDBCSQLite3Library current library
+		module: SQLite3Library current library
 ]
