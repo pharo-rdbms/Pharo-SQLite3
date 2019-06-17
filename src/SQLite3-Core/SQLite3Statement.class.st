@@ -241,13 +241,13 @@ SQLite3Statement >> step [
 SQLite3Statement >> stepOk: aValue [
 
 	"These are normal conditions."	
-	(aValue = ROW) ifTrue: [ ^ ROW ].
-	(aValue = DONE) ifTrue: [ ^ DONE ].
+	(aValue = SQLITE_ROW) ifTrue: [ ^ SQLITE_ROW ].
+	(aValue = SQLITE_DONE) ifTrue: [ ^ SQLITE_DONE ].
 	
 	"These are error conditions."
-	(aValue = BUSY)
+	(aValue = SQLITE_BUSY)
 		ifTrue: [ connection signal: SQLite3Busy with: aValue ].
-	(aValue = MISUSE)
+	(aValue = SQLITE_MISUSE)
 		ifTrue: [ connection signal: SQLite3Misuse with: aValue ].				
 
 	"Catch any error not specifically handled above."

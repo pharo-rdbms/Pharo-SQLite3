@@ -428,16 +428,16 @@ SQLite3Library >> changes: aHandle [
 { #category : #'private - utilities' }
 SQLite3Library >> checkForOk: aValue on: aHandle [
 
-	(aValue = OK)
+	(aValue = SQLITE_OK)
 		ifFalse: [ 
-			(aValue = BUSY)
+			(aValue = SQLITE_BUSY)
 				ifTrue: [ self signal: SQLite3Busy with: aValue on: aHandle ].
-			(aValue = LOCKED)
+			(aValue = SQLITE_LOCKED)
 				ifTrue: [ self signal: SQLite3Locked with: aValue on: aHandle ].
-			(aValue = MISUSE)
+			(aValue = SQLITE_MISUSE)
 				ifTrue: [ self signal: SQLite3Misuse with: aValue on: aHandle ].				
 			self signal: SQLite3Error with: aValue on: aHandle ].	
-	^ OK
+	^ SQLITE_OK
 ]
 
 { #category : #cleaning }
