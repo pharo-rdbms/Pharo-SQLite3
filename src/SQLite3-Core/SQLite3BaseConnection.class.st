@@ -200,7 +200,7 @@ SQLite3BaseConnection >> open [
 			| err |
 			err := library apiErrorMessage: dbHandle.
 			library apiClose: dbHandle.
-			SQLite3Error signal: err ]
+			SQLite3AbstractError signal: err ]
 ]
 
 { #category : #'public API - operating' }

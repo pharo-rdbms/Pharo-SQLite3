@@ -392,7 +392,7 @@ SQLite3Library >> booleanFrom: aStatement at: aColumn [
 	
 	declared := self apiColumnDeclaredType: aStatement atColumn: aColumn.
 	(self class booleanTypes includes: declared asLowercase) ifFalse: [ 
-		SQLite3Error signal: 'Column is not declared as a boolean.' ].
+		SQLite3AbstractError signal: 'Column is not declared as a boolean.' ].
 
 	selector := DataTypeMap at: (self apiColumnType: aStatement atColumn: aColumn).
 	(selector = #nilAt:) ifTrue: [ ^ nil ].
@@ -404,7 +404,7 @@ SQLite3Library >> booleanFrom: aStatement at: aColumn [
 				ifFalse: [
 					(self class booleanSQLFalseWords includes: value asLowercase)
 						ifTrue: [ ^ false ]
-						ifFalse: [ SQLite3Error signal: 'Column value cannot be read as a boolean.' ]]].
+						ifFalse: [ SQLite3AbstractError signal: 'Column value cannot be read as a boolean.' ]]].
 	(selector = #integerAt:) 
 		ifTrue: [
 			value := self apiColumnInt: aStatement atColumn: aColumn.
@@ -413,7 +413,7 @@ SQLite3Library >> booleanFrom: aStatement at: aColumn [
 				ifFalse: [ 
 					(value = 0) 
 						ifTrue: [ ^ false ]
-						ifFalse: [ SQLite3Error signal: 'Column value cannot be read as a boolean.' ]]]	
+						ifFalse: [ SQLite3AbstractError signal: 'Column value cannot be read as a boolean.' ]]]	
  
  
 ]
@@ -436,7 +436,7 @@ SQLite3Library >> checkForOk: aValue on: aHandle [
 				ifTrue: [ self signal: SQLite3Locked with: aValue on: aHandle ].
 			(aValue = SQLITE_MISUSE)
 				ifTrue: [ self signal: SQLite3Misuse with: aValue on: aHandle ].				
-			self signal: SQLite3Error with: aValue on: aHandle ].	
+			self signal: SQLite3AbstractError with: aValue on: aHandle ].	
 	^ SQLITE_OK
 ]
 

@@ -30,6 +30,7 @@ Class {
 		'SQLITE_NOMEM',
 		'SQLITE_NOTADB',
 		'SQLITE_NOTFOUND',
+		'SQLITE_NOTICE',
 		'SQLITE_NULL',
 		'SQLITE_OK',
 		'SQLITE_PERM',
@@ -39,7 +40,8 @@ Class {
 		'SQLITE_ROW',
 		'SQLITE_SCHEMA',
 		'SQLITE_TEXT',
-		'SQLITE_TOOBIG'
+		'SQLITE_TOOBIG',
+		'SQLITE_WARNING'
 	],
 	#category : #'SQLite3-Core-UFFI-Support'
 }
@@ -74,6 +76,8 @@ SQLite3Constants class >> initConstants [
 	SQLITE_FORMAT := 24.			"Auxiliary database format error"	
 	SQLITE_RANGE := 25.			"2nd parameter to sqlite3_bind out of range"
 	SQLITE_NOTADB := 26.			"File opened that is not a database file"
+	SQLITE_NOTICE := 27.			"Notifications from sqlite3_log()"
+	SQLITE_WARNING := 28.			"Warnings from sqlite3_log()"
 																			
 	SQLITE_ROW := 100.				"sqlite3_step() has another row ready"
 	SQLITE_DONE := 101.			"sqlite3_step() has finished executing"

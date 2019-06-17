@@ -251,7 +251,7 @@ SQLite3Statement >> stepOk: aValue [
 		ifTrue: [ connection signal: SQLite3Misuse with: aValue ].				
 
 	"Catch any error not specifically handled above."
-	connection signal: SQLite3Error with: aValue
+	connection signal: SQLite3AbstractError with: aValue
 
 ]
 
