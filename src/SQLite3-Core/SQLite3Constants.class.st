@@ -38,16 +38,25 @@ SQLite3Constants class >> initConstants [
 
 ]
 
-{ #category : #initialization }
-SQLite3Constants class >> initialize [
-	self initConstants.
-			
+{ #category : #'private - initialization' }
+SQLite3Constants class >> initDataTypes [
 	"Fundamental Datatypes"
+	
 	SQLITE_INTEGER := 1.
 	SQLITE_FLOAT := 2.
 	SQLITE_TEXT := 3.
 	SQLITE3_TEXT := 3.
 	SQLITE_BLOB := 4.	
-	SQLITE_NULL := 5.
+	SQLITE_NULL := 5
+			
+	
+]
 
+{ #category : #initialization }
+SQLite3Constants class >> initialize [
+	self 
+		initConstants;
+		initDataTypes
+			
+	
 ]
