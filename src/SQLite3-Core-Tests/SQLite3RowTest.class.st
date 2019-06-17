@@ -30,6 +30,20 @@ SQLite3RowTest >> testAsArray [
 ]
 
 { #category : #tests }
+SQLite3RowTest >> testColumnAccessingIfAbsent [
+	|blockExecutedFlag|
+	blockExecutedFlag := false.
+	
+	filledRow at: 'foo' ifAbsent: [ blockExecutedFlag := true ].
+	
+	self deny: blockExecutedFlag.
+	
+	filledRow at: 'nope' ifAbsent: [ blockExecutedFlag := true ].
+	
+	self assert: blockExecutedFlag.
+]
+
+{ #category : #tests }
 SQLite3RowTest >> testColumnAccessingOnEmptyRow [
 
 	self assert: (emptyRow at: 'foo') equals: nil
@@ -43,4 +57,25 @@ SQLite3RowTest >> testColumnAccessingOnFilledRow [
 	self assert: (filledRow at: 'pi') equals: '3.14'.
 	
 	self assert: (filledRow at: 'nope') equals: nil
+]
+
+{ #category : #tests }
+SQLite3RowTest >> testColumnPuttingOnEmptyRow [
+ 
+	self assert: (emptyRow at: 'foo') equals: nil.
+	
+	emptyRow at: 'foo' put: 42.
+	
+	self assert: (emptyRow at: 'foo') equals: 42.
+
+]
+
+{ #category : #tests }
+SQLite3RowTest >> testColumnPuttingOnFilledRow [
+ 
+	self assert: (filledRow at: 'foo') equals: 1.
+	
+	filledRow at: 'foo' put: 2.
+	
+	self assert: (filledRow at: 'foo') equals: 2
 ]
