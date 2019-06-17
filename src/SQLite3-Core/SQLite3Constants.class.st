@@ -7,12 +7,30 @@ Class {
 	#classVars : [
 		'SQLITE3_TEXT',
 		'SQLITE_ABORT',
+		'SQLITE_ABORT_ROLLBACK',
 		'SQLITE_AUTH',
 		'SQLITE_BLOB',
 		'SQLITE_BUSY',
+		'SQLITE_BUSY_RECOVERY',
+		'SQLITE_BUSY_SNAPSHOT',
 		'SQLITE_CANTOPEN',
+		'SQLITE_CANTOPEN_CONVPATH',
+		'SQLITE_CANTOPEN_FULLPATH',
+		'SQLITE_CANTOPEN_ISDIR',
+		'SQLITE_CANTOPEN_NOTEMPDIR',
 		'SQLITE_CONSTRAINT',
+		'SQLITE_CONSTRAINT_CHECK',
+		'SQLITE_CONSTRAINT_COMMITHOOK',
+		'SQLITE_CONSTRAINT_FOREIGNKEY',
+		'SQLITE_CONSTRAINT_FUNCTION',
+		'SQLITE_CONSTRAINT_NOTNULL',
+		'SQLITE_CONSTRAINT_PRIMARYKEY',
+		'SQLITE_CONSTRAINT_ROWID',
+		'SQLITE_CONSTRAINT_TRIGGER',
+		'SQLITE_CONSTRAINT_UNIQUE',
+		'SQLITE_CONSTRAINT_VTAB',
 		'SQLITE_CORRUPT',
+		'SQLITE_CORRUPT_VTAB',
 		'SQLITE_DONE',
 		'SQLITE_EMPTY',
 		'SQLITE_ERROR',
@@ -23,7 +41,34 @@ Class {
 		'SQLITE_INTERNAL',
 		'SQLITE_INTERRUPT',
 		'SQLITE_IOERR',
+		'SQLITE_IOERR_ACCESS',
+		'SQLITE_IOERR_BLOCKED',
+		'SQLITE_IOERR_CHECKRESERVEDLOCK',
+		'SQLITE_IOERR_CLOSE',
+		'SQLITE_IOERR_CONVPATH',
+		'SQLITE_IOERR_DELETE',
+		'SQLITE_IOERR_DELETE_NOENT',
+		'SQLITE_IOERR_DIR_CLOSE',
+		'SQLITE_IOERR_DIR_FSYNC',
+		'SQLITE_IOERR_FSTAT',
+		'SQLITE_IOERR_FSYNC',
+		'SQLITE_IOERR_GETTEMPPATH',
+		'SQLITE_IOERR_LOCK',
+		'SQLITE_IOERR_MMAP',
+		'SQLITE_IOERR_NOMEM',
+		'SQLITE_IOERR_RDLOCK',
+		'SQLITE_IOERR_READ',
+		'SQLITE_IOERR_SEEK',
+		'SQLITE_IOERR_SHMLOCK',
+		'SQLITE_IOERR_SHMMAP',
+		'SQLITE_IOERR_SHMOPEN',
+		'SQLITE_IOERR_SHMSIZE',
+		'SQLITE_IOERR_SHORT_READ',
+		'SQLITE_IOERR_TRUNCATE',
+		'SQLITE_IOERR_UNLOCK',
+		'SQLITE_IOERR_WRITE',
 		'SQLITE_LOCKED',
+		'SQLITE_LOCKED_SHAREDCACHE',
 		'SQLITE_MISMATCH',
 		'SQLITE_MISUSE',
 		'SQLITE_NOLFS',
@@ -31,25 +76,117 @@ Class {
 		'SQLITE_NOTADB',
 		'SQLITE_NOTFOUND',
 		'SQLITE_NOTICE',
+		'SQLITE_NOTICE_RECOVER_ROLLBACK',
+		'SQLITE_NOTICE_RECOVER_WAL',
 		'SQLITE_NULL',
 		'SQLITE_OK',
 		'SQLITE_PERM',
 		'SQLITE_PROTOCOL',
 		'SQLITE_RANGE',
 		'SQLITE_READONLY',
+		'SQLITE_READONLY_CANTLOCK',
+		'SQLITE_READONLY_DBMOVED',
+		'SQLITE_READONLY_RECOVERY',
+		'SQLITE_READONLY_ROLLBACK',
 		'SQLITE_ROW',
 		'SQLITE_SCHEMA',
 		'SQLITE_TEXT',
 		'SQLITE_TOOBIG',
-		'SQLITE_WARNING'
+		'SQLITE_WARNING',
+		'SQLITE_WARNING_AUTOINDEX'
 	],
 	#category : #'SQLite3-Core-UFFI-Support'
 }
 
 { #category : #'private - initialization' }
 SQLite3Constants class >> initConstants [
-
 	SQLITE_OK := 0.		 			"Successful result"
+	
+	self initResultCodes.
+	self initExtendedResultCodes.
+	
+	SQLITE_ROW := 100.				"sqlite3_step() has another row ready"
+	SQLITE_DONE := 101.			"sqlite3_step() has finished executing"
+
+]
+
+{ #category : #'private - initialization' }
+SQLite3Constants class >> initDataTypes [
+	"Fundamental Datatypes"
+	
+	SQLITE_INTEGER := 1.
+	SQLITE_FLOAT := 2.
+	SQLITE_TEXT := 3.
+	SQLITE3_TEXT := 3.
+	SQLITE_BLOB := 4.	
+	SQLITE_NULL := 5
+			
+	
+]
+
+{ #category : #'private - initialization' }
+SQLite3Constants class >> initExtendedResultCodes [
+	"Newer versions of SQLite (version 3.3.8 and later) include support for additional result codes that provide more detailed information about errors. The extended result codes are enabled or disabled on a per database connection basis using the [sqlite3_extended_result_codes()] API."
+	
+	SQLITE_IOERR_READ              := (SQLITE_IOERR | (1<<8)).
+	SQLITE_IOERR_SHORT_READ        := (SQLITE_IOERR | (2<<8)).
+	SQLITE_IOERR_WRITE             := (SQLITE_IOERR | (3<<8)).
+	SQLITE_IOERR_FSYNC             := (SQLITE_IOERR | (4<<8)).
+	SQLITE_IOERR_DIR_FSYNC         := (SQLITE_IOERR | (5<<8)).
+	SQLITE_IOERR_TRUNCATE          := (SQLITE_IOERR | (6<<8)).
+	SQLITE_IOERR_FSTAT             := (SQLITE_IOERR | (7<<8)).
+	SQLITE_IOERR_UNLOCK            := (SQLITE_IOERR | (8<<8)).
+	SQLITE_IOERR_RDLOCK            := (SQLITE_IOERR | (9<<8)).
+	SQLITE_IOERR_DELETE            := (SQLITE_IOERR | (10<<8)).
+	SQLITE_IOERR_BLOCKED           := (SQLITE_IOERR | (11<<8)).
+	SQLITE_IOERR_NOMEM             := (SQLITE_IOERR | (12<<8)).
+	SQLITE_IOERR_ACCESS            := (SQLITE_IOERR | (13<<8)).
+	SQLITE_IOERR_CHECKRESERVEDLOCK := (SQLITE_IOERR | (14<<8)).
+	SQLITE_IOERR_LOCK              := (SQLITE_IOERR | (15<<8)).
+	SQLITE_IOERR_CLOSE             := (SQLITE_IOERR | (16<<8)).
+	SQLITE_IOERR_DIR_CLOSE         := (SQLITE_IOERR | (17<<8)).
+	SQLITE_IOERR_SHMOPEN           := (SQLITE_IOERR | (18<<8)).
+	SQLITE_IOERR_SHMSIZE           := (SQLITE_IOERR | (19<<8)).
+	SQLITE_IOERR_SHMLOCK           := (SQLITE_IOERR | (20<<8)).
+	SQLITE_IOERR_SHMMAP            := (SQLITE_IOERR | (21<<8)).
+	SQLITE_IOERR_SEEK              := (SQLITE_IOERR | (22<<8)).
+	SQLITE_IOERR_DELETE_NOENT      := (SQLITE_IOERR | (23<<8)).
+	SQLITE_IOERR_MMAP              := (SQLITE_IOERR | (24<<8)).
+	SQLITE_IOERR_GETTEMPPATH       := (SQLITE_IOERR | (25<<8)).
+	SQLITE_IOERR_CONVPATH          := (SQLITE_IOERR | (26<<8)).
+	SQLITE_LOCKED_SHAREDCACHE      := (SQLITE_LOCKED |  (1<<8)).
+	SQLITE_BUSY_RECOVERY           := (SQLITE_BUSY   |  (1<<8)).
+	SQLITE_BUSY_SNAPSHOT           := (SQLITE_BUSY   |  (2<<8)).
+	SQLITE_CANTOPEN_NOTEMPDIR      := (SQLITE_CANTOPEN | (1<<8)).
+	SQLITE_CANTOPEN_ISDIR          := (SQLITE_CANTOPEN | (2<<8)).
+	SQLITE_CANTOPEN_FULLPATH       := (SQLITE_CANTOPEN | (3<<8)).
+	SQLITE_CANTOPEN_CONVPATH       := (SQLITE_CANTOPEN | (4<<8)).
+	SQLITE_CORRUPT_VTAB            := (SQLITE_CORRUPT | (1<<8)).
+	SQLITE_READONLY_RECOVERY       := (SQLITE_READONLY | (1<<8)).
+	SQLITE_READONLY_CANTLOCK       := (SQLITE_READONLY | (2<<8)).
+	SQLITE_READONLY_ROLLBACK       := (SQLITE_READONLY | (3<<8)).
+	SQLITE_READONLY_DBMOVED        := (SQLITE_READONLY | (4<<8)).
+	SQLITE_ABORT_ROLLBACK          := (SQLITE_ABORT | (2<<8)).
+	SQLITE_CONSTRAINT_CHECK        := (SQLITE_CONSTRAINT | (1<<8)).
+	SQLITE_CONSTRAINT_COMMITHOOK   := (SQLITE_CONSTRAINT | (2<<8)).
+	SQLITE_CONSTRAINT_FOREIGNKEY   := (SQLITE_CONSTRAINT | (3<<8)).
+	SQLITE_CONSTRAINT_FUNCTION     := (SQLITE_CONSTRAINT | (4<<8)).
+	SQLITE_CONSTRAINT_NOTNULL      := (SQLITE_CONSTRAINT | (5<<8)).
+	SQLITE_CONSTRAINT_PRIMARYKEY   := (SQLITE_CONSTRAINT | (6<<8)).
+	SQLITE_CONSTRAINT_TRIGGER      := (SQLITE_CONSTRAINT | (7<<8)).
+	SQLITE_CONSTRAINT_UNIQUE       := (SQLITE_CONSTRAINT | (8<<8)).
+	SQLITE_CONSTRAINT_VTAB         := (SQLITE_CONSTRAINT | (9<<8)).
+	SQLITE_CONSTRAINT_ROWID        := (SQLITE_CONSTRAINT |(10<<8)).
+	SQLITE_NOTICE_RECOVER_WAL      := (SQLITE_NOTICE | (1<<8)).
+	SQLITE_NOTICE_RECOVER_ROLLBACK := (SQLITE_NOTICE | (2<<8)).
+	SQLITE_WARNING_AUTOINDEX       := (SQLITE_WARNING | (1<<8)).
+]
+
+{ #category : #'private - initialization' }
+SQLite3Constants class >> initResultCodes [
+	"In its default configuration, SQLite API routines return one of 26 integer 
+	[SQLITE_OK | result codes]."
+
 	SQLITE_ERROR := 1. 			"SQL error or missing database"
 	SQLITE_INTERNAL := 2.			"Internal logic error in SQLite"
 	SQLITE_PERM := 3.				"Access permission denied"	
@@ -78,24 +215,6 @@ SQLite3Constants class >> initConstants [
 	SQLITE_NOTADB := 26.			"File opened that is not a database file"
 	SQLITE_NOTICE := 27.			"Notifications from sqlite3_log()"
 	SQLITE_WARNING := 28.			"Warnings from sqlite3_log()"
-																			
-	SQLITE_ROW := 100.				"sqlite3_step() has another row ready"
-	SQLITE_DONE := 101.			"sqlite3_step() has finished executing"
-
-]
-
-{ #category : #'private - initialization' }
-SQLite3Constants class >> initDataTypes [
-	"Fundamental Datatypes"
-	
-	SQLITE_INTEGER := 1.
-	SQLITE_FLOAT := 2.
-	SQLITE_TEXT := 3.
-	SQLITE3_TEXT := 3.
-	SQLITE_BLOB := 4.	
-	SQLITE_NULL := 5
-			
-	
 ]
 
 { #category : #initialization }
