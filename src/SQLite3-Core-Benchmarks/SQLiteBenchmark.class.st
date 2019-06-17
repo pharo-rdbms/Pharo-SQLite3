@@ -8,7 +8,7 @@ Class {
 		'db',
 		'stmt'
 	],
-	#category : #'SQLite3-Core-Tests-Connections'
+	#category : #'SQLite3-Core-Benchmarks-Benchmarking'
 }
 
 { #category : #running }
