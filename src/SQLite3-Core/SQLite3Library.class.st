@@ -429,7 +429,7 @@ SQLite3Library >> changes: aHandle [
 SQLite3Library >> checkForOk: aValue on: aHandle [
 
 	(aValue = SQLITE_OK)
-		ifFalse: [ 
+		ifFalse: [  
 			(aValue = SQLITE_BUSY)
 				ifTrue: [ self signal: SQLite3Busy with: aValue on: aHandle ].
 			(aValue = SQLITE_LOCKED)

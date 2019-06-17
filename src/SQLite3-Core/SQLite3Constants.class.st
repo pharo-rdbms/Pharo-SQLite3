@@ -22,8 +22,9 @@ Class {
 	#category : #'SQLite3-Core-UFFI-Support'
 }
 
-{ #category : #initialization }
-SQLite3Constants class >> initialize [
+{ #category : #'private - initialization' }
+SQLite3Constants class >> initConstants [
+
 	SQLITE_OK := 0.		 			"Successful result"
 	SQLITE_ERROR := 1. 			"SQL error or missing database"
 	SQLITE_BUSY := 5.  			"The database file is locked" 
@@ -33,6 +34,12 @@ SQLite3Constants class >> initialize [
 	SQLITE_MISUSE := 21. 			"Library used incorrectly"
 	SQLITE_ROW := 100.				"sqlite3_step() has another row ready"
 	SQLITE_DONE := 101.			"sqlite3_step() has finished executing"
+
+]
+
+{ #category : #initialization }
+SQLite3Constants class >> initialize [
+	self initConstants.
 			
 	"Types."
 	INTEGER := 1.
