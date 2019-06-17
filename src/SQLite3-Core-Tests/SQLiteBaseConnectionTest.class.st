@@ -430,7 +430,7 @@ SQLiteBaseConnectionTest >> testDeclaredColumnTypes [
 
 { #category : #tests }
 SQLiteBaseConnectionTest >> testDefaultMultilingualStrings [
-	| s idx | 
+	| s | 
 	
 	res := db basicExecute: 'create table x (xk integer primary key, xm1 text default ''中文'', xm2 text default ''áěšřčá'');'.
 	self assert: res equals: 0.
