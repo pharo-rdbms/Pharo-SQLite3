@@ -5,19 +5,20 @@ Class {
 	#name : #SQLite3Constants,
 	#superclass : #SharedPool,
 	#classVars : [
-		'BLOB',
-		'FLOAT',
-		'INTEGER',
-		'NULL',
+		'SQLITE3_TEXT',
+		'SQLITE_BLOB',
 		'SQLITE_BUSY',
 		'SQLITE_CONSTRAINT',
 		'SQLITE_DONE',
 		'SQLITE_ERROR',
+		'SQLITE_FLOAT',
+		'SQLITE_INTEGER',
 		'SQLITE_LOCKED',
 		'SQLITE_MISUSE',
+		'SQLITE_NULL',
 		'SQLITE_OK',
 		'SQLITE_ROW',
-		'TEXT'
+		'SQLITE_TEXT'
 	],
 	#category : #'SQLite3-Core-UFFI-Support'
 }
@@ -41,11 +42,12 @@ SQLite3Constants class >> initConstants [
 SQLite3Constants class >> initialize [
 	self initConstants.
 			
-	"Types."
-	INTEGER := 1.
-	FLOAT := 2.
-	TEXT := 3.
-	BLOB := 4.	
-	NULL := 5.
+	"Fundamental Datatypes"
+	SQLITE_INTEGER := 1.
+	SQLITE_FLOAT := 2.
+	SQLITE_TEXT := 3.
+	SQLITE3_TEXT := 3.
+	SQLITE_BLOB := 4.	
+	SQLITE_NULL := 5.
 
 ]
