@@ -60,6 +60,18 @@ SQLite3RowTest >> testColumnAccessingOnFilledRow [
 ]
 
 { #category : #tests }
+SQLite3RowTest >> testColumnNamesOnEmptyRow [
+	self assert: emptyRow columnNames equals: #()
+
+]
+
+{ #category : #tests }
+SQLite3RowTest >> testColumnNamesOnFilledRow [
+		
+	self assert: filledRow columnNames equals: #('foo' 'bar' 'pi')
+]
+
+{ #category : #tests }
 SQLite3RowTest >> testColumnPuttingOnEmptyRow [
  
 	self assert: (emptyRow at: 'foo') equals: nil.

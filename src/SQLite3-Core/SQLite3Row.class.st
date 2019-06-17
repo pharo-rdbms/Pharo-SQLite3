@@ -53,6 +53,12 @@ SQLite3Row >> atName: aKey put: anObject [
 ]
 
 { #category : #accessing }
+SQLite3Row >> columnNames [
+ 
+	^ self data keys
+]
+
+{ #category : #accessing }
 SQLite3Row >> data [
 
 	 ^data
