@@ -12,14 +12,9 @@ Class {
 	#category : #'SQLite3-Core-Database'
 }
 
-{ #category : #accessing }
+{ #category : #conversion }
 SQLite3Row >> asArray [
-	| c |
-
-	c := OrderedCollection new.
-	1 to: self dataCount do: [ :i |
-		c add: (self atIndex: i) ].
-	^ c asArray
+	^ self data asArray
 ]
 
 { #category : #accessing }
