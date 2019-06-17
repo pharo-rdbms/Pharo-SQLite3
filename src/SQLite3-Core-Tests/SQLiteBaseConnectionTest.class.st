@@ -6,9 +6,7 @@ Class {
 	#superclass : #TestCase,
 	#instVars : [
 		'db',
-		'db2',
-		'res',
-		'res2'
+		'res'
 	],
 	#category : #'SQLite3-Core-Tests-Connections'
 }
@@ -59,7 +57,7 @@ SQLiteBaseConnectionTest >> tearDown [
 
 { #category : #tests }
 SQLiteBaseConnectionTest >> testBadOpen [
-	| invalidFilename |
+	| invalidFilename db2 |
 	invalidFilename := Smalltalk os isWindows
 		ifTrue: [ '/&*no' ]
 		ifFalse: [ '/nosuchfile' ].
