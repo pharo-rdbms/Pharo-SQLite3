@@ -7,6 +7,7 @@ Class {
 	#classVars : [
 		'SQLITE3_TEXT',
 		'SQLITE_ABORT',
+		'SQLITE_AUTH',
 		'SQLITE_BLOB',
 		'SQLITE_BUSY',
 		'SQLITE_CANTOPEN',
@@ -16,18 +17,24 @@ Class {
 		'SQLITE_EMPTY',
 		'SQLITE_ERROR',
 		'SQLITE_FLOAT',
+		'SQLITE_FORMAT',
 		'SQLITE_FULL',
 		'SQLITE_INTEGER',
 		'SQLITE_INTERNAL',
+		'SQLITE_INTERRUPT',
 		'SQLITE_IOERR',
 		'SQLITE_LOCKED',
+		'SQLITE_MISMATCH',
 		'SQLITE_MISUSE',
+		'SQLITE_NOLFS',
 		'SQLITE_NOMEM',
+		'SQLITE_NOTADB',
 		'SQLITE_NOTFOUND',
 		'SQLITE_NULL',
 		'SQLITE_OK',
 		'SQLITE_PERM',
 		'SQLITE_PROTOCOL',
+		'SQLITE_RANGE',
 		'SQLITE_READONLY',
 		'SQLITE_ROW',
 		'SQLITE_SCHEMA',
@@ -60,7 +67,14 @@ SQLite3Constants class >> initConstants [
 	SQLITE_SCHEMA := 17.			"The database schema changed"
 	SQLITE_TOOBIG := 18.			"String or BLOB exceeds size limit"			
 	SQLITE_CONSTRAINT := 19.		"Abort due to constraint violation"
+	SQLITE_MISMATCH := 20.		"Data type mismatch"		
 	SQLITE_MISUSE := 21. 			"Library used incorrectly"
+	SQLITE_NOLFS := 22.			"Uses OS features not supported on host"	
+	SQLITE_AUTH := 23.				"Authorization denied"			
+	SQLITE_FORMAT := 24.			"Auxiliary database format error"	
+	SQLITE_RANGE := 25.			"2nd parameter to sqlite3_bind out of range"
+	SQLITE_NOTADB := 26.			"File opened that is not a database file"
+																			
 	SQLITE_ROW := 100.				"sqlite3_step() has another row ready"
 	SQLITE_DONE := 101.			"sqlite3_step() has finished executing"
 
