@@ -1,6 +1,4 @@
 "
-This class comment was automatically generated from https://www.sqlite.org/rescode.html
-
 The SQLITE_WARNING result code is not returned by any C/C++ interface. However, SQLITE_WARNING (or rather one of its extended error codes) is sometimes used as the first argument in an sqlite3_log() callback to indicate that an unusual and possibly ill-advised operation is taking place.
 "
 Class {

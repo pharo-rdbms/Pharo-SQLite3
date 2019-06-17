@@ -1,6 +1,4 @@
 "
-This class comment was automatically generated from https://www.sqlite.org/rescode.html
-
 The SQLITE_LOCKED result code indicates that a write operation could not continue because of a conflict within the same database connection or a conflict with a different database connection that uses a shared cache.
 
 For example, a DROP TABLE statement cannot be run while another thread is reading from that table on the same database connection because dropping the table would delete the table out from under the concurrent reader.

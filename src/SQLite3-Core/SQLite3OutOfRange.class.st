@@ -1,6 +1,4 @@
 "
-This class comment was automatically generated from https://www.sqlite.org/rescode.html
-
 The SQLITE_RANGE error indices that the parameter number argument to one of the sqlite3_bind routines or the column number in one of the sqlite3_column routines is out of range.
 "
 Class {
