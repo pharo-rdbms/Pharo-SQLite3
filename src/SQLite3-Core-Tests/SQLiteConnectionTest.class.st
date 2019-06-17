@@ -1,5 +1,5 @@
 "
-Unit tests for UDBCSQLiteConnection
+Unit tests for SQLiteConnection
 "
 Class {
 	#name : #SQLiteConnectionTest,
