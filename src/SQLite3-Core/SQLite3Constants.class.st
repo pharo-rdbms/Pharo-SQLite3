@@ -100,13 +100,13 @@ Class {
 
 { #category : #'private - initialization' }
 SQLite3Constants class >> initConstants [
-	SQLITE_OK := 0.		 			"Successful result"
 	
-	self initResultCodes.
-	self initExtendedResultCodes.
+	self 
+		initResultCodes;			
+		initErrorCodes;
+		initExtendedErrorCodes
 	
-	SQLITE_ROW := 100.				"sqlite3_step() has another row ready"
-	SQLITE_DONE := 101.			"sqlite3_step() has finished executing"
+	
 
 ]
 
@@ -124,8 +124,43 @@ SQLite3Constants class >> initDataTypes [
 	
 ]
 
-{ #category : #'private - initialization' }
-SQLite3Constants class >> initExtendedResultCodes [
+{ #category : #'private - initialization constants' }
+SQLite3Constants class >> initErrorCodes [
+	"In its default configuration, SQLite API routines return one of 26 integer 
+	[SQLITE_OK | result codes]."
+
+	SQLITE_ERROR := 1. 			"SQL error or missing database"
+	SQLITE_INTERNAL := 2.			"Internal logic error in SQLite"
+	SQLITE_PERM := 3.				"Access permission denied"	
+	SQLITE_ABORT := 4.				"Callback routine requested an abort"											
+	SQLITE_BUSY := 5.  			"The database file is locked" 
+	SQLITE_LOCKED := 6. 			"A table in the database is locked"
+	SQLITE_NOMEM := 7.				"A malloc() failed"
+	SQLITE_READONLY := 8.			"Attempt to write a readonly database"
+	SQLITE_INTERRUPT := 9.		"Operation terminated by sqlite3_interrupt()"
+	SQLITE_IOERR := 10.			"Some kind of disk I/O error occurred"
+	SQLITE_CORRUPT := 11.			"The database disk image is malformed"
+	SQLITE_NOTFOUND := 12.		"Unknown opcode in sqlite3_file_control()"							
+	SQLITE_FULL := 13.				"Insertion failed because database is full"	
+	SQLITE_CANTOPEN := 14.   	"Unable to open the database file"
+	SQLITE_PROTOCOL := 15.		"Database lock protocol error"
+	SQLITE_EMPTY := 16.			"Database is empty"
+	SQLITE_SCHEMA := 17.			"The database schema changed"
+	SQLITE_TOOBIG := 18.			"String or BLOB exceeds size limit"			
+	SQLITE_CONSTRAINT := 19.		"Abort due to constraint violation"
+	SQLITE_MISMATCH := 20.		"Data type mismatch"		
+	SQLITE_MISUSE := 21. 			"Library used incorrectly"
+	SQLITE_NOLFS := 22.			"Uses OS features not supported on host"	
+	SQLITE_AUTH := 23.				"Authorization denied"			
+	SQLITE_FORMAT := 24.			"Auxiliary database format error"	
+	SQLITE_RANGE := 25.			"2nd parameter to sqlite3_bind out of range"
+	SQLITE_NOTADB := 26.			"File opened that is not a database file"
+	SQLITE_NOTICE := 27.			"Notifications from sqlite3_log()"
+	SQLITE_WARNING := 28.			"Warnings from sqlite3_log()"
+]
+
+{ #category : #'private - initialization constants' }
+SQLite3Constants class >> initExtendedErrorCodes [
 	"Newer versions of SQLite (version 3.3.8 and later) include support for additional result codes that provide more detailed information about errors. The extended result codes are enabled or disabled on a per database connection basis using the [sqlite3_extended_result_codes()] API."
 	
 	SQLITE_IOERR_READ              := (SQLITE_IOERR | (1<<8)).
@@ -182,39 +217,12 @@ SQLite3Constants class >> initExtendedResultCodes [
 	SQLITE_WARNING_AUTOINDEX       := (SQLITE_WARNING | (1<<8)).
 ]
 
-{ #category : #'private - initialization' }
+{ #category : #'private - initialization constants' }
 SQLite3Constants class >> initResultCodes [
-	"In its default configuration, SQLite API routines return one of 26 integer 
-	[SQLITE_OK | result codes]."
 
-	SQLITE_ERROR := 1. 			"SQL error or missing database"
-	SQLITE_INTERNAL := 2.			"Internal logic error in SQLite"
-	SQLITE_PERM := 3.				"Access permission denied"	
-	SQLITE_ABORT := 4.				"Callback routine requested an abort"											
-	SQLITE_BUSY := 5.  			"The database file is locked" 
-	SQLITE_LOCKED := 6. 			"A table in the database is locked"
-	SQLITE_NOMEM := 7.				"A malloc() failed"
-	SQLITE_READONLY := 8.			"Attempt to write a readonly database"
-	SQLITE_INTERRUPT := 9.		"Operation terminated by sqlite3_interrupt()"
-	SQLITE_IOERR := 10.			"Some kind of disk I/O error occurred"
-	SQLITE_CORRUPT := 11.			"The database disk image is malformed"
-	SQLITE_NOTFOUND := 12.		"Unknown opcode in sqlite3_file_control()"							
-	SQLITE_FULL := 13.				"Insertion failed because database is full"	
-	SQLITE_CANTOPEN := 14.   	"Unable to open the database file"
-	SQLITE_PROTOCOL := 15.		"Database lock protocol error"
-	SQLITE_EMPTY := 16.			"Database is empty"
-	SQLITE_SCHEMA := 17.			"The database schema changed"
-	SQLITE_TOOBIG := 18.			"String or BLOB exceeds size limit"			
-	SQLITE_CONSTRAINT := 19.		"Abort due to constraint violation"
-	SQLITE_MISMATCH := 20.		"Data type mismatch"		
-	SQLITE_MISUSE := 21. 			"Library used incorrectly"
-	SQLITE_NOLFS := 22.			"Uses OS features not supported on host"	
-	SQLITE_AUTH := 23.				"Authorization denied"			
-	SQLITE_FORMAT := 24.			"Auxiliary database format error"	
-	SQLITE_RANGE := 25.			"2nd parameter to sqlite3_bind out of range"
-	SQLITE_NOTADB := 26.			"File opened that is not a database file"
-	SQLITE_NOTICE := 27.			"Notifications from sqlite3_log()"
-	SQLITE_WARNING := 28.			"Warnings from sqlite3_log()"
+	SQLITE_OK := 0.		 			"Successful result"
+	SQLITE_ROW := 100.				"sqlite3_step() has another row ready"
+	SQLITE_DONE := 101 			"sqlite3_step() has finished executing"
 ]
 
 { #category : #initialization }
