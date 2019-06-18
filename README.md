@@ -25,4 +25,4 @@ The full history is described in the [history detais](doc/history.md).
 
 ## Migration
 
-If you want to migrate your code from an older SQLite binding then check the [Migration Guide](doc/migrate.md).
+If you want to migrate your code from an older SQLite binding then check the [Migration Guide](doc/migration.md).
