@@ -170,7 +170,7 @@ SQLite3BaseConnection >> initialize [
 	library := SQLite3Library current.
 	dbHandle := SQLite3DatabaseExternalObject new.
 	dbHandle autoRelease.
-	statementClass := SQLite3Statement.
+	statementClass := SQLite3PreparedStatement.
 ]
 
 { #category : #testing }

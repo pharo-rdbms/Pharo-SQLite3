@@ -2,7 +2,7 @@
 I represent an SQLite prepared statement.
 "
 Class {
-	#name : #SQLite3Statement,
+	#name : #SQLite3PreparedStatement,
 	#superclass : #Object,
 	#instVars : [
 		'connection',
@@ -15,7 +15,7 @@ Class {
 }
 
 { #category : #'public - accessing' }
-SQLite3Statement >> at: aColumn putBoolean: aBoolean [
+SQLite3PreparedStatement >> at: aColumn putBoolean: aBoolean [
 
 	^ self library 
 		with: handle 
@@ -26,12 +26,12 @@ SQLite3Statement >> at: aColumn putBoolean: aBoolean [
 ]
 
 { #category : #'public - accessing' }
-SQLite3Statement >> at: aColumn putByteArray: anObject [
+SQLite3PreparedStatement >> at: aColumn putByteArray: anObject [
 	^ self library with: handle at: aColumn putBlob: anObject
 ]
 
 { #category : #'public - accessing' }
-SQLite3Statement >> at: aColumn putDateTime: aDateTime [
+SQLite3PreparedStatement >> at: aColumn putDateTime: aDateTime [
 	| s |
 	
 	s := SQLite3DateTimeString streamContents: [ :stream | aDateTime asDateAndTime printOn: stream ].
@@ -39,7 +39,7 @@ SQLite3Statement >> at: aColumn putDateTime: aDateTime [
 ]
 
 { #category : #'public - accessing' }
-SQLite3Statement >> at: aColumn putFloat: aFloat [
+SQLite3PreparedStatement >> at: aColumn putFloat: aFloat [
 	| f |
 	
 	f := (aFloat isKindOf: Fraction)
@@ -49,30 +49,30 @@ SQLite3Statement >> at: aColumn putFloat: aFloat [
 ]
 
 { #category : #'public - accessing' }
-SQLite3Statement >> at: aColumn putInteger: anInteger [
+SQLite3PreparedStatement >> at: aColumn putInteger: anInteger [
 
 	^ self library with: handle at: aColumn putInteger: anInteger
 ]
 
 { #category : #'public - accessing' }
-SQLite3Statement >> at: aColumn putNil: anObject [
+SQLite3PreparedStatement >> at: aColumn putNil: anObject [
 	"Goofy interface note - anObject is ignored here."
 	"When used by SQLite3Connection, anObject will always be nil."
 	^ self library with: handle putNullAt: aColumn
 ]
 
 { #category : #'public - accessing' }
-SQLite3Statement >> at: aColumn putObject: anObject [
+SQLite3PreparedStatement >> at: aColumn putObject: anObject [
 	^ self library with: handle at: aColumn putBlob: (FLSerializer serializeToByteArray: anObject)
 ]
 
 { #category : #'public - accessing' }
-SQLite3Statement >> at: aColumn putString: aString [
+SQLite3PreparedStatement >> at: aColumn putString: aString [
 	^ self library with: handle at: aColumn putString: aString
 ]
 
 { #category : #public }
-SQLite3Statement >> basicExecute: aBlock [
+SQLite3PreparedStatement >> basicExecute: aBlock [
 	| ret |
 	
 	ret := self step. 
@@ -85,38 +85,38 @@ SQLite3Statement >> basicExecute: aBlock [
 ]
 
 { #category : #'public - accessing' }
-SQLite3Statement >> bindParameterCount [
+SQLite3PreparedStatement >> bindParameterCount [
 	^ self library bindParameterCount: handle
 ]
 
 { #category : #'public - accessing' }
-SQLite3Statement >> bindParameterIndex: aName [
+SQLite3PreparedStatement >> bindParameterIndex: aName [
 	^ self library bindParameterIndex: handle for: aName
 ]
 
 { #category : #'public - accessing' }
-SQLite3Statement >> booleanAt: aColumn [ 
+SQLite3PreparedStatement >> booleanAt: aColumn [ 
 	^self library booleanFrom: handle at: aColumn
 ]
 
 { #category : #'public - accessing' }
-SQLite3Statement >> byteArrayAt: aColumn [
+SQLite3PreparedStatement >> byteArrayAt: aColumn [
 	^ self library blobFrom: handle at: aColumn
 
 ]
 
 { #category : #public }
-SQLite3Statement >> clearBindings [
+SQLite3PreparedStatement >> clearBindings [
 	connection clearBindings: self
 ]
 
 { #category : #'private - accessing' }
-SQLite3Statement >> connection: anObject [
+SQLite3PreparedStatement >> connection: anObject [
 	connection := anObject
 ]
 
 { #category : #'public - accessing' }
-SQLite3Statement >> dataTypeForObject: anObject [
+SQLite3PreparedStatement >> dataTypeForObject: anObject [
 
 	anObject ifNil: [ ^#at:putNil: ].
 
@@ -142,17 +142,17 @@ SQLite3Statement >> dataTypeForObject: anObject [
 ]
 
 { #category : #'public - accessing' }
-SQLite3Statement >> dataValuesAvailable [
+SQLite3PreparedStatement >> dataValuesAvailable [
 	^ self library dataValuesAvailable: handle
 ]
 
 { #category : #'public - accessing' }
-SQLite3Statement >> dateTimeAt: aColumn [	
+SQLite3PreparedStatement >> dateTimeAt: aColumn [	
 	^ DateAndTime fromString: (self library stringFrom: handle at: aColumn)
 ]
 
 { #category : #initialization }
-SQLite3Statement >> finalize [
+SQLite3PreparedStatement >> finalize [
 	| result |
 	
 	result := connection finalize: self sqlText.
@@ -163,18 +163,18 @@ SQLite3Statement >> finalize [
 ]
 
 { #category : #'public - accessing' }
-SQLite3Statement >> floatAt: aColumn [
+SQLite3PreparedStatement >> floatAt: aColumn [
 
 	^self library floatFrom: handle at: aColumn
 ]
 
 { #category : #'private - accessing' }
-SQLite3Statement >> handle [
+SQLite3PreparedStatement >> handle [
 	^ handle
 ]
 
 { #category : #initialization }
-SQLite3Statement >> initialize [
+SQLite3PreparedStatement >> initialize [
 
 	super initialize.
 	handle := SQLite3StatementExternalObject new.
@@ -182,12 +182,12 @@ SQLite3Statement >> initialize [
 ]
 
 { #category : #'public - accessing' }
-SQLite3Statement >> integerAt: aColumn [ 
+SQLite3PreparedStatement >> integerAt: aColumn [ 
 	^self library integerFrom: handle at: aColumn
 ]
 
 { #category : #'private - testing' }
-SQLite3Statement >> isDateAndTimeLike: anObject [
+SQLite3PreparedStatement >> isDateAndTimeLike: anObject [
 
 	^ ((anObject isKindOf: DateAndTime) or: [ anObject isKindOf: Date ])
 			or: [ anObject isKindOf: Time ]
@@ -196,49 +196,49 @@ SQLite3Statement >> isDateAndTimeLike: anObject [
 ]
 
 { #category : #'private - testing' }
-SQLite3Statement >> isFloatLike: anObject [
+SQLite3PreparedStatement >> isFloatLike: anObject [
 	^ (anObject isKindOf: Float) or: [ anObject isKindOf: Fraction ]
 		
 
 ]
 
 { #category : #private }
-SQLite3Statement >> library [
+SQLite3PreparedStatement >> library [
 	^SQLite3Library current
 ]
 
 { #category : #'public - accessing' }
-SQLite3Statement >> nameOfColumn: aColumn [
+SQLite3PreparedStatement >> nameOfColumn: aColumn [
 	^ self library nameFor: handle at: aColumn
 ]
 
 { #category : #'public - accessing' }
-SQLite3Statement >> nilAt: aColumn [
+SQLite3PreparedStatement >> nilAt: aColumn [
 	^ nil  
 ]
 
 { #category : #'public - accessing' }
-SQLite3Statement >> objectAt: aColumn [
+SQLite3PreparedStatement >> objectAt: aColumn [
 	^ FLMaterializer materializeFromByteArray: (self library blobFrom: handle at: aColumn)  
 ]
 
 { #category : #public }
-SQLite3Statement >> reset [
+SQLite3PreparedStatement >> reset [
 	connection reset: self
 ]
 
 { #category : #operating }
-SQLite3Statement >> sqlText [ 
+SQLite3PreparedStatement >> sqlText [ 
 	^ self library sqlText: handle
 ]
 
 { #category : #public }
-SQLite3Statement >> step [
+SQLite3PreparedStatement >> step [
 	^ self stepOk: (self library step: handle)
 ]
 
 { #category : #private }
-SQLite3Statement >> stepOk: aValue [
+SQLite3PreparedStatement >> stepOk: aValue [
 
 	"These are normal conditions."	
 	(aValue = SQLITE_ROW) ifTrue: [ ^ SQLITE_ROW ].
@@ -256,17 +256,17 @@ SQLite3Statement >> stepOk: aValue [
 ]
 
 { #category : #operating }
-SQLite3Statement >> stringAt: aColumn [	 
+SQLite3PreparedStatement >> stringAt: aColumn [	 
 	^ self library stringFrom: handle at: aColumn
 ]
 
 { #category : #public }
-SQLite3Statement >> typeOfColumn: aColumn [
+SQLite3PreparedStatement >> typeOfColumn: aColumn [
 	^ self library typeFor: handle at: aColumn
 ]
 
 { #category : #public }
-SQLite3Statement >> valueOfColumn: aColumn [
+SQLite3PreparedStatement >> valueOfColumn: aColumn [
 	^ self perform: (self typeOfColumn: aColumn) with: aColumn
 
 ]
