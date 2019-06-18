@@ -427,8 +427,9 @@ SQLite3Library >> changes: aHandle [
 
 { #category : #'private - utilities' }
 SQLite3Library >> checkForOk: anInteger on: aHandle [
-	^ self sqlite3ResultFor: anInteger ifNoneMatch: [ 		
-		 SQLite3NativeError forNativeErrorCode: anInteger messageText: (self apiErrorMessage: aHandle) ]
+	^ self sqlite3ResultFor: anInteger ifNoneMatch: [ 
+	 		
+		 (SQLite3NativeError forNativeErrorCode: anInteger messageText: (self apiErrorMessage: aHandle)) signal ]
 	
 ]
 
