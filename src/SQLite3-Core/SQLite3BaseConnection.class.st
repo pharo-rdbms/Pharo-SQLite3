@@ -39,32 +39,6 @@ SQLite3BaseConnection class >> openOn: aFilename [
 
 ]
 
-{ #category : #'public API - backups' }
-SQLite3BaseConnection >> asBackupDestination: backupObject [
-	self asBackupDestination: backupObject forDatabase: 'main'
-]
-
-{ #category : #'public API - backups' }
-SQLite3BaseConnection >> asBackupDestination: backupObject forDatabase: databaseName [
-	
-	backupObject destinationHandle: dbHandle.
-	backupObject destinationDatabaseName: databaseName
-	
-]
-
-{ #category : #'public API - backups' }
-SQLite3BaseConnection >> asBackupSource: backupObject [
-	self asBackupSource: backupObject forDatabase: 'main'
-]
-
-{ #category : #'public API - backups' }
-SQLite3BaseConnection >> asBackupSource: backupObject forDatabase: databaseName [
-	
-	backupObject sourceHandle: dbHandle.
-	backupObject sourceDatabaseName: databaseName
-	
-]
-
 { #category : #'public API - operating' }
 SQLite3BaseConnection >> basicExecute: anSQLText [ 
 	^ (self prepare: anSQLText) step; finalize
