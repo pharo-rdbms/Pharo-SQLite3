@@ -12,6 +12,13 @@ Class {
 }
 
 { #category : #tests }
+SQLiteBaseConnectionTest >> invalidFileNameOnCurrentOperatingSystem [
+	^Smalltalk os isWindows
+		ifTrue: [ '/&*no' ]
+		ifFalse: [ '/nosuchfile' ]
+]
+
+{ #category : #tests }
 SQLiteBaseConnectionTest >> noTestColumnNamesBobbyGo [
 	"In this test, Bobby Tables strikes naive SQL string construction."
 	"20190302, pierce: #basicExecute: uses prepare/step/finalize internally and is no longer susceptible to injection attacks. "
@@ -55,18 +62,16 @@ SQLiteBaseConnectionTest >> tearDown [
 
 ]
 
-{ #category : #tests }
+{ #category : #'tests - connections' }
 SQLiteBaseConnectionTest >> testBadOpen [
-	| invalidFilename db2 |
-	invalidFilename := Smalltalk os isWindows
-		ifTrue: [ '/&*no' ]
-		ifFalse: [ '/nosuchfile' ].
-	db2 := SQLite3BaseConnection on: invalidFilename.
-	self should: [ db2 open ] raise: SQLite3CantOpen.
-	self assert: db2 isOpen equals: false
+	| newConnection |
+	newConnection := SQLite3BaseConnection
+		on: self invalidFileNameOnCurrentOperatingSystem.
+	self should: [ newConnection open ] raise: SQLite3CantOpen.
+	self deny: newConnection isOpen
 ]
 
-{ #category : #tests }
+{ #category : #'tests - execution' }
 SQLiteBaseConnectionTest >> testBasicExecuteOk [
 
 	res := db basicExecute: 'create table x (xk integer, xv integer);'.
@@ -76,7 +81,7 @@ SQLiteBaseConnectionTest >> testBasicExecuteOk [
 	
 ]
 
-{ #category : #tests }
+{ #category : #'tests - execution' }
 SQLiteBaseConnectionTest >> testBasicExecuteSyntaxError [
 
 	self should: [ db basicExecute: 'create table,;' ]
@@ -84,7 +89,7 @@ SQLiteBaseConnectionTest >> testBasicExecuteSyntaxError [
 	
 ]
 
-{ #category : #tests }
+{ #category : #'tests - types' }
 SQLiteBaseConnectionTest >> testBooleanColumnTypeMismatch [
 	| s | 
 	
@@ -98,7 +103,7 @@ SQLiteBaseConnectionTest >> testBooleanColumnTypeMismatch [
 	
 ]
 
-{ #category : #tests }
+{ #category : #'tests - types' }
 SQLiteBaseConnectionTest >> testBooleanObject [
 	| s | 
 	
@@ -122,7 +127,7 @@ SQLiteBaseConnectionTest >> testBooleanObject [
 	
 ]
 
-{ #category : #tests }
+{ #category : #'tests - writing' }
 SQLiteBaseConnectionTest >> testBooleanWriteIntegerOneThenRead [
 	| s | 
 	
@@ -145,7 +150,7 @@ SQLiteBaseConnectionTest >> testBooleanWriteIntegerOneThenRead [
 	s finalize
 ]
 
-{ #category : #tests }
+{ #category : #'tests - writing' }
 SQLiteBaseConnectionTest >> testBooleanWriteIntegerTwoThenRead [
 	| s | 
 	
@@ -166,7 +171,7 @@ SQLiteBaseConnectionTest >> testBooleanWriteIntegerTwoThenRead [
 	s finalize
 ]
 
-{ #category : #tests }
+{ #category : #'tests - writing' }
 SQLiteBaseConnectionTest >> testBooleanWriteIntegerZeroThenRead [
 	| s | 
 	
@@ -189,7 +194,7 @@ SQLiteBaseConnectionTest >> testBooleanWriteIntegerZeroThenRead [
 	s finalize
 ]
 
-{ #category : #tests }
+{ #category : #'tests - writing' }
 SQLiteBaseConnectionTest >> testBooleanWriteNilThenRead [
 	| s | 
 	
@@ -212,7 +217,7 @@ SQLiteBaseConnectionTest >> testBooleanWriteNilThenRead [
 	s finalize
 ]
 
-{ #category : #tests }
+{ #category : #'tests - writing' }
 SQLiteBaseConnectionTest >> testBooleanWriteSQLNullThenRead [
 	| s | 
 	
@@ -234,7 +239,7 @@ SQLiteBaseConnectionTest >> testBooleanWriteSQLNullThenRead [
 	s finalize
 ]
 
-{ #category : #tests }
+{ #category : #'tests - writing' }
 SQLiteBaseConnectionTest >> testBooleanWriteStringFalseThenRead [
 	| s | 
 	
@@ -257,7 +262,7 @@ SQLiteBaseConnectionTest >> testBooleanWriteStringFalseThenRead [
 	s finalize
 ]
 
-{ #category : #tests }
+{ #category : #'tests - writing' }
 SQLiteBaseConnectionTest >> testBooleanWriteStringTrueThenRead [
 	| s | 
 	
@@ -280,7 +285,7 @@ SQLiteBaseConnectionTest >> testBooleanWriteStringTrueThenRead [
 	s finalize
 ]
 
-{ #category : #tests }
+{ #category : #'tests - writing' }
 SQLiteBaseConnectionTest >> testBooleanWriteStringTwoThenRead [
 	| s | 
 	
@@ -301,7 +306,7 @@ SQLiteBaseConnectionTest >> testBooleanWriteStringTwoThenRead [
 	s finalize
 ]
 
-{ #category : #tests }
+{ #category : #'tests - writing' }
 SQLiteBaseConnectionTest >> testBooleanWriteThenRead [
 	| s | 
 	
@@ -324,7 +329,7 @@ SQLiteBaseConnectionTest >> testBooleanWriteThenRead [
 	s finalize
 ]
 
-{ #category : #tests }
+{ #category : #'tests - columns' }
 SQLiteBaseConnectionTest >> testColumnNames [
 	| columns |
 	
@@ -338,7 +343,7 @@ SQLiteBaseConnectionTest >> testColumnNames [
 
 ]
 
-{ #category : #tests }
+{ #category : #'tests - columns' }
 SQLiteBaseConnectionTest >> testColumnNamesBobbyStop [
 	"In this test, Bobby Tables strikes again, but fails, because #columnNamesFor: uses parameter binding."
 	| columns tables |
@@ -362,7 +367,7 @@ SQLiteBaseConnectionTest >> testColumnNamesBobbyStop [
 	self assert: tables second equals: 'students'
 ]
 
-{ #category : #tests }
+{ #category : #'tests - columns' }
 SQLiteBaseConnectionTest >> testColumnNamesNoSuchTable [
 	| columns |
 	
@@ -372,7 +377,7 @@ SQLiteBaseConnectionTest >> testColumnNamesNoSuchTable [
 	self assert: (columns isNil).
 ]
 
-{ #category : #tests }
+{ #category : #'tests - execution' }
 SQLiteBaseConnectionTest >> testDataValuesAvailable [
 	| s | 
 	
@@ -388,7 +393,7 @@ SQLiteBaseConnectionTest >> testDataValuesAvailable [
 	s finalize
 ]
 
-{ #category : #tests }
+{ #category : #'tests - types' }
 SQLiteBaseConnectionTest >> testDateAndTime [
 	| data s | 
 	
@@ -415,7 +420,7 @@ SQLiteBaseConnectionTest >> testDateAndTime [
 	s finalize
 ]
 
-{ #category : #tests }
+{ #category : #'tests - columns' }
 SQLiteBaseConnectionTest >> testDeclaredColumnTypes [
 	| columns |
 	
@@ -428,7 +433,7 @@ SQLiteBaseConnectionTest >> testDeclaredColumnTypes [
 	self assert: columns third equals: 'boolean'
 ]
 
-{ #category : #tests }
+{ #category : #'tests - multilingual' }
 SQLiteBaseConnectionTest >> testDefaultMultilingualStrings [
 	| s | 
 	
@@ -450,7 +455,7 @@ SQLiteBaseConnectionTest >> testDefaultMultilingualStrings [
 	s finalize
 ]
 
-{ #category : #tests }
+{ #category : #'tests - connections' }
 SQLiteBaseConnectionTest >> testDoubleClose [
 	
 	db close.
@@ -458,7 +463,7 @@ SQLiteBaseConnectionTest >> testDoubleClose [
 	"#tearDown will close the db again, and is similarly guarded."
 ]
 
-{ #category : #tests }
+{ #category : #'tests - types' }
 SQLiteBaseConnectionTest >> testFloat [
 	| s |	
 	res := db basicExecute: 'create table x (xk integer primary key, xv real);'.
@@ -473,7 +478,7 @@ SQLiteBaseConnectionTest >> testFloat [
 	s finalize
 ]
 
-{ #category : #tests }
+{ #category : #'tests - types' }
 SQLiteBaseConnectionTest >> testInteger [
 	"The large integer comes from Glorp's testInt8."
 	| s |	
@@ -493,7 +498,7 @@ SQLiteBaseConnectionTest >> testInteger [
 	s finalize
 ]
 
-{ #category : #tests }
+{ #category : #'tests - multilingual' }
 SQLiteBaseConnectionTest >> testMultilingualStrings [
 	| data s idx | 
 	
@@ -520,7 +525,7 @@ SQLiteBaseConnectionTest >> testMultilingualStrings [
 	s finalize
 ]
 
-{ #category : #tests }
+{ #category : #'tests - multilingual' }
 SQLiteBaseConnectionTest >> testMultilingualTableName [
 	| s | 
 	
@@ -541,7 +546,7 @@ SQLiteBaseConnectionTest >> testMultilingualTableName [
 	s finalize
 ]
 
-{ #category : #tests }
+{ #category : #'tests - types' }
 SQLiteBaseConnectionTest >> testObjectBlob [
 	| data s | 
 	
@@ -654,7 +659,7 @@ SQLiteBaseConnectionTest >> testResultSetColumnIntrospection [
 	s finalize
 ]
 
-{ #category : #tests }
+{ #category : #'tests - types' }
 SQLiteBaseConnectionTest >> testScaledDecimal [
 	"This test is a simplified version of GlorpNumericTest>>tesNumeric."
 	| s number float |
@@ -677,7 +682,7 @@ SQLiteBaseConnectionTest >> testScaledDecimal [
 	s finalize
 ]
 
-{ #category : #tests }
+{ #category : #'tests - tables' }
 SQLiteBaseConnectionTest >> testTableNames [
 
 	| tables |	
@@ -688,7 +693,7 @@ SQLiteBaseConnectionTest >> testTableNames [
 	self assert: tables first equals: 'x'
 ]
 
-{ #category : #tests }
+{ #category : #'tests - tables' }
 SQLiteBaseConnectionTest >> testTableNamesOfEmptyDatabase [
 
 	| tables |	
@@ -698,7 +703,7 @@ SQLiteBaseConnectionTest >> testTableNamesOfEmptyDatabase [
 
 ]
 
-{ #category : #tests }
+{ #category : #'tests - types' }
 SQLiteBaseConnectionTest >> testTime [
 	"SQLite3 converts a given Time instance into a DateAndTime and stores that."
 	| data today s | 
