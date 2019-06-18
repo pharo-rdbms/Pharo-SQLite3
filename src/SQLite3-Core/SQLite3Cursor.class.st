@@ -6,7 +6,7 @@ Class {
 	#name : #SQLite3Cursor,
 	#superclass : #Object,
 	#instVars : [
-		'db',
+		'connection',
 		'statement',
 		'moreRows',
 		'rowClass'
@@ -25,7 +25,7 @@ SQLite3Cursor >> close [
 SQLite3Cursor >> execute: anSQLText with: anObject on: aDb [
 	| obj |
 
-	db := aDb.
+	connection := aDb.
 
 	obj := anObject isNil ifTrue: [ #() ] ifFalse: [ anObject ].
 
@@ -145,7 +145,7 @@ SQLite3Cursor >> onlyRow: ifNoneBlock [
 { #category : #private }
 SQLite3Cursor >> prepareStatement: anSQLText [
 
-	statement := db prepare: anSQLText.
+	statement := connection prepare: anSQLText.
 	statement clearBindings.
 	statement	reset
 
