@@ -16,7 +16,7 @@ SQLite3Connection >> execute: anSQLText [
 { #category : #'public API - operating' }
 SQLite3Connection >> execute: anSQLText value: anObject [
 
-	^ SQLite3ResultSet new execute: anSQLText 
+	^ SQLite3Cursor new execute: anSQLText 
 		with: (Array with: anObject) 
 		on: self	
 
@@ -25,7 +25,7 @@ SQLite3Connection >> execute: anSQLText value: anObject [
 { #category : #'public API - operating' }
 SQLite3Connection >> execute: anSQLText value: object1 value: object2 [
 
-	^ SQLite3ResultSet new execute: anSQLText 
+	^ SQLite3Cursor new execute: anSQLText 
 		with: (Array with: object1 with: object2) 
 		on: self	
 
@@ -34,7 +34,7 @@ SQLite3Connection >> execute: anSQLText value: object1 value: object2 [
 { #category : #'public API - operating' }
 SQLite3Connection >> execute: anSQLText value: object1 value: object2 value: object3 [
 
-	^ SQLite3ResultSet new execute: anSQLText 
+	^ SQLite3Cursor new execute: anSQLText 
 		with: (Array with: object1 with: object2 with: object3) 
 		on: self	
 
@@ -43,7 +43,7 @@ SQLite3Connection >> execute: anSQLText value: object1 value: object2 value: obj
 { #category : #'public API - operating' }
 SQLite3Connection >> execute: anSQLText value: object1 value: object2 value: object3 value: object4 [
 
-	^ SQLite3ResultSet new execute: anSQLText 
+	^ SQLite3Cursor new execute: anSQLText 
 		with: (Array with: object1 with: object2 with: object3 with: object4) 
 		on: self	
 
@@ -55,6 +55,6 @@ SQLite3Connection >> execute: anSQLText with: anObject [
 	anObject isString
 		ifTrue: [ SQLite3AbstractError signal: 'Unable to execute SQL on instance of String.' ].
 			
-	^ SQLite3ResultSet new execute: anSQLText with: anObject on: self	
+	^ SQLite3Cursor new execute: anSQLText with: anObject on: self	
 
 ]
