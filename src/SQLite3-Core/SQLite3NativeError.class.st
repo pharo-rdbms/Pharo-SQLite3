@@ -1,5 +1,9 @@
 "
-Common subclass for errors corresponding to a native SQLite3 C library error
+Common subclass for errors corresponding to a native SQLite3 C library error code.
+
+Typically one uses this class to create and access instances of subclasses: 
+ 
+	(SQLite3NativeError forNativeErrorCode: SQLITE_INTERRUPT  messageText: 'Interrupted') signal
 "
 Class {
 	#name : #SQLite3NativeError,
@@ -9,6 +13,22 @@ Class {
 	],
 	#category : #'SQLite3-Core-Errors'
 }
+
+{ #category : #examples }
+SQLite3NativeError class >> example [
+
+	(SQLite3NativeError forNativeErrorCode: SQLITE_INTERRUPT  messageText: 'Interrupted') signal
+]
+
+{ #category : #accessing }
+SQLite3NativeError class >> forNativeErrorCode: anInteger messageText: aString [
+
+	^(self subclassForNativeErrorCode: anInteger) new
+			messageText: aString;
+			yourself
+
+	
+]
 
 { #category : #testing }
 SQLite3NativeError class >> isAbstract [ 
@@ -23,8 +43,8 @@ SQLite3NativeError class >> nativeErrorCode [
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : #'private - accessing' }
 SQLite3NativeError class >> subclassForNativeErrorCode: anInteger [
-	^ self subclasses detect: [ :subclass |
-		subclass nativeErrorCode = anInteger ]
+	^ self subclasses 
+		detect: [ :subclass | subclass nativeErrorCode = anInteger ]
 ]

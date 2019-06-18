@@ -192,15 +192,8 @@ SQLite3BaseConnection >> on: aFilename [
 
 { #category : #'public API - open/close' }
 SQLite3BaseConnection >> open [
-	 ((library open: dbFilename via: dbHandle) == 0)
-		ifTrue: [ 
-			isOpen := true.
-			^ self ]
-		ifFalse: [
-			| err |
-			err := library apiErrorMessage: dbHandle.
-			library apiClose: dbHandle.
-			SQLite3AbstractError signal: err ]
+	library open: dbFilename via: dbHandle.
+	isOpen := true
 ]
 
 { #category : #'public API - operating' }

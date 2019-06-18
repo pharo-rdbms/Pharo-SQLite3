@@ -426,18 +426,10 @@ SQLite3Library >> changes: aHandle [
 ]
 
 { #category : #'private - utilities' }
-SQLite3Library >> checkForOk: aValue on: aHandle [
-
-	(aValue = SQLITE_OK)
-		ifFalse: [  
-			(aValue = SQLITE_BUSY)
-				ifTrue: [ self signal: SQLite3Busy with: aValue on: aHandle ].
-			(aValue = SQLITE_LOCKED)
-				ifTrue: [ self signal: SQLite3Locked with: aValue on: aHandle ].
-			(aValue = SQLITE_MISUSE)
-				ifTrue: [ self signal: SQLite3Misuse with: aValue on: aHandle ].				
-			self signal: SQLite3AbstractError with: aValue on: aHandle ].	
-	^ SQLITE_OK
+SQLite3Library >> checkForOk: anInteger on: aHandle [
+	^ self sqlite3ResultFor: anInteger ifNoneMatch: [ 		
+		 SQLite3NativeError forNativeErrorCode: anInteger messageText: (self apiErrorMessage: aHandle) ]
+	
 ]
 
 { #category : #cleaning }
@@ -575,6 +567,14 @@ SQLite3Library >> sqlText: aStatementHandle [
 	^ self apiSql: aStatementHandle
 	
 
+]
+
+{ #category : #'private - utilities' }
+SQLite3Library >> sqlite3ResultFor: anInteger ifNoneMatch: aBlock [
+
+	^[ 
+		SQLite3Result forNativeResultCode: anInteger
+	] on: NotFound do: aBlock
 ]
 
 { #category : #stepping }
