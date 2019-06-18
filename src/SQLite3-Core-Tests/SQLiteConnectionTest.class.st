@@ -876,7 +876,7 @@ SQLiteConnectionTest >> testExecuteWithToFail2 [
 	self assert: res equals: 0
 ]
 
-{ #category : #tests }
+{ #category : #'tests - glorp compatibility' }
 SQLiteConnectionTest >> testGlorpAutoID [
 	| schema rows |
 	
@@ -901,7 +901,7 @@ SQLiteConnectionTest >> testGlorpAutoID [
 
 ]
 
-{ #category : #tests }
+{ #category : #'tests - glorp compatibility' }
 SQLiteConnectionTest >> testGlorpCompositeKey [
 	| schema rows |
 	
@@ -923,7 +923,7 @@ SQLiteConnectionTest >> testGlorpCompositeKey [
 
 ]
 
-{ #category : #tests }
+{ #category : #'tests - glorp compatibility' }
 SQLiteConnectionTest >> testGlorpDoubleInsertPrimaryKey [
 	| schema rows |
 	
@@ -947,7 +947,7 @@ SQLiteConnectionTest >> testGlorpDoubleInsertPrimaryKey [
 
 ]
 
-{ #category : #tests }
+{ #category : #'tests - glorp compatibility' }
 SQLiteConnectionTest >> testGlorpUpdate [
 	| schema rows |
 	
@@ -970,7 +970,7 @@ SQLiteConnectionTest >> testGlorpUpdate [
 	self assert: (rows first at: 'COPIES_IN_STOCK') equals: 6
 ]
 
-{ #category : #tests }
+{ #category : #'tests - glorp compatibility' }
 SQLiteConnectionTest >> testGlorpUpdateTwice [
 	| schema rows |
 	
