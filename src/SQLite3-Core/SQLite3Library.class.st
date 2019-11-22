@@ -203,7 +203,7 @@ SQLite3Library >> apiColumnDeclaredType: aStatement atColumn: aColumn [
 SQLite3Library >> apiColumnDouble: aStatement atColumn: aColumn [
 	"double sqlite3_column_double(sqlite3_stmt*, int)"
 
-	^ self nbCall: #(double sqlite3_column_double (sqlite3_stmt* aStatement, int aColumn))
+	^ self ffiCall: #(double sqlite3_column_double (sqlite3_stmt* aStatement, int aColumn))
 		module: self library
 
 ]
