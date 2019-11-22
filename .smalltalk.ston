@@ -1,0 +1,9 @@
+SmalltalkCISpec {
+  #loading : [
+    SCIMetacelloLoadSpec {
+      #baseline : 'SQLite3',
+      #directory : 'src',
+      #platforms : [ #pharo ]
+    }
+  ]
+}
