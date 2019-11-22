@@ -54,6 +54,7 @@ Contributors in order of appearance:
 - Torsten Bergmann
 - Andreas Raab
 - Pierce Ng
+- Esteban Lorenzano
 - Guillermo Polito
 - Esteban Maringolo
 - Julien Deplangue
