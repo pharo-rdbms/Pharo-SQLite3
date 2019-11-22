@@ -14,13 +14,15 @@ Initially there was a simple FFI wrapper for SQLite Version 2 provided in 2002 b
 
 In 2010 [Torsten Bergmann](https://github.com/astares) wrote an initial version for an SQLite binding for Pharo based on the old Squeak code. Beside getting the code to work again several cleanups were applied like commenting, categorization of methods and removing old underscore assignments to follow standard syntax. This initial version also included proper packaging using [Metacello](https://wiki.squeak.org/squeak/6157) package system and was released as "SQLite3-Core-tbn.1.mcz" in the [http://www.squeaksource.com/SQLite.html](http://www.squeaksource.com/SQLite.html) repository.
 
-Andreas Raab (Squeak VM engineer) helped maintaining it and added things like prepared statements and other at that time in the same repo. This code was hosted on old [SqueakSource](http://www.squeaksource.com) repository server until 2013 and then Torsten Bergmann moved it to [SmalltalkHub](http://www.smalltalkhub.com/) repo [http://smalltalkhub.com/#!/~TorstenBergmann/SQLite](http://smalltalkhub.com/#!/~TorstenBergmann/SQLite) which was a new code hosting page at that time. Torsten maintained and supported the SQLite binding and this repo includes the versions valid up to Pharo 3.0.
+Andreas Raab (Squeak VM engineer) helped maintaining it and added things like prepared statements and other at that time in the same repo. This code was hosted on old [SqueakSource](http://www.squeaksource.com) repository server until 2013 and then Torsten Bergmann moved it to [SmalltalkHub](http://www.smalltalkhub.com/) repo [http://smalltalkhub.com/#!/~TorstenBergmann/SQLite](http://smalltalkhub.com/#!/~TorstenBergmann/SQLite) which was a new code hosting page at that time. 
+
+The SQLite binding in this outdated STHub repo includes the versions valid up to Pharo 3.0.
 
 ### SQLite binding based on Native Boost for Pharo 4
 
 As Pharo moved on a new foreign function interface called ["Native Boost"](http://www.esug.org/wiki/pier/Conferences/2011/Schedule-And-Talks/Native-boost) from [Igor Stasenko](https://github.com/sig) appeared in 2014 as a way to do externally bind libraries. So the old Squeak's FFI mechanism was seen as legacy for doing foreign function calls.
 
-So in [2014 Pierce Ng started to port the code](https://www.samadhiweb.com/blog/2014.03.01.nbsqlite3.html) over to NativeBoost as you can read on a [blog post](https://www.samadhiweb.com/blog/2014.03.01.nbsqlite3.html) he wrote at that time. Initially this new NB version from Pierce was hosted on [http://ss3.gemstone.com/ss/NBSQLite3.html](http://ss3.gemstone.com/ss/NBSQLite3.html).
+So in [2014 Pierce Ng started to port the code](https://www.samadhiweb.com/blog/2014.03.01.nbsqlite3.html) to make use of the new NativeBoost mechanism as you can read on a [blog post](https://www.samadhiweb.com/blog/2014.03.01.nbsqlite3.html) he wrote at that time. Initially this new NB version from Pierce was hosted on [http://ss3.gemstone.com/ss/NBSQLite3.html](http://ss3.gemstone.com/ss/NBSQLite3.html) in an own repository.
 
 Torsten and [Pierce](https://github.com/PierceNg) aligned on working together and agreed to host the common code in [http://smalltalkhub.com/#!/~PharoExtras/NBSQLite3](http://smalltalkhub.com/#!/~PharoExtras/NBSQLite3) as SmalltalkHub was the central place to host Pharo projects at that time.
 
