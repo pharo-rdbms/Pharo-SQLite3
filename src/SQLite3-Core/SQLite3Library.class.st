@@ -81,6 +81,7 @@ SQLite3Library class >> initializeTypeMap [
 
 { #category : #factory }
 SQLite3Library class >> reset [
+	<script>
 	Current := nil
 ]
 
