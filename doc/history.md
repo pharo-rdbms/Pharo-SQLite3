@@ -71,9 +71,11 @@ and several projects are hosted there including:
 
 In Mai 2019 [Julien Delpangue announced via Twitter](https://twitter.com/juldelplanque/status/1132670416852537344) another fork - stating he wanted to have a clean version for an SQLite3 driver for Pharo. [Julien](https://github.com/juliendelplanque) wanted the code to be independent from UDBC and Glorp. He did not know that one could load only the driver independent from any other - and like Guille he did not contact the original maintainers to cooperate and sort out issues.  
 
-Julien made his personal fork available on [https://github.com/juliendelplanque/SQLite3](https://github.com/juliendelplanque/SQLite3).
+Julien made his personal fork available on [https://github.com/juliendelplanque/SQLite3](https://github.com/juliendelplanque/SQLite3) and invested some time and energy on refactoring the project and providing a nice user documentation (that has been migrated in this repository see [getting_started.md](https://github.com/pharo-rdbms/Pharo-SQLite3/blob/master/doc/getting_started.md) page).
 
-Trying to prevent even further confusion to Pharo users who want to use SQlite3 Torsten and Pierce contacted Julien to seek more alignment. To move the project forward as a community project in the future where others can participate Torsten offered to invest some time and to work and provide a cleaned up version including the parts Julien was missing. This version should be made available on the central location like [https://github.com/pharo-rdbms](https://github.com/pharo-rdbms) so it could become a real community project.
+Trying to prevent even further confusion to Pharo users who want to use SQlite3 Torsten and Pierce contacted Julien to seek more alignment. To move the project forward as a community project in the future where others can participate. Julien agreed. Torsten offered to invest some time and to work and provide a cleaned up version integrating the parts Julien was missing and the enhancements Julien provided. This version should be made available on the central location like [https://github.com/pharo-rdbms](https://github.com/pharo-rdbms) so it could become a real community project.
+
+Julien's fork now explicitely states that [https://github.com/pharo-rdbms](https://github.com/pharo-rdbms) should be favored.
 
 ### Community owned, GitHub hosted SQLite3 project for Pharo 7 and 8
 
