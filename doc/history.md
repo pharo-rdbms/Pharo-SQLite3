@@ -12,10 +12,9 @@ Initially there was a simple FFI wrapper for SQLite Version 2 provided in 2002 b
 
 ### Initial SQLite binding for Pharo 1.0 - 3.0 based on FFI
 
-In 2010 [Torsten Bergmann](https://github.com/astares) wrote an initial version for an SQLite binding for Pharo based on the old Squeak code. Beside getting the code to work again several cleanups were applied like commenting, categorization of methods and removing old underscore assignments to follow standard syntax. This initial verson also included proper packaging using [Metacello](https://wiki.squeak.org/squeak/6157) package system and was released as "SQLite3-Core-tbn.1.mcz" in the [http://www.squeaksource.com/SQLite.html](http://www.squeaksource.com/SQLite.html) repository.
+In 2010 [Torsten Bergmann](https://github.com/astares) wrote an initial version for an SQLite binding for Pharo based on the old Squeak code. Beside getting the code to work again several cleanups were applied like commenting, categorization of methods and removing old underscore assignments to follow standard syntax. This initial version also included proper packaging using [Metacello](https://wiki.squeak.org/squeak/6157) package system and was released as "SQLite3-Core-tbn.1.mcz" in the [http://www.squeaksource.com/SQLite.html](http://www.squeaksource.com/SQLite.html) repository.
 
-Andreas Raab (Squeak VM engineer) helped maintaining and added things like prepared statements and other at that time in the same repo.
-This code was hosted on old SqueakSource repository server until 2013 and then Torsten Bergmann moved it to [SmalltalkHub](http://www.smalltalkhub.com/) repo [http://smalltalkhub.com/#!/~TorstenBergmann/SQLite](http://smalltalkhub.com/#!/~TorstenBergmann/SQLite) which was a new code hosting page at that time. Torsten maintained and supported the SQLite binding and this repo includes the versions valid up to Pharo 3.0.
+Andreas Raab (Squeak VM engineer) helped maintaining it and added things like prepared statements and other at that time in the same repo. This code was hosted on old [SqueakSource](http://www.squeaksource.com) repository server until 2013 and then Torsten Bergmann moved it to [SmalltalkHub](http://www.smalltalkhub.com/) repo [http://smalltalkhub.com/#!/~TorstenBergmann/SQLite](http://smalltalkhub.com/#!/~TorstenBergmann/SQLite) which was a new code hosting page at that time. Torsten maintained and supported the SQLite binding and this repo includes the versions valid up to Pharo 3.0.
 
 ### SQLite binding based on Native Boost for Pharo 4
 
@@ -86,4 +85,4 @@ repository in a version suitable for Pharo 7 and Pharo 8. Our hope this that mai
 
 ### Future 
 
-It is planned to still revive and review some old code from the NB based version like SQLCiphers that did not yet make its way back to the codebase. If you want to help and contribute feel free to join. 
+It is planned to still revive and review some old code from the NB based version like [SQLCiphers](https://www.samadhiweb.com/blog/2015.12.24.sqlcipher.html) that did not yet make its way back to the codebase. If you want to help and contribute feel free to join. 
