@@ -2,6 +2,16 @@
 
 Standalone Pharo SQLite3 Binding - community owned
 
+- [Quick Start](#quick-start)
+  * [Installation](#installation)
+  * [Getting started](#getting-started)
+- [Project Infos](#project-infos)
+  * [History](#history)
+  * [Roadmap](#roadmap)
+  * [Contributors](#contributors)
+  * [License](#license)
+  * [Migration](#migration)
+
 # Quick Start 
 
 ## Installation
@@ -15,6 +25,8 @@ Metacello new
 
 a binary of SQlite for Windows is included in the **bin** folder
 
+## Getting started
+
 # Project Infos
 
 ## History
@@ -23,7 +35,7 @@ The project goes back to a binding to SQLite database for Squeak later ported to
 
 The full history is described in the [history detais](doc/history.md).
 
-# Roadmap for SQLite3
+# Roadmap 
 
 - Implement support for
   [SQLcipher](https://github.com/sqlcipher/sqlcipher). This was available
@@ -31,7 +43,10 @@ The full history is described in the [history detais](doc/history.md).
 
 - Implement driver for [Voyage](https://github.com/pharo-nosql/voyage). 
 
-## Contributors (in order of appearance)
+# Contributors 
+
+Contributors in order of appearance:
+
 - Avi Bryant
 - Fred Mannby
 - Torsten Bergmann
