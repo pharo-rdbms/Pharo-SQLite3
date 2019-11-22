@@ -27,7 +27,7 @@ a binary of SQlite for Windows is included in the **bin** folder
 
 ## Getting started
 
-See the [getting started](GettingStarted.md) document.
+See the [getting started](doc/getting_started.md) document.
 
 # Project Infos
 
