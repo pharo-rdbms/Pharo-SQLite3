@@ -1,6 +1,6 @@
 # Pharo-SQlite3
 
-Pharo SQLite3 Binding 
+Standalone Pharo SQLite3 Binding 
 
 # Quick Start 
 
