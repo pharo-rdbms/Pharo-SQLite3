@@ -11,6 +11,45 @@ Class {
 	#category : #'SQLite3-Core-Tests-Connections'
 }
 
+{ #category : #'tests - DEACTIVATED' }
+SQLiteBaseConnectionTest >> deactivatedTestTracing [
+	| sql callback expected actual  |
+	
+	(SystemVersion current major >= 7) ifTrue: [ self skip ].
+	"This test invokes a callback from SQLite to Pharo. It works in Pharo 6 and earlier but not in Pharo 7."
+	
+	sql := #('create table if not exists x (xk integer primary key, iv integer, tv text)'
+			'insert into x values (NULL, 1, ''two'')'
+			'drop table x').
+			
+	expected := String streamContents: [ :s |
+		s nextPutAll: sql first; cr;
+			nextPutAll: sql second; cr;
+			nextPutAll: sql third; cr ].
+	
+	actual := WriteStream on: String new.
+	
+	callback := FFICallback 	
+						signature: #(void (ExternalAddress appData, String sqlText))
+						block: [ :appdata :sqltext |
+							"We ignore appdata in this test, because we're passing a null pointer in."
+							actual nextPutAll: sqltext; cr ].
+	
+	"The null pointer appears as appdata in the callback."
+	db traceUsing: callback with: ExternalAddress new. 
+	
+	res := db basicExecute: sql first.
+	self assert: res equals: 0.
+	
+	res := db basicExecute: sql second.
+	self assert: res equals: 0.
+
+	res := db basicExecute: sql third.
+	self assert: res equals: 0.
+
+	self assert: actual contents equals: expected
+]
+
 { #category : #tests }
 SQLiteBaseConnectionTest >> invalidFileNameOnCurrentOperatingSystem [
 	^Smalltalk os isWindows
@@ -733,43 +772,4 @@ SQLiteBaseConnectionTest >> testTime [
 		self assert: v minute equals: data minute. 
 		self assert: v second equals: data second ].
 	s finalize
-]
-
-{ #category : #tests }
-SQLiteBaseConnectionTest >> testTracing [
-	| sql callback expected actual  |
-	
-	(SystemVersion current major >= 7) ifTrue: [ self skip ].
-	"This test invokes a callback from SQLite to Pharo. It works in Pharo 6 and earlier but not in Pharo 7."
-	
-	sql := #('create table if not exists x (xk integer primary key, iv integer, tv text)'
-			'insert into x values (NULL, 1, ''two'')'
-			'drop table x').
-			
-	expected := String streamContents: [ :s |
-		s nextPutAll: sql first; cr;
-			nextPutAll: sql second; cr;
-			nextPutAll: sql third; cr ].
-	
-	actual := WriteStream on: String new.
-	
-	callback := FFICallback 	
-						signature: #(void (ExternalAddress appData, String sqlText))
-						block: [ :appdata :sqltext |
-							"We ignore appdata in this test, because we're passing a null pointer in."
-							actual nextPutAll: sqltext; cr ].
-	
-	"The null pointer appears as appdata in the callback."
-	db traceUsing: callback with: ExternalAddress new. 
-	
-	res := db basicExecute: sql first.
-	self assert: res equals: 0.
-	
-	res := db basicExecute: sql second.
-	self assert: res equals: 0.
-
-	res := db basicExecute: sql third.
-	self assert: res equals: 0.
-
-	self assert: actual contents equals: expected
 ]
