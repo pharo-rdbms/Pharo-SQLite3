@@ -13,6 +13,8 @@ Metacello new
 	load
 ```
 
+a binary of SQlite for Windows is included in the **bin** folder
+
 # Project Infos
 
 ## History
