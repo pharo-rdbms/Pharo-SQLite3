@@ -1,6 +1,6 @@
 # Pharo-SQlite3
 
-Standalone Pharo SQLite3 Binding - community owned
+Standalone [SQLite3](https://www.sqlite.org) database binding for [Pharo](http://www.pharo.org) - community owned
 
 - [Quick Start](#quick-start)
   * [Installation](#installation)
