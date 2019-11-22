@@ -40,7 +40,7 @@ See the [getting started](doc/getting_started.md) document.
 
 The project goes back to a binding to SQLite database for Squeak later ported to Pharo and maintained over time to include new SQLite3 features.
 
-The full history is described in the [history detais](doc/history.md).
+The full history is described in the [history details](doc/history.md).
 
 # Roadmap 
 
