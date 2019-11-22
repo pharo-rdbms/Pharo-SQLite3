@@ -1,6 +1,6 @@
 # Pharo-SQlite3
 
-Standalone Pharo SQLite3 Binding 
+Standalone Pharo SQLite3 Binding - community owned
 
 # Quick Start 
 
