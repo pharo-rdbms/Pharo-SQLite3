@@ -1,33 +1,33 @@
 # History
 
-This document describes the history of bindings for SQLite3 in the Squeak and Pharo world and the history of the Pharo SQLite3 project for Pharo.
+This document describes the history of bindings for [SQLite3](https://www.sqlite.org/) in the [Squeak](http://www.squeak.org) and [Pharo](http://www.pharo.org) world and the history of the Pharo SQLite3 project for [Pharo](http://www.pharo.org).
 
 SQLite is a C-language library that implements a small, fast, self-contained, high-reliability, full-featured, SQL database engine. It perfectly fits as a tiny relational database system (RDBMS) for applications that have to persist data in a simple way.
 
 ## Early versions for Squeak
 
-Initially there was a simple FFI wrapper for SQLite Version 2 provided in 2002 by Avi Bryant (creator of [Seaside](http://www.seaside.st)) for [Squeak](http://www.squeak.org) available only as a simple code file / changeset. FFI was the foreign function interface for Squeak allowing to call external C libraries. Additionally there was another Squeak wrapper for the SQlite library written in 2005 by Fred Mannby.
+Initially there was a simple FFI wrapper for SQLite Version 2 provided in 2002 by [Avi Bryant](https://twitter.com/avibryant) (creator of [Seaside](http://www.seaside.st)) for [Squeak](http://www.squeak.org) available only as a simple code file / changeset. [FFI](http://wiki.squeak.org/squeak/1414) was the foreign function interface for Squeak allowing to call external C libraries. Additionally there was another Squeak wrapper for the SQlite library written in [2005 by Fred Mannby](http://map.squeak.org/package/b396aec0-e9cd-4e70-8746-eb38284f75af).
 
 ## Versions for Pharo
 
 ### Initial SQLite binding for Pharo 1.0 - 3.0 based on FFI
 
-In 2010 Torsten Bergmann wrote an initial version for an SQLite binding for Pharo based on the old Squeak code. Beside getting the code to work again several cleanups were applied like commenting, categorization of methods and removing old underscore assignments to follow standard syntax. This initial verson also included proper packaging using Metacello package system and was released as "SQLite3-Core-tbn.1.mcz" in the [http://www.squeaksource.com/SQLite.html](http://www.squeaksource.com/SQLite.html) repository.
+In 2010 [Torsten Bergmann](https://github.com/astares) wrote an initial version for an SQLite binding for Pharo based on the old Squeak code. Beside getting the code to work again several cleanups were applied like commenting, categorization of methods and removing old underscore assignments to follow standard syntax. This initial verson also included proper packaging using [Metacello](https://wiki.squeak.org/squeak/6157) package system and was released as "SQLite3-Core-tbn.1.mcz" in the [http://www.squeaksource.com/SQLite.html](http://www.squeaksource.com/SQLite.html) repository.
 
 Andreas Raab (Squeak VM engineer) helped maintaining and added things like prepared statements and other at that time in the same repo.
-This code was hosted on old SqueakSource repository server until 2013 and then Torsten Bergmann moved it to SmalltalkHub [http://smalltalkhub.com/#!/~TorstenBergmann/SQLite](http://smalltalkhub.com/#!/~TorstenBergmann/SQLite) which was a new code hosting page at that time. Torsten maintained and supported the SQLite binding and this repo includes the versions valid up to Pharo 3.0.
+This code was hosted on old SqueakSource repository server until 2013 and then Torsten Bergmann moved it to [SmalltalkHub](http://www.smalltalkhub.com/) repo [http://smalltalkhub.com/#!/~TorstenBergmann/SQLite](http://smalltalkhub.com/#!/~TorstenBergmann/SQLite) which was a new code hosting page at that time. Torsten maintained and supported the SQLite binding and this repo includes the versions valid up to Pharo 3.0.
 
 ### SQLite binding based on Native Boost for Pharo 4
 
-As Pharo moved on a new foreign function interface called "Native Boost" from Igor Stasenko appeared in 2014 as a way to do externally bind libraries. So the old Squeak's FFI mechanism was seen as legacy for doing foreign function calls.
+As Pharo moved on a new foreign function interface called ["Native Boost"](http://www.esug.org/wiki/pier/Conferences/2011/Schedule-And-Talks/Native-boost) from [Igor Stasenko](https://github.com/sig) appeared in 2014 as a way to do externally bind libraries. So the old Squeak's FFI mechanism was seen as legacy for doing foreign function calls.
 
 So in [2014 Pierce Ng started to port the code](https://www.samadhiweb.com/blog/2014.03.01.nbsqlite3.html) over to NativeBoost as you can read on a [blog post](https://www.samadhiweb.com/blog/2014.03.01.nbsqlite3.html) he wrote at that time. Initially this new NB version from Pierce was hosted on [http://ss3.gemstone.com/ss/NBSQLite3.html](http://ss3.gemstone.com/ss/NBSQLite3.html).
 
-Torsten and Pierce aligned on working together and agreed to host the common code in [http://smalltalkhub.com/#!/~PharoExtras/NBSQLite3](http://smalltalkhub.com/#!/~PharoExtras/NBSQLite3) as SmalltalkHub was the central place to host Pharo projects at that time.
+Torsten and [Pierce](https://github.com/PierceNg) aligned on working together and agreed to host the common code in [http://smalltalkhub.com/#!/~PharoExtras/NBSQLite3](http://smalltalkhub.com/#!/~PharoExtras/NBSQLite3) as SmalltalkHub was the central place to host Pharo projects at that time.
 
 Pharo also had a port of the famous [Glorp ORM](http://glorp.org/) (object relational mapping) framework originally provided by Alan Knight. The Glorp framework goes back to ideas TOPLink Smalltalk which later influenced also TOPLink for Java and other ORM frameworks.
 
-Pierce also contributed a lot of new code to the project and several nice things got added: [Glorp binding](https://www.samadhiweb.com/blog/2014.09.24.glorp.nbsqlite3.html), encoding, ciphers. The two maintainers also cared on setting up an early Smalltalk CI jobs and proper configurations so the SQlite3 code was easily accessible from the Pharo catalog.
+Pierce contributed a lot of new code to the project and several nice things got added: [Glorp binding](https://www.samadhiweb.com/blog/2014.09.24.glorp.nbsqlite3.html), encoding, ciphers. The two maintainers also cared on setting up an early Smalltalk CI jobs and proper configurations so the SQlite3 code was easily accessible from the Pharo catalog.
 
 This native boost (NB) based version of SQLite3 binding was the officially supported version up to Pharo 4
 
@@ -53,9 +53,9 @@ Nonetheless Pierce and Torsten continued maintaining the SQlite3 binding code fo
 
 ### Moving SQlite3 support to GitHub with Pharo 6
 
-While SmalltalkHub served several years as a hosting service for Pharo community projects - in Pharo 6 the versioning system was extended with Iceberg to be able to use git and modern code hosting services. Therefore the SQlite binding code was moved from SmalltalkHub to GitHub: Torsten made UDBC available on [https://github.com/astares/Pharo-UDBC](https://github.com/astares/Pharo-UDBC) location and extended the rights so Pierce could directly commit into the repository. With this both were able to keep maintaining the driver using git.
+While SmalltalkHub served several years as a hosting service for Pharo community projects - in Pharo 6 the versioning system was extended with Iceberg to be able to use git and modern code hosting services. Therefore the SQlite binding code was moved from SmalltalkHub to GitHub: Torsten made UDBC available on [https://github.com/astares/Pharo-UDBC](https://github.com/astares/Pharo-UDBC) location and extended the rights so Pierce could directly commit into the repository. With this both were able to keep maintaining the binding using git.
 
-[Pierce extended the library to now also handle multilingual table names](https://lists.pharo.org/pipermail/pharo-users_lists.pharo.org/2019-March/042722.html), column names and default column values; in other words, multilingual SQL statements.
+[Pierce extended the library to now also handle multilingual table names](https://lists.pharo.org/pipermail/pharo-users_lists.pharo.org/2019-March/042722.html), column names and default column values; in other words, multilingual SQL statements. His contributions for the [I18N enhancement allowed to use SQLite in Pharo even more multilingual](https://www.samadhiweb.com/blog/2019.03.02.multilingual.sqlite.html).
 
 #### Glorp and Glorp SQLite on GitHub
 
@@ -70,12 +70,11 @@ and several projects are hosted there including:
 
 #### Another independent fork
 
-In Mai 2019 [Julien Delpangue announced via Twitter](https://twitter.com/juldelplanque/status/1132670416852537344) another fork - stating he wanted to have a clean version for an SQLite3 driver for Pharo. Julien wanted the code to be independent from UDBC and Glorp.
-He did not know that one could load only the driver independent from any other - and like Guille he did not contact the original maintainers to cooperate and sort out issues.  
+In Mai 2019 [Julien Delpangue announced via Twitter](https://twitter.com/juldelplanque/status/1132670416852537344) another fork - stating he wanted to have a clean version for an SQLite3 driver for Pharo. [Julien](https://github.com/juliendelplanque) wanted the code to be independent from UDBC and Glorp. He did not know that one could load only the driver independent from any other - and like Guille he did not contact the original maintainers to cooperate and sort out issues.  
 
 Julien made his personal fork available on [https://github.com/juliendelplanque/SQLite3](https://github.com/juliendelplanque/SQLite3).
 
-Trying to prevent even further confusion to Pharo users who want to use SQlite3 Torsten and Pierce contacted Julien to seek more alignment. To move the project forward as a community projoect in the future where also Julien can participate Torsten offered to invest some time and to work and provide a cleaned up version including the parts Julien was missing and that should be made available on the central location like [https://github.com/pharo-rdbms](https://github.com/pharo-rdbms) so it could become a real community project again.
+Trying to prevent even further confusion to Pharo users who want to use SQlite3 Torsten and Pierce contacted Julien to seek more alignment. To move the project forward as a community project in the future where others can participate Torsten offered to invest some time and to work and provide a cleaned up version including the parts Julien was missing. This version should be made available on the central location like [https://github.com/pharo-rdbms](https://github.com/pharo-rdbms) so it could become a real community project.
 
 ### Community owned, GitHub hosted SQLite3 project for Pharo 7 and 8
 
