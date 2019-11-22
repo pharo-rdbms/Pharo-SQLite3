@@ -23,7 +23,7 @@ Standalone [SQLite3](https://www.sqlite.org) database binding for [Pharo](http:/
 
 ```Smalltalk
 Metacello new 
-	repository: 'github://astares/Pharo-SQLite3/src';
+	repository: 'github://pharo-rdbms/Pharo-SQLite3/src';
 	baseline: 'SQlite3';
 	load
 ```
