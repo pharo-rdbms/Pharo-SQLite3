@@ -354,12 +354,8 @@ SQLite3Library >> apiTotalChanges: handle [
 
 { #category : #'private - api' }
 SQLite3Library >> apiTrace: handle with: callback with: appdata [
-	"void *sqlite3_trace(sqlite3* void(*)(void*, const char*), void*)"
-	<primitive: #primitiveNativeCall module: #NativeBoostPlugin error: errorCode>
-	^ self ffiCallout 
-		options: #( optMayGC );
-		function: #(void* sqlite3_trace (sqlite3* handle, FFICallback callback, ExternalAddress appdata))
-		module: self library
+
+	^ self ffiCall: #(void* sqlite3_trace (sqlite3* handle, FFICallback callback, ExternalAddress appdata)) module: self library
 
 ]
 
