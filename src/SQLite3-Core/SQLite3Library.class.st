@@ -637,7 +637,7 @@ SQLite3Library >> typeFor: aStatement at: aColumn [
 
 { #category : #'private - accessing' }
 SQLite3Library >> unixModuleName [
-	(#('/usr/lib/i386-linux-gnu' '/usr/lib32' '/usr/lib'),
+	(#('/usr/lib/i386-linux-gnu' '/usr/lib32' '/usr/lib/x86_64-linux-gnu' '/usr/lib64' '/usr/lib'),
 			((OSEnvironment current at: 'LD_LIBRARY_PATH' ifAbsent: [ '' ]) substrings: ':'))
 		do: [ :path | 
 			#('libsqlite3.so.0' 'libsqlite3.so') do: [ :libraryName |
