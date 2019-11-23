@@ -636,8 +636,20 @@ SQLite3Library >> typeFor: aStatement at: aColumn [
 ]
 
 { #category : #'private - accessing' }
+SQLite3Library >> unix64ModuleName [
+	(#('/lib/x86_64-linux-gnu' '/usr/lib'),
+			((OSEnvironment current at: 'LD_LIBRARY_PATH' ifAbsent: [ '' ]) substrings: ':'))
+		do: [ :path | 
+			| libraryPath |
+			libraryPath := path asFileReference /  'libsqlite3.so'.
+			libraryPath exists
+				ifTrue: [ ^ libraryPath fullName ] ].
+	self error: 'Module not found.'
+]
+
+{ #category : #'private - accessing' }
 SQLite3Library >> unixModuleName [
-	(#('/usr/lib/i386-linux-gnu' '/usr/lib32' '/usr/lib/x86_64-linux-gnu' '/usr/lib64' '/usr/lib'),
+	(#('/usr/lib/i386-linux-gnu' '/usr/lib32' '/usr/lib'),
 			((OSEnvironment current at: 'LD_LIBRARY_PATH' ifAbsent: [ '' ]) substrings: ':'))
 		do: [ :path | 
 			#('libsqlite3.so.0' 'libsqlite3.so') do: [ :libraryName |
@@ -645,7 +657,6 @@ SQLite3Library >> unixModuleName [
 			libraryPath := path asFileReference / libraryName.
 			libraryPath exists
 				ifTrue: [ ^ libraryPath fullName ] ] ].
-
 	self error: 'Module not found.'
 ]
 
