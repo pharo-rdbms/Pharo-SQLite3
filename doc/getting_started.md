@@ -12,7 +12,7 @@ connection := SQLite3Connection memory.
 - Create a database stored on the file system.
 
 ```st
-connection := SQLite3Connection on: FileLocator desktop / 'mydatabase.db'.
+connection := SQLite3Connection on: (Smalltalk imageDirectory / 'mydatabase.db') fullName.
 ```
 
 ## Opening a connection
