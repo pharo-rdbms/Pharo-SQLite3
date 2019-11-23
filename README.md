@@ -56,7 +56,7 @@ Contributors in order of appearance:
 
 - Avi Bryant
 - Fred Mannby
-- Torsten Bergmann
+- Torsten Bergmann ("astares")
 - Andreas Raab
 - Pierce Ng
 - Esteban Lorenzano
