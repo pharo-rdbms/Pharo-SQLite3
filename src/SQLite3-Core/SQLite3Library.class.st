@@ -518,7 +518,7 @@ SQLite3Library >> loadExtension: dbHandle with: aFilename [
 ]
 
 { #category : #'private - accessing' }
-SQLite3Library >> macModuleName [
+SQLite3Library >> macLibraryName [
 	| pluginDir |
 	pluginDir := FileSystem /'usr'/'lib'.
 	#('libsqlite3.dylib' 'libsqlite3.0.dylib')
@@ -636,7 +636,7 @@ SQLite3Library >> typeFor: aStatement at: aColumn [
 ]
 
 { #category : #'private - accessing' }
-SQLite3Library >> unix32ModuleName [ 
+SQLite3Library >> unix32LibraryName [ 
 	(#('/usr/lib/i386-linux-gnu' '/usr/lib32' '/usr/lib'),
 			((OSEnvironment current at: 'LD_LIBRARY_PATH' ifAbsent: [ '' ]) substrings: ':'))
 		do: [ :path | 
@@ -649,7 +649,7 @@ SQLite3Library >> unix32ModuleName [
 ]
 
 { #category : #'private - accessing' }
-SQLite3Library >> unix64ModuleName [ 
+SQLite3Library >> unix64LibraryName [ 
 	(#('/lib/x86_64-linux-gnu' '/usr/lib'),
 			((OSEnvironment current at: 'LD_LIBRARY_PATH' ifAbsent: [ '' ]) substrings: ':'))
 		do: [ :path | 
@@ -668,7 +668,7 @@ SQLite3Library >> utf8StringToPharo: anUTF8String [
 ]
 
 { #category : #'private - accessing' }
-SQLite3Library >> win32ModuleName [
+SQLite3Library >> win32LibraryName [
 	^ 'sqlite3'
 ]
 
