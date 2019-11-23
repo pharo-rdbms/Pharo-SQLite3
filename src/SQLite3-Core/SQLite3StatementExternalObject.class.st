@@ -12,7 +12,6 @@ Class {
 SQLite3StatementExternalObject class >> finalizeResourceData: aHandle [
 	SQLite3Library current 
 		ffiCall: #(int sqlite3_finalize (ExternalAddress aHandle))
-		module: SQLite3Library current library
 ]
 
 { #category : #finalization }

@@ -131,9 +131,20 @@ SQLite3BaseConnection >> enableExtensions [
 	^ library enableLoadExtension: dbHandle 
 ]
 
+{ #category : #accessing }
+SQLite3BaseConnection >> filename [
+	^ dbFilename 
+]
+
 { #category : #'public API - operating' }
 SQLite3BaseConnection >> finalize: anSQLText [ 
 	"no-op"	
+]
+
+{ #category : #'public API - introspection' }
+SQLite3BaseConnection >> getAutoCommit [
+
+	^library getAutoCommit: dbHandle 
 ]
 
 { #category : #initialization }
