@@ -488,6 +488,11 @@ SQLite3Library >> integerFrom: aStatement at: aColumn [
 	^ self apiColumnInt: aStatement atColumn: aColumn
 ]
 
+{ #category : #'private - accessing' }
+SQLite3Library >> library [ 
+	^self libraryName
+]
+
 { #category : #'private - api' }
 SQLite3Library >> loadExtension: dbHandle with: aFilename [
 

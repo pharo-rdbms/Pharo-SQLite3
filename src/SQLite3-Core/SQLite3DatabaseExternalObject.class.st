@@ -11,5 +11,4 @@ Class {
 SQLite3DatabaseExternalObject class >> finalizeResourceData: resourceData [
 	SQLite3Library current 
 		ffiCall: #(int sqlite3_close (ExternalAddress resourceData))
-		module: SQLite3Library current library
 ]
