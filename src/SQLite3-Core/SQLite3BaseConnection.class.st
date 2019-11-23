@@ -141,6 +141,12 @@ SQLite3BaseConnection >> finalize: anSQLText [
 	"no-op"	
 ]
 
+{ #category : #'public API - introspection' }
+SQLite3BaseConnection >> getAutoCommit [
+
+	^library getAutoCommit: dbHandle 
+]
+
 { #category : #initialization }
 SQLite3BaseConnection >> initialize [
 	

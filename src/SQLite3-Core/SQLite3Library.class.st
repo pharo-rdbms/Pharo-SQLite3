@@ -286,6 +286,14 @@ SQLite3Library >> apiFinalize: handle [
 ]
 
 { #category : #'private - api' }
+SQLite3Library >> apiGetAutocommit: handle [
+	"int sqlite3_get_autocommit(sqlite3*);"
+	
+	^ self ffiCall: #(int sqlite3_get_autocommit (GASQLite3DatabaseExternalObject handle))
+	 
+]
+
+{ #category : #'private - api' }
 SQLite3Library >> apiLoadExtension: dbHandle with: zFile with: zProc with: pzErrMsg [
 	"int sqlite3_load_extension(sqlite3*, const char*, const char*, char **)."
 
@@ -481,6 +489,12 @@ SQLite3Library >> execute: anSQLText on: aDBHandle [
 SQLite3Library >> floatFrom: aStatement at: aColumn [
 
 	^ self apiColumnDouble: aStatement atColumn: aColumn
+]
+
+{ #category : #accessing }
+SQLite3Library >> getAutoCommit: aHandle [
+
+	^ self apiGetAutocommit: aHandle
 ]
 
 { #category : #operating }
