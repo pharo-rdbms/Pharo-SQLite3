@@ -637,11 +637,14 @@ SQLite3Library >> typeFor: aStatement at: aColumn [
 
 { #category : #'private - accessing' }
 SQLite3Library >> unixModuleName [
-	| pluginDir |
-	pluginDir := Smalltalk vm binary parent.
-	#('sqlite3' 'sqlite3.so.0' 'libsqlite3.so' 'libsqlite3.so.0')
-		detect: [ :each | (pluginDir / each) exists ] 
-		ifFound: [ :libName | ^ (pluginDir / libName) fullName ].
+	(#('/usr/lib/i386-linux-gnu' '/usr/lib32' '/usr/lib'),
+			((OSEnvironment current at: 'LD_LIBRARY_PATH' ifAbsent: [ '' ]) substrings: ':'))
+		do: [ :path | 
+			#('libsqlite3.so.0' 'libsqlite3.so') do: [ :libraryName |
+			| libraryPath |
+			libraryPath := path asFileReference / libraryName.
+			libraryPath exists
+				ifTrue: [ ^ libraryPath fullName ] ] ].
 
 	self error: 'Module not found.'
 ]
