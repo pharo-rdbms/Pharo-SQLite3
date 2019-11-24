@@ -112,7 +112,7 @@ SQLite3Row >> first [
 
 { #category : #accessing }
 SQLite3Row >> last [
-	^ self values ifEmpty: [ nil ] ifNotEmpty: [:v | v first ]
+	^ self values ifEmpty: [ nil ] ifNotEmpty: [:v | v last ]
 
 ]
 

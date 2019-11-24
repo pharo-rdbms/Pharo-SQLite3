@@ -183,24 +183,12 @@ SQLite3Cursor >> rows [
 
 { #category : #API }
 SQLite3Cursor >> rowsOfClass: aRowClass [
-	| rows nc rr rv |
-
+	| rows |
 	statement ifNil: [ SQLite3Misuse signal: 'This result set does not contain a prepared statement.' ].	
 	
 	rows := OrderedCollection new.
-	[ moreRows ] whileTrue: [	
-		nc := statement dataValuesAvailable.
-		(nc = 0)
-			ifFalse: [ 
-				rr := aRowClass new.
-				0 to: nc - 1 do: [ :c | 
-					rv := statement valueOfColumn: c.
-					rr atIndex: c + 1 put: rv.
-					rr atName: (statement nameOfColumn: c) put: rv ].   
-				rr dataCount: nc. 
-				rows add: rr ].
-		moreRows := (statement step) = 100 " == SQLITE_ROW " ].
-	
+	[ moreRows ] whileTrue: [
+			rows add: (self nextOfClass: aRowClass) ].
 	^ rows
 
 ]
