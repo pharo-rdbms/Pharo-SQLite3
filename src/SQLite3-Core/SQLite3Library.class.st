@@ -663,14 +663,16 @@ SQLite3Library >> unix32ModuleName [
 
 { #category : #'private - accessing' }
 SQLite3Library >> unix64LibraryName [ 
-	(#('/lib/x86_64-linux-gnu' '/usr/lib'),
+	(#('/usr/lib/x86_64-linux-gnu' '/lib/x86_64-linux-gnu' '/usr/lib'),
 			((OSEnvironment current at: 'LD_LIBRARY_PATH' ifAbsent: [ '' ]) substrings: ':'))
 		do: [ :path | 
-			| libraryPath |
-			libraryPath := path asFileReference /  'libsqlite3.so'.
-			libraryPath exists
-				ifTrue: [ ^ libraryPath fullName ] ].
+			#('libsqlite3.so.0' 'libsqlite3.so') do: [ :libraryName |
+				| libraryPath |
+				libraryPath := path asFileReference /  libraryName.
+				libraryPath exists
+					ifTrue: [ ^ libraryPath fullName ]]].
 	self error: 'Module not found.'
+
 ]
 
 { #category : #'private - accessing' }
