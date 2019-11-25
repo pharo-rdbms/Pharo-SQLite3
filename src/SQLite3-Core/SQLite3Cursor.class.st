@@ -9,7 +9,8 @@ Class {
 		'connection',
 		'statement',
 		'moreRows',
-		'rowClass'
+		'rowClass',
+		'columnNames'
 	],
 	#category : #'SQLite3-Core-Database'
 }
@@ -19,6 +20,17 @@ SQLite3Cursor >> close [
 
 	statement ifNotNil: [ statement finalize ].
 	statement := nil
+]
+
+{ #category : #accessing }
+SQLite3Cursor >> columnNames [
+	| nc |
+	^columnNames ifNil: [ 
+		nc := statement dataValuesAvailable. 
+		columnNames := Array new: nc.
+		0 to: nc - 1 do: [ :c | columnNames at: c + 1 put: (statement nameOfColumn: c) ].
+		columnNames
+	]
 ]
 
 { #category : #private }
@@ -98,7 +110,7 @@ SQLite3Cursor >> next [
 
 { #category : #API }
 SQLite3Cursor >> nextOfClass: aRowClass [
-	| nc rr rv |
+	| nc rr |
 
 	statement ifNil: [ SQLite3Misuse signal: 'This result set does not contain a prepared statement.' ].	
 	
@@ -106,19 +118,21 @@ SQLite3Cursor >> nextOfClass: aRowClass [
 		nc := statement dataValuesAvailable.
 		(nc = 0)
 			ifTrue: [ ^ nil ] 
-			ifFalse: [ 
-				rr := aRowClass new.
+			ifFalse: [
+				columnNames ifNil: [ 
+					columnNames := Array new: nc.
+					 0 to: nc - 1 do: [ :c | columnNames at: c + 1 
+							put: (statement nameOfColumn: c) ].
+					]
+				].
+				rr := aRowClass new columnNames: columnNames; yourself. 
 				0 to: nc - 1 do: [ :c | 
-					rv := statement valueOfColumn: c.
-					rr atIndex: c + 1 put: rv.
-					rr atName: (statement nameOfColumn: c) put: rv ]. 
-				rr dataCount: nc. 
-				"statement clearBindings." "XXX With this, the Glorp result set fails its test..."
-				moreRows := (statement step) = 100. " == SQLITE_ROW "
-				^ rr ]].
+					rr atIndex: c + 1 put: (statement valueOfColumn: c)].
+					"statement clearBindings." "XXX With this, the Glorp result set fails its test..."
+					moreRows := (statement step) = 100. " == SQLITE_ROW "
+					^ rr ].
 		
 	^ nil
-
 ]
 
 { #category : #API }
@@ -169,24 +183,12 @@ SQLite3Cursor >> rows [
 
 { #category : #API }
 SQLite3Cursor >> rowsOfClass: aRowClass [
-	| rows nc rr rv |
-
+	| rows |
 	statement ifNil: [ SQLite3Misuse signal: 'This result set does not contain a prepared statement.' ].	
 	
 	rows := OrderedCollection new.
-	[ moreRows ] whileTrue: [	
-		nc := statement dataValuesAvailable.
-		(nc = 0)
-			ifFalse: [ 
-				rr := aRowClass new.
-				0 to: nc - 1 do: [ :c | 
-					rv := statement valueOfColumn: c.
-					rr atIndex: c + 1 put: rv.
-					rr atName: (statement nameOfColumn: c) put: rv ].   
-				rr dataCount: nc. 
-				rows add: rr ].
-		moreRows := (statement step) = 100 " == SQLITE_ROW " ].
-	
+	[ moreRows ] whileTrue: [
+			rows add: (self nextOfClass: aRowClass) ].
 	^ rows
 
 ]

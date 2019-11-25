@@ -15,7 +15,7 @@ Class {
 SQLite3RowTest >> setUp [
 	super setUp.
 	emptyRow := SQLite3Row new.
-	filledRow := SQLite3Row new.
+	filledRow := SQLite3Row new columnNames: {'foo'. 'bar'. 'pi'}; yourself.
 	filledRow
 		at: 'foo' put: 1;
 		at: 'bar' put: true;
