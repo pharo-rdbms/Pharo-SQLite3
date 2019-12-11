@@ -119,9 +119,9 @@ ConfigurationOfSQLite3 >> dev: spec [
 
 	spec for: #'common' do: [ 
 		spec
-			baseline: 'SQlite3' with: [ 
+			baseline: 'SQLite3' with: [ 
 				spec 
-					className: 'BaselineOfSQlite3';
+					className: 'BaselineOfSQLite3';
 					repository: 'github://pharo-rdbms/Pharo-SQLite3:master/src' ]]
 ]
 
@@ -239,8 +239,8 @@ ConfigurationOfSQLite3 >> version150: spec [
 
 	spec for: #'common' do: [ 
 		spec
-			baseline: 'SQlite3' with: [ 
+			baseline: 'SQLite3' with: [ 
 				spec 
-					className: 'BaselineOfSQlite3';
+					className: 'BaselineOfSQLite3';
 					repository: 'github://pharo-rdbms/Pharo-SQLite3:1.5.0/src' ]]
 ]
