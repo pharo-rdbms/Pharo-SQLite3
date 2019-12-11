@@ -30,6 +30,18 @@ SQLite3RowTest >> testAsArray [
 ]
 
 { #category : #tests }
+SQLite3RowTest >> testAsDictionary [
+	| dict  |
+	dict := Dictionary new.
+	dict at: 'foo' put: 1.
+	dict at: 'bar' put: true.
+	dict at: 'pi' put: '3.14'.
+	
+	self assert: emptyRow asDictionary equals: Dictionary new.	
+	self assert: filledRow asDictionary equals: dict
+]
+
+{ #category : #tests }
 SQLite3RowTest >> testColumnAccessingIfAbsent [
 	|blockExecutedFlag|
 	blockExecutedFlag := false.

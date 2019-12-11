@@ -12,6 +12,14 @@ Class {
 	#category : #'SQLite3-Core-Database'
 }
 
+{ #category : #'instance creation' }
+SQLite3Row class >> new: anInteger [
+	^(self new) 
+		columnNames:(Array new:anInteger);
+		values: (Array new: anInteger);
+		yourself
+]
+
 { #category : #converting }
 SQLite3Row >> asArray [
 	^ self values asArray
@@ -24,7 +32,7 @@ SQLite3Row >> asCombinedDictionary [
 
 { #category : #converting }
 SQLite3Row >> asDictionary [
-	^ Dictionary newFromKeys: self columnNames andValues: self data
+	^ Dictionary newFromKeys: self columnNames andValues: self values
 ]
 
 { #category : #accessing }
@@ -42,7 +50,7 @@ SQLite3Row >> at: aKey ifAbsent: aBlock [
 { #category : #accessing }
 SQLite3Row >> at: aKey put: anObject [
 	^ aKey isInteger 
-		ifTrue: [self values at: aKey put: anObject]
+		ifTrue: [self atIndex: aKey put: anObject]
 		ifFalse: [ self atName: aKey put: anObject ]
 ]
 
@@ -58,7 +66,12 @@ SQLite3Row >> atIndex: anIndex put: anObject [
 
 { #category : #accessing }
 SQLite3Row >> atName: aKey [ 
-	^ self values at: (self columnNames indexOf: aKey) ifAbsent: [ ]
+	| idx |
+	idx := self columnNames indexOf: aKey.
+	^idx = 0 
+		ifTrue: [ SQLite3Misuse
+				signal: 'Attept to set invalid column name ', aKey, ' in result set'   ] 
+		ifFalse: [ values at: idx ]
 ]
 
 { #category : #accessing }
@@ -78,7 +91,6 @@ SQLite3Row >> columnNames [
 
 { #category : #accessing }
 SQLite3Row >> columnNames: anArray [
- 
 	columnNames := anArray.
 	values := Array new: anArray size
 ]
@@ -124,4 +136,9 @@ SQLite3Row >> size [
 { #category : #accessing }
 SQLite3Row >> values [
 	 ^values ifNil: [ #() ]
+]
+
+{ #category : #accessing }
+SQLite3Row >> values: anArray [
+	 values := anArray
 ]

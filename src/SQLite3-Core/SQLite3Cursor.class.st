@@ -10,86 +10,41 @@ Class {
 		'statement',
 		'moreRows',
 		'rowClass',
-		'columnNames'
+		'rows',
+		'mutators'
+	],
+	#pools : [
+		'SQLite3Constants'
 	],
 	#category : #'SQLite3-Core-Database'
 }
 
+{ #category : #'instance creation' }
+SQLite3Cursor class >> on: aStatement [ 
+	^(self new) statement: aStatement; yourself.
+]
+
+{ #category : #accessing }
+SQLite3Cursor >> changes [ 
+	^statement changes
+]
+
 { #category : #API }
 SQLite3Cursor >> close [
-
-	statement ifNotNil: [ statement finalize ].
-	statement := nil
+	" closing a cursor is not the same as closing the statement - we may reuse a prepared statement"
+	statement ifNotNil: [ statement reset ].
+	statement := nil.
+	mutators := nil.
 ]
 
 { #category : #accessing }
 SQLite3Cursor >> columnNames [
-	| nc |
-	^columnNames ifNil: [ 
-		nc := statement dataValuesAvailable. 
-		columnNames := Array new: nc.
-		0 to: nc - 1 do: [ :c | columnNames at: c + 1 put: (statement nameOfColumn: c) ].
-		columnNames
-	]
+	^ statement ifNotNil: [ statement columnNames ] ifNil: [ #() ]
 ]
 
-{ #category : #private }
-SQLite3Cursor >> execute: anSQLText with: anObject on: aDb [
-	| obj |
-
-	connection := aDb.
-
-	obj := anObject isNil ifTrue: [ #() ] ifFalse: [ anObject ].
-
-	(obj isDictionary)
-		ifTrue: [ self execute: anSQLText withKeysAndValues: obj ]
-		ifFalse: [
-			(obj isCollection)
-				ifTrue: [ self execute: anSQLText withCollection: obj ]
-				ifFalse: [ SQLite3AbstractError signal: 'Unable to execute SQL on instance of ', obj class asString ]]
-	
-
-
-]
-
-{ #category : #private }
-SQLite3Cursor >> execute: anSQLText withCollection: aCollection [
-	| i |
-	self prepareStatement: anSQLText.
-	i := 1.
-	aCollection do: [ :v | i := self execute: statement withIndex: i withValue: v ].
-	moreRows := statement step = 100	" == SQLITE_ROW "
-]
-
-{ #category : #private }
-SQLite3Cursor >> execute: aStatement withIndex: anInteger withValue: anObject [
-		
-	aStatement perform: (aStatement dataTypeForObject: anObject) with: anInteger with: anObject.
-	^ anInteger + 1
-		
-
-]
-
-{ #category : #private }
-SQLite3Cursor >> execute: aStatement withKey: keyObject withValue: valueObject [
-	| col |
-
-	col := aStatement bindParameterIndex: keyObject.
-	(col = 0) ifFalse: [
-		aStatement perform: (aStatement dataTypeForObject: valueObject) with: col with: valueObject ]
-
-		
-
-]
-
-{ #category : #private }
-SQLite3Cursor >> execute: anSQLText withKeysAndValues: anObject [
-	
-	self prepareStatement: anSQLText.
-	anObject keysAndValuesDo: [ :k :v | 
-		self execute: statement withKey: k withValue: v ].
-	moreRows := (statement step) = 100. " == SQLITE_ROW "
-
+{ #category : #accessing }
+SQLite3Cursor >> connection [ 
+	^statement connection
 ]
 
 { #category : #initialization }
@@ -102,6 +57,15 @@ SQLite3Cursor >> initialize [
 
 ]
 
+{ #category : #accessing }
+SQLite3Cursor >> mutators [
+	^ mutators
+		ifNil: [ mutators := self columnNames
+				collect: [ :c | 
+					(((c substrings: ' _-()') collect: [ :ea | ea capitalized ])
+						joinUsing: '') uncapitalized asSymbol asMutator ] ]
+]
+
 { #category : #API }
 SQLite3Cursor >> next [
 	^ self nextOfClass: self rowClass
@@ -110,28 +74,30 @@ SQLite3Cursor >> next [
 
 { #category : #API }
 SQLite3Cursor >> nextOfClass: aRowClass [
-	| nc rr |
-
-	statement ifNil: [ SQLite3Misuse signal: 'This result set does not contain a prepared statement.' ].	
+	| rr |
+	moreRows ifFalse: [ ^nil ].
 	
-	moreRows ifTrue: [	
-		nc := statement dataValuesAvailable.
-		(nc = 0)
-			ifTrue: [ ^ nil ] 
-			ifFalse: [
-				columnNames ifNil: [ 
-					columnNames := Array new: nc.
-					 0 to: nc - 1 do: [ :c | columnNames at: c + 1 
-							put: (statement nameOfColumn: c) ].
-					]
-				].
-				rr := aRowClass new columnNames: columnNames; yourself. 
-				0 to: nc - 1 do: [ :c | 
-					rr atIndex: c + 1 put: (statement valueOfColumn: c)].
-					"statement clearBindings." "XXX With this, the Glorp result set fails its test..."
-					moreRows := (statement step) = 100. " == SQLITE_ROW "
-					^ rr ].
-		
+	statement
+		ifNil: [ SQLite3Misuse
+				signal: 'This result set does not contain a prepared statement.' ].
+	moreRows
+		ifTrue: [
+			rr := aRowClass new.
+			(rr respondsTo: #columnNames:)
+				ifTrue: [ "generic row class"
+					rr columnNames: self columnNames.
+					1 to: statement dataValuesAvailable do: [ :c | rr at: c put: (statement valueOfColumn: c - 1) ].
+					 ]
+				ifFalse: [ | msgs |
+					"custom object"
+					msgs := self mutators.
+					1 to: msgs count do: [ :c | 
+						(rr respondsTo: (msgs at: c))
+							ifTrue: [ rr perform: (msgs at: c) with: (statement valueOfColumn: c - 1) ] ] 
+						].
+			moreRows := statement step = SQLITE_ROW.
+			moreRows ifFalse: [ self close ].
+			^ rr ].
 	^ nil
 ]
 
@@ -145,24 +111,17 @@ SQLite3Cursor >> onlyRow [
 
 { #category : #API }
 SQLite3Cursor >> onlyRow: ifNoneBlock [
-	| rows |
-	
-	rows := self rows.
-	^ (rows isEmpty)
-		ifTrue: [ ifNoneBlock value ]
-		ifFalse: [ rows first ]
+	^self rows
+		ifEmpty: [ ifNoneBlock value ]
+		ifNotEmpty: [ rows first ].
 
 "For the common case where there is exactly one row expected. Returns the evaluation of ifNoneBlock if there is no row."
 
 ]
 
-{ #category : #private }
-SQLite3Cursor >> prepareStatement: anSQLText [
-
-	statement := connection prepare: anSQLText.
-	statement clearBindings.
-	statement	reset
-
+{ #category : #API }
+SQLite3Cursor >> onlyValue [
+	^(self onlyRow: SQLite3Row) ifNotNil: [ :r | r first ]
 ]
 
 { #category : #accessing }
@@ -183,10 +142,8 @@ SQLite3Cursor >> rows [
 
 { #category : #API }
 SQLite3Cursor >> rowsOfClass: aRowClass [
-	| rows |
-	statement ifNil: [ SQLite3Misuse signal: 'This result set does not contain a prepared statement.' ].	
 	
-	rows := OrderedCollection new.
+	rows ifNil: [ rows := OrderedCollection new ].
 	[ moreRows ] whileTrue: [
 			rows add: (self nextOfClass: aRowClass) ].
 	^ rows
@@ -200,5 +157,6 @@ SQLite3Cursor >> statement [
 
 { #category : #accessing }
 SQLite3Cursor >> statement: anObject [
-	statement := anObject
+	statement := anObject.
+	moreRows := (statement ifNil:[false ] ifNotNil: [ statement dataValuesAvailable > 0 ])
 ]
