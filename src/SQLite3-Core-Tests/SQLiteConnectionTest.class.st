@@ -195,7 +195,7 @@ SQLiteConnectionTest >> testExecuteValueInsertBooleanNilThenSelect [
 	self assert: res equals: 0.
 
 	rs := db execute: 'insert into x values (NULL, ?)' value: nil.
-	self assert: rs next equals: nil.
+	self assert: (rs next isNil).
 	rs close.
 
 	res := db commitTransaction.
@@ -229,7 +229,7 @@ SQLiteConnectionTest >> testExecuteValueInsertBooleanThenSelect [
 	self assert: res equals: 0.
 
 	rs := db execute: 'insert into x values (NULL, ?)' value: true.
-	self assert: rs next equals: nil.
+	self assert: (rs next isNil)..
 	rs close.
 
 	res := db commitTransaction.
@@ -372,7 +372,7 @@ SQLiteConnectionTest >> testExecuteValueInsertThenSelectDateTime [
 
 	data := DateAndTime year: 2015 month: 4 day: 1.
 	rs := db execute: 'insert into x values (?)' value: data.
-	self assert: rs next equals: nil.
+	self assert: (rs next isNil).
 	rs close.
 
 	res := db commitTransaction.
@@ -408,7 +408,7 @@ SQLiteConnectionTest >> testExecuteWithInsertArray [
 	self assert: res equals: 0.
 
 	rs := db execute: 'insert into x values (NULL, ?, ?)' with: #(1 'two').
-	self assert: rs next equals: nil.
+	self assert: (rs next isNil)..
 	rs close.
 
 	res := db commitTransaction.
@@ -439,7 +439,7 @@ SQLiteConnectionTest >> testExecuteWithInsertBooleanNilThenSelect [
 	self assert: res equals: 0.
 
 	rs := db execute: 'insert into x values (NULL, ?)' with: (Array with: nil).
-	self assert: rs next equals: nil.
+	self assert: (rs next isNil)..
 	rs close.
 
 	res := db commitTransaction.
@@ -473,7 +473,7 @@ SQLiteConnectionTest >> testExecuteWithInsertBooleanSQLNullThenSelect [
 	self assert: res equals: 0.
 
 	rs := db execute: 'insert into x values (NULL, NULL)'.
-	self assert: rs next equals: nil.
+	self assert: (rs next isNil).
 	rs close.
 
 	res := db commitTransaction.
@@ -505,7 +505,7 @@ SQLiteConnectionTest >> testExecuteWithInsertBooleanThenSelect [
 	self assert: res equals: 0.
 
 	rs := db execute: 'insert into x values (NULL, ?)' with: (Array with: true).
-	self assert: rs next equals: nil.
+	self assert: (rs next isNil).
 	rs close.
 
 	res := db commitTransaction.
@@ -535,7 +535,7 @@ SQLiteConnectionTest >> testExecuteWithInsertChanges [
 	res := db beginTransaction.
 	self assert: res equals: 0.
 	rs := db execute: 'insert into x values (NULL, ?, ?)' with: #(1 'two').
-	self assert: rs next equals: nil.
+	self assert: (rs next isNil).
 	rs close.
 
 	res := db commitTransaction.
@@ -571,7 +571,7 @@ SQLiteConnectionTest >> testExecuteWithInsertDictionary [
 
 	rs := db execute: 'insert into x values (NULL, :first, :two)'
 		with: (Dictionary newFromPairs: #(':first' 1 ':two' '2' ':nosuch' 3)).
-	self assert: rs next equals: nil.
+	self assert: (rs next isNil)..
 	rs close.
 
 	res := db commitTransaction.

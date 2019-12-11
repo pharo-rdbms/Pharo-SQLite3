@@ -18,7 +18,7 @@ Class {
 	#category : #'SQLite3-Core-Connections'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #creating }
 SQLite3Backup class >> to: dConnection named: dName from: sConnection named: sName [
 	^(self new)
 		dstConnection: dConnection;
