@@ -7,7 +7,8 @@ Class {
 	#instVars : [
 		'db',
 		'res',
-		'rs'
+		'rs',
+		'target'
 	],
 	#category : #'SQLite3-Core-Tests-Connections'
 }
@@ -48,7 +49,37 @@ SQLiteConnectionTest >> setUp [
 SQLiteConnectionTest >> tearDown [
 	
 	[ db close ] on: SQLite3Misuse do: [ ].
+	[ target ifNotNil:[target close] ] on: SQLite3Misuse do: [ ].
 	super tearDown.
+]
+
+{ #category : #tests }
+SQLiteConnectionTest >> testBackup [
+	| row backup |
+	
+	target := SQLite3Connection memory.
+	target open.
+	self populateRowsInto: 'junk' of: db.
+	backup := db backupTo: target.
+	backup open; step; finish.
+	row := (target execute: 'select * from junk where rt = ''1-ZZZ''') onlyRow.
+	
+	self assert: (row at: 'rk') equals: 1.
+	self assert: (row at: 'rt') equals: '1-ZZZ'.
+	self assert: (row at: 1) equals: 1.
+	self assert: (row at: 3) equals: '1-ZZZ'.
+	
+
+]
+
+{ #category : #tests }
+SQLiteConnectionTest >> testChanges [
+	| count |
+	count := self populateRowsInto: 'stuff' of: db.
+	self assert: db changes equals: 1.
+	(db basicExecute: 'delete from stuff').
+	self assert: db changes equals: count.
+
 ]
 
 { #category : #tests }
@@ -164,7 +195,7 @@ SQLiteConnectionTest >> testExecuteValueInsertBooleanNilThenSelect [
 	self assert: res equals: 0.
 
 	rs := db execute: 'insert into x values (NULL, ?)' value: nil.
-	self assert: rs next isNil.
+	self assert: (rs next isNil).
 	rs close.
 
 	res := db commitTransaction.
@@ -198,7 +229,7 @@ SQLiteConnectionTest >> testExecuteValueInsertBooleanThenSelect [
 	self assert: res equals: 0.
 
 	rs := db execute: 'insert into x values (NULL, ?)' value: true.
-	self assert: rs next isNil.
+	self assert: (rs next isNil)..
 	rs close.
 
 	res := db commitTransaction.
@@ -377,7 +408,7 @@ SQLiteConnectionTest >> testExecuteWithInsertArray [
 	self assert: res equals: 0.
 
 	rs := db execute: 'insert into x values (NULL, ?, ?)' with: #(1 'two').
-	self assert: (rs next isNil).
+	self assert: (rs next isNil)..
 	rs close.
 
 	res := db commitTransaction.
@@ -408,7 +439,7 @@ SQLiteConnectionTest >> testExecuteWithInsertBooleanNilThenSelect [
 	self assert: res equals: 0.
 
 	rs := db execute: 'insert into x values (NULL, ?)' with: (Array with: nil).
-	self assert: rs next isNil.
+	self assert: (rs next isNil)..
 	rs close.
 
 	res := db commitTransaction.
@@ -442,7 +473,7 @@ SQLiteConnectionTest >> testExecuteWithInsertBooleanSQLNullThenSelect [
 	self assert: res equals: 0.
 
 	rs := db execute: 'insert into x values (NULL, NULL)'.
-	self assert: rs next isNil.
+	self assert: (rs next isNil).
 	rs close.
 
 	res := db commitTransaction.
@@ -474,7 +505,7 @@ SQLiteConnectionTest >> testExecuteWithInsertBooleanThenSelect [
 	self assert: res equals: 0.
 
 	rs := db execute: 'insert into x values (NULL, ?)' with: (Array with: true).
-	self assert: rs next isNil.
+	self assert: (rs next isNil).
 	rs close.
 
 	res := db commitTransaction.
@@ -504,8 +535,9 @@ SQLiteConnectionTest >> testExecuteWithInsertChanges [
 	res := db beginTransaction.
 	self assert: res equals: 0.
 	rs := db execute: 'insert into x values (NULL, ?, ?)' with: #(1 'two').
-	self assert: rs next isNil.
+	self assert: (rs next isNil).
 	rs close.
+
 	res := db commitTransaction.
 	self assert: res equals: 0.
 	
@@ -539,7 +571,7 @@ SQLiteConnectionTest >> testExecuteWithInsertDictionary [
 
 	rs := db execute: 'insert into x values (NULL, :first, :two)'
 		with: (Dictionary newFromPairs: #(':first' 1 ':two' '2' ':nosuch' 3)).
-	self assert: (rs next isNil).
+	self assert: (rs next isNil)..
 	rs close.
 
 	res := db commitTransaction.
@@ -876,6 +908,18 @@ SQLiteConnectionTest >> testExecuteWithToFail2 [
 	self assert: res equals: 0
 ]
 
+{ #category : #tests }
+SQLiteConnectionTest >> testGetAutocommit [
+	
+	self assert: db getAutoCommit equals: true.
+	db beginTransaction.
+	self assert: db getAutoCommit equals: false.
+	db rollbackTransaction.
+	self assert: db getAutoCommit equals: true.
+	
+
+]
+
 { #category : #'tests - glorp compatibility' }
 SQLiteConnectionTest >> testGlorpAutoID [
 	| schema rows |
@@ -1049,6 +1093,18 @@ SQLiteConnectionTest >> testRows [
 	self assert: (rows last at: 3) equals: (rowCount asString, '-ZZZ').
 		
 
+]
+
+{ #category : #tests }
+SQLiteConnectionTest >> testStatementReadOnly [
+
+	| stmt |
+	
+	self populateRowsInto: 'junk' of: db.
+	stmt := db prepare: 'select * from junk'.
+	self assert: stmt isReadOnly equals: true.
+	stmt := db prepare: 'delete from junk'.
+	self assert: stmt isReadOnly equals: false.
 ]
 
 { #category : #tests }

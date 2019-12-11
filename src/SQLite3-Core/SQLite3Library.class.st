@@ -71,8 +71,8 @@ SQLite3Library class >> initializeTypeMap [
 	TypeMap := Dictionary newFromPairs: #(
 		sqlite3		      #SQLite3DatabaseExternalObject
 		sqlite3_stmt			#SQLite3StatementExternalObject
-		"sqlite3_backup		NBSQLite3BackupExternalObject 
-		sqlite3_blob			NBSQLite3BlobExternalObject "
+		sqlite3_backup		#NBSQLite3BackupExternalObject 
+		"sqlite3_blob			NBSQLite3BlobExternalObject "
 		sqlite3_int64		FFIInt64
 	)
 ]
@@ -80,6 +80,50 @@ SQLite3Library class >> initializeTypeMap [
 { #category : #factory }
 SQLite3Library class >> reset [
 	uniqueInstance := nil
+]
+
+{ #category : #'private - api' }
+SQLite3Library >> apiBackupFinish: backupHandle [
+	"int sqlite3_backup_finish(sqlite3_backup *p)"
+	 
+	^ self ffiCall: #(int sqlite3_backup_finish(SQLite3BackupExternalReference *backupHandle))
+		
+
+]
+
+{ #category : #'private - api' }
+SQLite3Library >> apiBackupPageCount: backupHandle [
+	"int sqlite3_backup_pagecount(sqlite3_backup *p)"
+	 
+	^ self ffiCall: #(int sqlite3_backup_pagecount(sqlite3_backup *backupHandle))
+
+]
+
+{ #category : #'private - api' }
+SQLite3Library >> apiBackupRemaining: backupHandle [
+	"int sqlite3_backup_remaining(sqlite3_backup *p)"
+	 
+	^ self ffiCall: #(int sqlite3_backup_remaining(sqlite3_backup *backupHandle))
+]
+
+{ #category : #'private - api' }
+SQLite3Library >> apiBackupStep:nPage via: backupHandle [
+	"int sqlite3_backup_step(sqlite3_backup *p, int nPage)"
+	 
+	^ self ffiCall: #(int sqlite3_backup_step(SQLite3BackupExternalReference *backupHandle, int nPage))
+]
+
+{ #category : #'private - api' }
+SQLite3Library >> apiBackupTo: pDest named: zDestName from: pSource named: zSourceName [
+	"sqlite3_backup *sqlite3_backup_init(
+  sqlite3 *pDest,                        /* Destination database handle */
+  const char *zDestName,                 /* Destination database name */
+  sqlite3 *pSource,                      /* Source database handle */
+  const char *zSourceName                /* Source database name */
+)"
+	 
+	^ self ffiCall: #(SQLite3BackupExternalReference *sqlite3_backup_init(
+  sqlite3 *pDest, String zDestName, sqlite3 *pSource, String zSourceName))
 ]
 
 { #category : #'private - api' }
@@ -187,6 +231,14 @@ SQLite3Library >> apiColumnBytes: aStatement atColumn: aColumn [
 ]
 
 { #category : #'private - api' }
+SQLite3Library >> apiColumnCount: aStatement [
+	"int sqlite3_column_count(sqlite3_stmt *pStmt)"
+	 
+	^ self ffiCall: #(int sqlite3_column_count(sqlite3_stmt *aStatement))
+
+]
+
+{ #category : #'private - api' }
 SQLite3Library >> apiColumnDeclaredType: aStatement atColumn: aColumn [
 	"const char *sqlite3_column_decltype(sqlite3_stmt*, int)"
 
@@ -253,6 +305,14 @@ This option is used to enable or disable the sqlite3_load_extension() interface 
 ]
 
 { #category : #'private - api' }
+SQLite3Library >> apiDBHandle: statementHandle [
+	"sqlite3 *sqlite3_db_handle(sqlite3_stmt*);"
+	 
+	^self ffiCall: #(SQLite3DatabaseExternalObject *sqlite3_db_handle(SQLite3StatementExternalObject *statementHandle))
+
+]
+
+{ #category : #'private - api' }
 SQLite3Library >> apiDataCount: handle [
 	"int sqlite3_data_count(sqlite3_stmt*)"
 	
@@ -289,8 +349,22 @@ SQLite3Library >> apiFinalize: handle [
 SQLite3Library >> apiGetAutocommit: handle [
 	"int sqlite3_get_autocommit(sqlite3*);"
 	
-	^ self ffiCall: #(int sqlite3_get_autocommit (GASQLite3DatabaseExternalObject handle))
+	^ self ffiCall: #(int sqlite3_get_autocommit (sqlite3 *handle))
 	 
+]
+
+{ #category : #'private - api' }
+SQLite3Library >> apiLastInsertRowid: handle [
+	"sqlite3_int64 sqlite3_last_insert_rowid(sqlite3*)"
+
+	^ self ffiCall: #(long sqlite3_last_insert_rowid(SQLite3DatabaseExternalObject *handle))
+]
+
+{ #category : #'private - api' }
+SQLite3Library >> apiLibVersion [
+	"const char *sqlite3_libversion(void)"
+	 
+	^self ffiCall: #(String sqlite3_libversion(void)) 
 ]
 
 { #category : #'private - api' }
@@ -307,6 +381,19 @@ SQLite3Library >> apiOpen: filename via: handle [
 	"int sqlite3_open(const char*, sqlite3**)"
 	 
 	^self ffiCall: #(int sqlite3_open(String filename, sqlite3 **handle)) 
+	 
+]
+
+{ #category : #'private - api' }
+SQLite3Library >> apiOpen: filename withFlags: flags vfs: vfs via: handle [
+	"int sqlite3_open_v2(
+  const char *filename,   /* Database filename (UTF-8) */
+  sqlite3 **ppDb,         /* OUT: SQLite db handle */
+  int flags,              /* Flags */
+  const char *zVfs        /* Name of VFS module to use */
+)"
+	 
+	^self ffiCall: #(int sqlite3_open_v2(String filename, sqlite3 **handle, int flags, String vfs)) 
 	 
 ]
 
@@ -329,10 +416,26 @@ SQLite3Library >> apiReset: handle [
 ]
 
 { #category : #'private - api' }
+SQLite3Library >> apiSleep [
+	"int sqlite3_sleep(int)"
+	 
+	^ self ffiCall: #(int sqlite3_sleep(int))
+]
+
+{ #category : #'private - api' }
 SQLite3Library >> apiSql: handle [
 	"const char *sqlite3_sql(sqlite3_stmt*)"
 	 
 	^ self ffiCall: #(String sqlite3_sql (sqlite3_stmt* handle))
+		
+
+]
+
+{ #category : #'private - api' }
+SQLite3Library >> apiStatementReadOnly: handle [
+	"int sqlite3_stmt_readonly(sqlite3_stmt *pStmt)"
+	
+	^ self ffiCall: #(int sqlite3_stmt_readonly (SQLite3StatementExternalObject * handle))
 		
 
 ]
@@ -344,6 +447,14 @@ SQLite3Library >> apiStep: handle [
 	^ self ffiCall: #(int sqlite3_step (sqlite3_stmt* handle))
 		
 
+]
+
+{ #category : #'private - api' }
+SQLite3Library >> apiThreadsafe [
+	"int sqlite3_threadsafe(void)"
+	 
+	^self ffiCall: #(int sqlite3_threadsafe(void)) 
+	 
 ]
 
 { #category : #'private - api' }
@@ -360,6 +471,16 @@ SQLite3Library >> apiTrace: handle with: callback with: appdata [
 
 	^ self ffiCall: #(void* sqlite3_trace (sqlite3* handle, FFICallback callback, ExternalAddress appdata)) 
 
+]
+
+{ #category : #operating }
+SQLite3Library >> backup: backupHandle step: nPages [
+	^self apiBackupStep: nPages via: backupHandle
+]
+
+{ #category : #operating }
+SQLite3Library >> backupTo: dstConnection named: dstName from: srcConnection named: srcName [
+	^self apiBackupTo: dstConnection named: dstName from: srcConnection named: srcName
 ]
 
 { #category : #operating }
@@ -442,7 +563,12 @@ SQLite3Library >> clearBindings: sHandle on: dbHandle [
 
 { #category : #'connection handling' }
 SQLite3Library >> close: aHandle [	
-	^ self checkForOk: (self apiClose: aHandle) on: aHandle
+	^ self self apiClose: aHandle
+]
+
+{ #category : #'connection handling' }
+SQLite3Library >> columnCount: aStatementHandle [	
+	^ self apiColumnCount: aStatementHandle
 ]
 
 { #category : #accessing }
@@ -450,6 +576,11 @@ SQLite3Library >> dataValuesAvailable: aStatementHandle [
 	^ self apiDataCount: aStatementHandle
 	
 
+]
+
+{ #category : #'connection handling' }
+SQLite3Library >> dbHandle: statementHandle [
+	^self apiDBHandle: statementHandle
 ]
 
 { #category : #configuring }
@@ -494,7 +625,7 @@ SQLite3Library >> floatFrom: aStatement at: aColumn [
 { #category : #accessing }
 SQLite3Library >> getAutoCommit: aHandle [
 
-	^ self apiGetAutocommit: aHandle
+	^ (self apiGetAutocommit: aHandle) ~= 0
 ]
 
 { #category : #operating }
@@ -502,9 +633,21 @@ SQLite3Library >> integerFrom: aStatement at: aColumn [
 	^ self apiColumnInt: aStatement atColumn: aColumn
 ]
 
+{ #category : #accessing }
+SQLite3Library >> lastInsertRowId: dbHandle [
+
+	^ self apiLastInsertRowid: dbHandle
+]
+
 { #category : #'private - accessing' }
 SQLite3Library >> library [ 
 	^self libraryName
+]
+
+{ #category : #accessing }
+SQLite3Library >> libraryVersion [
+	"See http://sqlite.org/c3ref/libversion.html"
+	^self apiLibVersion 
 ]
 
 { #category : #'private - api' }
@@ -544,6 +687,16 @@ SQLite3Library >> open: aFilename via: aHandle [
 	^ self checkForOk: (self apiOpen: aFilename via: aHandle) on: aHandle
 ]
 
+{ #category : #accessing }
+SQLite3Library >> open: aFilename withFlags: flags vfs: vfs via: aHandle [	
+	^ self checkForOk: (self apiOpen: aFilename withFlags: flags vfs: vfs via: aHandle) on: aHandle
+]
+
+{ #category : #accessing }
+SQLite3Library >> open: aFilename withFlags: flags via: aHandle [	
+	^ self checkForOk: (self apiOpen: aFilename withFlags: flags vfs: nil via: aHandle) on: aHandle
+]
+
 { #category : #'private - conversion' }
 SQLite3Library >> pharoStringToUTF8: aPharoString [
 	"Converts from Pharo Multibyte Characters to SQLite3 UTF-8 storage format"
@@ -567,11 +720,11 @@ SQLite3Library >> prepare: aStatementHandle on: aDBHandle with: anSQLText [
 ]
 
 { #category : #cleaning }
-SQLite3Library >> reset: aStatementHandle on: aDBHandle [	
+SQLite3Library >> reset: aStatementHandle [
 	
 	^ aStatementHandle 
 		ifNil: [ 0 ]
-		ifNotNil: [ self checkForOk: (self apiReset: aStatementHandle) on: aDBHandle ]
+		ifNotNil: [ self apiReset: aStatementHandle ]
 	
 
 ]
@@ -599,6 +752,15 @@ SQLite3Library >> sqlite3ResultFor: anInteger ifNoneMatch: aBlock [
 ]
 
 { #category : #stepping }
+SQLite3Library >> statementReadOnly:handle [	
+	"int sqlite3_stmt_readonly(sqlite3_stmt *pStmt)"
+	
+	^((self apiStatementReadOnly:handle) = 0) not
+	
+
+]
+
+{ #category : #stepping }
 SQLite3Library >> step: aStatementHandle [	
 	^ self apiStep: aStatementHandle
 	
@@ -608,6 +770,14 @@ SQLite3Library >> step: aStatementHandle [
 { #category : #operating }
 SQLite3Library >> stringFrom: aStatement at: aColumn [
 	^ self utf8StringToPharo: (self apiColumnText: aStatement atColumn: aColumn)
+]
+
+{ #category : #stepping }
+SQLite3Library >> threadsafe [
+	"http://sqlite.org/c3ref/threadsafe.html"
+	^self apiThreadsafe 
+	
+
 ]
 
 { #category : #introspection }

@@ -14,6 +14,12 @@ Class {
 	#category : #'SQLite3-Core-Connections'
 }
 
+{ #category : #'instance creation' }
+SQLite3BaseConnection class >> libraryVersion [
+	"Native Library Version http://sqlite.org/c3ref/libversion.html sqlite3_libversion"
+	^SQLite3Library current apiLibVersion 
+]
+
 { #category : #examples }
 SQLite3BaseConnection class >> memory [
 
@@ -37,6 +43,31 @@ SQLite3BaseConnection class >> openOn: aFilename [
 		open; 
 		yourself
 
+]
+
+{ #category : #'instance creation' }
+SQLite3BaseConnection class >> threadsafe [
+	"Native Library Version http://sqlite.org/c3ref/libversion.html sqlite3_libversion"
+	^SQLite3Library current threadsafe != 0 
+]
+
+{ #category : #'public API - backups' }
+SQLite3BaseConnection >> backupDatabaseNamed: sName to: aConnection named: dName [
+	"database name is either 'main' or 'temp' or the name given to ATTACH DATABASE
+	See article at https://www.oreilly.com/library/view/using-sqlite/9781449394592/re225.html"
+	^SQLite3Backup to: aConnection handle named: dName from: dbHandle named: sName
+]
+
+{ #category : #'public API - backups' }
+SQLite3BaseConnection >> backupTo: aConnection [
+
+	^self backupTo: aConnection named: 'main'
+]
+
+{ #category : #'public API - backups' }
+SQLite3BaseConnection >> backupTo: aConnection named: aName [
+
+	^SQLite3Backup to: aConnection handle named: aName from: dbHandle named: 'main'
 ]
 
 { #category : #'public API - operating' }
@@ -144,18 +175,24 @@ SQLite3BaseConnection >> finalize: anSQLText [
 { #category : #'public API - introspection' }
 SQLite3BaseConnection >> getAutoCommit [
 
-	^library getAutoCommit: dbHandle 
+	^library getAutoCommit: dbHandle
+]
+
+{ #category : #accessing }
+SQLite3BaseConnection >> handle [
+	^dbHandle
 ]
 
 { #category : #initialization }
 SQLite3BaseConnection >> initialize [
-	
 	super initialize.
 	isOpen := false.
 	library := SQLite3Library current.
 	dbHandle := SQLite3DatabaseExternalObject new.
 	dbHandle autoRelease.
 	statementClass := SQLite3PreparedStatement.
+
+	
 ]
 
 { #category : #testing }
@@ -187,14 +224,14 @@ SQLite3BaseConnection >> prepare: anSQLText [
 	
 	s := self statementClass new.
 	s connection: self.
-	library prepare: s handle on: dbHandle with: anSQLText.
+	s prepare: anSQLText.
 	^ s
 	
 ]
 
 { #category : #'public API - cleaning' }
 SQLite3BaseConnection >> reset: aStatement [ 
-	library reset: aStatement handle on: dbHandle
+	^library reset: aStatement handle
 	
 ]
 
