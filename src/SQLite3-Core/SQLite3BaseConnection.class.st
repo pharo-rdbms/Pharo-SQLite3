@@ -175,7 +175,7 @@ SQLite3BaseConnection >> finalize: anSQLText [
 { #category : #'public API - introspection' }
 SQLite3BaseConnection >> getAutoCommit [
 
-	^library getAutoCommit: dbHandle 
+	^(library getAutoCommit: dbHandle) ~= 0
 ]
 
 { #category : #accessing }
@@ -231,7 +231,7 @@ SQLite3BaseConnection >> prepare: anSQLText [
 
 { #category : #'public API - cleaning' }
 SQLite3BaseConnection >> reset: aStatement [ 
-	^library reset: aStatement handle on: dbHandle
+	^library reset: aStatement handle
 	
 ]
 

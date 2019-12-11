@@ -9,7 +9,6 @@ Class {
 		'TypeMap'
 	],
 	#pools : [
-		'AnObsoleteSQLite3FileOpenFlags',
 		'SQLite3Constants'
 	],
 	#category : #'SQLite3-Core-UFFI'
@@ -72,8 +71,8 @@ SQLite3Library class >> initializeTypeMap [
 	TypeMap := Dictionary newFromPairs: #(
 		sqlite3		      #SQLite3DatabaseExternalObject
 		sqlite3_stmt			#SQLite3StatementExternalObject
-		"sqlite3_backup		NBSQLite3BackupExternalObject 
-		sqlite3_blob			NBSQLite3BlobExternalObject "
+		sqlite3_backup		#NBSQLite3BackupExternalObject 
+		"sqlite3_blob			NBSQLite3BlobExternalObject "
 		sqlite3_int64		FFIInt64
 	)
 ]
@@ -89,6 +88,7 @@ SQLite3Library >> apiBackupFinish: backupHandle [
 	 
 	^ self ffiCall: #(int sqlite3_backup_finish(SQLite3BackupExternalReference *backupHandle))
 		
+
 ]
 
 { #category : #'private - api' }
@@ -96,7 +96,7 @@ SQLite3Library >> apiBackupPageCount: backupHandle [
 	"int sqlite3_backup_pagecount(sqlite3_backup *p)"
 	 
 	^ self ffiCall: #(int sqlite3_backup_pagecount(sqlite3_backup *backupHandle))
-		
+
 ]
 
 { #category : #'private - api' }
@@ -104,7 +104,6 @@ SQLite3Library >> apiBackupRemaining: backupHandle [
 	"int sqlite3_backup_remaining(sqlite3_backup *p)"
 	 
 	^ self ffiCall: #(int sqlite3_backup_remaining(sqlite3_backup *backupHandle))
-		
 ]
 
 { #category : #'private - api' }
@@ -112,7 +111,6 @@ SQLite3Library >> apiBackupStep:nPage via: backupHandle [
 	"int sqlite3_backup_step(sqlite3_backup *p, int nPage)"
 	 
 	^ self ffiCall: #(int sqlite3_backup_step(SQLite3BackupExternalReference *backupHandle, int nPage))
-		
 ]
 
 { #category : #'private - api' }
@@ -126,7 +124,6 @@ SQLite3Library >> apiBackupTo: pDest named: zDestName from: pSource named: zSour
 	 
 	^ self ffiCall: #(SQLite3BackupExternalReference *sqlite3_backup_init(
   sqlite3 *pDest, String zDestName, sqlite3 *pSource, String zSourceName))
-		
 ]
 
 { #category : #'private - api' }
@@ -202,7 +199,7 @@ SQLite3Library >> apiChanges: handle [
 SQLite3Library >> apiClearBindings: aStatement [
 	"int sqlite3_clear_bindings(sqlite3_stmt*)"
 
-	^ self ffiCall: #(int sqlite3_clear_bindings (SQLite3StatementExternalObject* aStatement))
+	^ self ffiCall: #(int sqlite3_clear_bindings (sqlite3_stmt* aStatement))
 	
 
 ]
@@ -234,11 +231,10 @@ SQLite3Library >> apiColumnBytes: aStatement atColumn: aColumn [
 ]
 
 { #category : #'private - api' }
-SQLite3Library >> apiColumnCount: aStatement [ 
-	"const void *sqlite3_column_blob(sqlite3_stmt*, int)"
-	
+SQLite3Library >> apiColumnCount: aStatement [
+	"int sqlite3_column_count(sqlite3_stmt *pStmt)"
+	 
 	^ self ffiCall: #(int sqlite3_column_count(sqlite3_stmt *aStatement))
-		
 
 ]
 
@@ -313,7 +309,7 @@ SQLite3Library >> apiDBHandle: statementHandle [
 	"sqlite3 *sqlite3_db_handle(sqlite3_stmt*);"
 	 
 	^self ffiCall: #(SQLite3DatabaseExternalObject *sqlite3_db_handle(SQLite3StatementExternalObject *statementHandle))
-	 
+
 ]
 
 { #category : #'private - api' }
@@ -353,7 +349,7 @@ SQLite3Library >> apiFinalize: handle [
 SQLite3Library >> apiGetAutocommit: handle [
 	"int sqlite3_get_autocommit(sqlite3*);"
 	
-	^ self ffiCall: #(int sqlite3_get_autocommit (SQLite3DatabaseExternalObject *handle))
+	^ self ffiCall: #(int sqlite3_get_autocommit (sqlite3 *handle))
 	 
 ]
 
@@ -369,7 +365,6 @@ SQLite3Library >> apiLibVersion [
 	"const char *sqlite3_libversion(void)"
 	 
 	^self ffiCall: #(String sqlite3_libversion(void)) 
-	 
 ]
 
 { #category : #'private - api' }
@@ -425,8 +420,6 @@ SQLite3Library >> apiSleep [
 	"int sqlite3_sleep(int)"
 	 
 	^ self ffiCall: #(int sqlite3_sleep(int))
-		
-
 ]
 
 { #category : #'private - api' }
@@ -438,11 +431,13 @@ SQLite3Library >> apiSql: handle [
 
 ]
 
-{ #category : #'as yet unclassified' }
-SQLite3Library >> apiStatementReadOnly:handle [ 
+{ #category : #'private - api' }
+SQLite3Library >> apiStatementReadOnly: handle [
 	"int sqlite3_stmt_readonly(sqlite3_stmt *pStmt)"
 	
 	^ self ffiCall: #(int sqlite3_stmt_readonly (SQLite3StatementExternalObject * handle))
+		
+
 ]
 
 { #category : #'private - api' }
@@ -568,7 +563,7 @@ SQLite3Library >> clearBindings: sHandle on: dbHandle [
 
 { #category : #'connection handling' }
 SQLite3Library >> close: aHandle [	
-	^ self checkForOk: (self apiClose: aHandle) on: aHandle
+	^ self self apiClose: aHandle
 ]
 
 { #category : #'connection handling' }
@@ -583,9 +578,8 @@ SQLite3Library >> dataValuesAvailable: aStatementHandle [
 
 ]
 
-{ #category : #'private - utilities' }
+{ #category : #'connection handling' }
 SQLite3Library >> dbHandle: statementHandle [
-
 	^self apiDBHandle: statementHandle
 ]
 
@@ -631,7 +625,7 @@ SQLite3Library >> floatFrom: aStatement at: aColumn [
 { #category : #accessing }
 SQLite3Library >> getAutoCommit: aHandle [
 
-	^ ((self apiGetAutocommit: aHandle) = 0) not
+	^ (self apiGetAutocommit: aHandle) ~= 0
 ]
 
 { #category : #operating }
@@ -639,7 +633,7 @@ SQLite3Library >> integerFrom: aStatement at: aColumn [
 	^ self apiColumnInt: aStatement atColumn: aColumn
 ]
 
-{ #category : #'private - api' }
+{ #category : #accessing }
 SQLite3Library >> lastInsertRowId: dbHandle [
 
 	^ self apiLastInsertRowid: dbHandle
@@ -687,12 +681,12 @@ SQLite3Library >> open: aFilename via: aHandle [
 	^ self checkForOk: (self apiOpen: aFilename via: aHandle) on: aHandle
 ]
 
-{ #category : #'connection handling' }
+{ #category : #accessing }
 SQLite3Library >> open: aFilename withFlags: flags vfs: vfs via: aHandle [	
 	^ self checkForOk: (self apiOpen: aFilename withFlags: flags vfs: vfs via: aHandle) on: aHandle
 ]
 
-{ #category : #'connection handling' }
+{ #category : #accessing }
 SQLite3Library >> open: aFilename withFlags: flags via: aHandle [	
 	^ self checkForOk: (self apiOpen: aFilename withFlags: flags vfs: nil via: aHandle) on: aHandle
 ]
@@ -720,7 +714,7 @@ SQLite3Library >> prepare: aStatementHandle on: aDBHandle with: anSQLText [
 ]
 
 { #category : #cleaning }
-SQLite3Library >> reset: aStatementHandle on: aDBHandle [	
+SQLite3Library >> reset: aStatementHandle [
 	
 	^ aStatementHandle 
 		ifNil: [ 0 ]
@@ -751,11 +745,13 @@ SQLite3Library >> sqlite3ResultFor: anInteger ifNoneMatch: aBlock [
 	] on: NotFound do: aBlock
 ]
 
-{ #category : #'as yet unclassified' }
-SQLite3Library >> statementReadOnly:handle [ 
+{ #category : #stepping }
+SQLite3Library >> statementReadOnly:handle [	
 	"int sqlite3_stmt_readonly(sqlite3_stmt *pStmt)"
 	
 	^((self apiStatementReadOnly:handle) = 0) not
+	
+
 ]
 
 { #category : #stepping }
@@ -770,10 +766,12 @@ SQLite3Library >> stringFrom: aStatement at: aColumn [
 	^ self utf8StringToPharo: (self apiColumnText: aStatement atColumn: aColumn)
 ]
 
-{ #category : #accessing }
+{ #category : #stepping }
 SQLite3Library >> threadsafe [
 	"http://sqlite.org/c3ref/threadsafe.html"
 	^self apiThreadsafe 
+	
+
 ]
 
 { #category : #introspection }
