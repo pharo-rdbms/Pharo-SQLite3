@@ -9,16 +9,7 @@ Class {
 		'dbHandle',
 		'isOpen',
 		'library',
-		'statementClass',
-		'isExecutingStatement',
-		'startBusyRetryTime',
-		'openResultSets',
-		'openFunctions',
-		'shouldCacheStatements',
-		'maxBusyRetryTimeInterval',
-		'logsErrors',
-		'traceExecution',
-		'traceExcecution'
+		'statementClass'
 	],
 	#category : #'SQLite3-Core-Connections'
 }
@@ -200,10 +191,7 @@ SQLite3BaseConnection >> initialize [
 	dbHandle := SQLite3DatabaseExternalObject new.
 	dbHandle autoRelease.
 	statementClass := SQLite3PreparedStatement.
-	openResultSets := Set new.
-	logsErrors := true.
-	traceExcecution := true.
-	shouldCacheStatements := false.
+
 	
 ]
 
