@@ -175,7 +175,7 @@ SQLite3BaseConnection >> finalize: anSQLText [
 { #category : #'public API - introspection' }
 SQLite3BaseConnection >> getAutoCommit [
 
-	^(library getAutoCommit: dbHandle) ~= 0
+	^library getAutoCommit: dbHandle
 ]
 
 { #category : #accessing }
