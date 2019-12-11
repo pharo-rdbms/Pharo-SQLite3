@@ -30,6 +30,20 @@ SQLite3RowTest >> testAsArray [
 ]
 
 { #category : #tests }
+SQLite3RowTest >> testAsCombinedDictionary [
+	| dict  |
+	dict := Dictionary new.
+	dict at: 'foo' put: 1.
+	dict at: 'bar' put: true.
+	dict at: 'pi' put: '3.14'.
+	dict at: 1 put: 1.
+	dict at: 2 put: true.
+	dict at: 3 put: '3.14'.	
+	self assert: emptyRow asCombinedDictionary equals: Dictionary new.	
+	self assert: filledRow asCombinedDictionary equals: dict
+]
+
+{ #category : #tests }
 SQLite3RowTest >> testAsDictionary [
 	| dict  |
 	dict := Dictionary new.

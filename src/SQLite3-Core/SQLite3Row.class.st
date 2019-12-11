@@ -32,7 +32,11 @@ SQLite3Row >> asCombinedDictionary [
 
 { #category : #converting }
 SQLite3Row >> asDictionary [
-	^ Dictionary newFromKeys: self columnNames andValues: self values
+	"Borrowed from the future - Pharo 8"
+	| dict |
+	dict := Dictionary new.
+	self columnNames with: self values do: [ :k :v | dict at: k put: v ].
+	^ dict
 ]
 
 { #category : #accessing }
