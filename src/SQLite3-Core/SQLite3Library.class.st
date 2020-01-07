@@ -864,6 +864,13 @@ SQLite3Library >> win32LibraryName [
 	^ 'sqlite3'
 ]
 
+{ #category : #'private - accessing' }
+SQLite3Library >> win32ModuleName [ 
+	"Remove later - this is just to satisfy old Pharo 6"
+	
+	^self win32LibraryName
+]
+
 { #category : #operating }
 SQLite3Library >> with: aStatement at: aColumn putBlob: aByteArray [
 	^ self apiBindBlob: aStatement atColumn: aColumn with: aByteArray with: aByteArray size with: -1 
