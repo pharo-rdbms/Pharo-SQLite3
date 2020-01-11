@@ -41,6 +41,6 @@ SQLite3Connection >> execute: anSQLText value: object1 value: object2 value: obj
 
 { #category : #'public API - operating' }
 SQLite3Connection >> execute: anSQLText with: aCollection [
-	^(self prepare: anSQLText) execute: aCollection
+	^(self prepare: anSQLText) execute: (aCollection ifNil: [ #() ] ifNotNil: [ aCollection ])
 
 ]

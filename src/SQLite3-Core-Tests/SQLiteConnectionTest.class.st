@@ -621,6 +621,37 @@ SQLiteConnectionTest >> testExecuteWithInsertMultilingualStringsThenSelect [
 ]
 
 { #category : #tests }
+SQLiteConnectionTest >> testExecuteWithInsertNilThenSelect [
+	| row |
+	
+	res := db basicExecute: 'create table if not exists x (xk integer primary key);'.
+	self assert: res equals: 0.
+	
+	res := db basicExecute: 'delete from x;'.
+	self assert: res equals: 0.	
+
+	res := db beginTransaction.
+	self assert: res equals: 0.
+
+	rs := db execute: 'insert into x values (NULL)' with: nil.
+	self assert: rs next isNil.
+	rs close.
+
+	res := db commitTransaction.
+	self assert: res equals: 0.
+
+	rs := db execute: 'select * from x'.	
+	row := rs next.
+	self assert: (row at: 'xk') equals: 1.
+	self assert: (row at: 1) equals: 1.
+	self assert: row first equals: 1.
+	self assert: row last equals: 1.
+	rs close
+
+	 
+]
+
+{ #category : #tests }
 SQLiteConnectionTest >> testExecuteWithInsertNoDataThenSelect [
 	| row |
 	
@@ -902,6 +933,25 @@ SQLiteConnectionTest >> testExecuteWithToFail2 [
 	self assert: res equals: 0.
 
 	self should: [ db execute: 'insert into x values (NULL, ?, ?)' with: '42' ]
+		raise: SQLite3AbstractError.
+
+	res := db rollbackTransaction.
+	self assert: res equals: 0
+]
+
+{ #category : #tests }
+SQLiteConnectionTest >> testExecuteWithToFail3 [
+	
+	res := db basicExecute: 'create table if not exists x (xk integer primary key, iv integer, tv text);'.
+	self assert: res equals: 0.
+	
+	res := db basicExecute: 'delete from x;'.
+	self assert: res equals: 0.	
+
+	res := db beginTransaction.
+	self assert: res equals: 0.
+
+	self should: [ db execute: 'insert into x values (NULL, ?, ?)' with: nil ]
 		raise: SQLite3AbstractError.
 
 	res := db rollbackTransaction.
