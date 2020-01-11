@@ -807,6 +807,9 @@ SQLite3Library >> typeFor: aStatement at: aColumn [
 		declared notNil ifTrue: [ 
 			"Handle column type of date/time as a special case."
 			(self class dateTimeTypes includes: declared asLowercase) ifTrue: [ ^ #dateTimeAt: ]]].
+	(selector = #byteArrayAt:) ifTrue: [ 
+		"If column type is declared as a blob, use #objectAt: to deserialize the byte array that is read."
+		(declared notNil & (declared = 'blob')) ifTrue: [ ^ #objectAt:  ]].
 	^ selector
 
 ]

@@ -280,6 +280,38 @@ SQLiteConnectionTest >> testExecuteValueInsertChanges [
 ]
 
 { #category : #tests }
+SQLiteConnectionTest >> testExecuteValueInsertSingleArray [
+	| rd data |
+		
+	res := db basicExecute: 'create table if not exists x (xk integer primary key, bv blob);'.
+	self assert: res equals: 0.
+	
+	res := db basicExecute: 'delete from x;'.
+	self assert: res equals: 0.	
+
+	res := db beginTransaction.
+	self assert: res equals: 0.
+
+	data := #(1 'two').
+
+	"Insert a Smalltalk array into the column bv."
+	rs := db execute: 'insert into x values (NULL, ?)' value: data.
+	self assert: (rs next isNil).
+	rs close.
+
+	res := db commitTransaction.
+	self assert: res equals: 0.
+	
+	rd := (db execute: 'select * from x') rows first.
+	self assert: (rd at: 'xk') equals: 1.
+	self assert: (rd at: 'bv') equals: data.
+	self assert: (rd at: 1) equals: 1.
+	self assert: (rd at: 2) equals: data.
+	self assert: rd first equals: 1.	
+	self assert: rd last equals: data
+]
+
+{ #category : #tests }
 SQLiteConnectionTest >> testExecuteValueInsertThenSelect [
 	| row |
 	
@@ -951,7 +983,7 @@ SQLiteConnectionTest >> testExecuteWithToFail3 [
 	res := db beginTransaction.
 	self assert: res equals: 0.
 
-	self should: [ db execute: 'insert into x values (NULL, ?, ?)' with: nil ]
+	self shouldnt: [ db execute: 'insert into x values (NULL, ?, ?)' with: nil ]
 		raise: SQLite3AbstractError.
 
 	res := db rollbackTransaction.
