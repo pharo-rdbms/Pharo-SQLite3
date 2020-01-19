@@ -157,9 +157,19 @@ SQLite3BaseConnection >> disableExtensions [
 	^ library disableLoadExtension: dbHandle 
 ]
 
+{ #category : #'public API - operating' }
+SQLite3BaseConnection >> disableSharedCache [
+	^ library setSharedCache: 0 on: dbHandle 
+]
+
 { #category : #'public API - extensions' }
 SQLite3BaseConnection >> enableExtensions [
 	^ library enableLoadExtension: dbHandle 
+]
+
+{ #category : #'public API - operating' }
+SQLite3BaseConnection >> enableSharedCache [
+	^ library setSharedCache: 1 on: dbHandle 
 ]
 
 { #category : #accessing }

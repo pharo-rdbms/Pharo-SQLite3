@@ -321,6 +321,14 @@ SQLite3Library >> apiDataCount: handle [
 ]
 
 { #category : #'private - api' }
+SQLite3Library >> apiEnableSharedCache: anInteger [
+	"int sqlite3_enable_shared_cache(int);"
+	
+	^ self ffiCall: #(int sqlite3_enable_shared_cache (int anInteger))
+	 
+]
+
+{ #category : #'private - api' }
 SQLite3Library >> apiErrorMessage: handle [ 
 	"const char *sqlite3_errmsg(sqlite3*)"
 	 
@@ -726,6 +734,12 @@ SQLite3Library >> reset: aStatementHandle [
 		ifNil: [ 0 ]
 		ifNotNil: [ self apiReset: aStatementHandle ]
 	
+
+]
+
+{ #category : #configuring }
+SQLite3Library >> setSharedCache: anInteger on: handle [
+	^ self checkForOk: (self apiEnableSharedCache:  anInteger) on: handle
 
 ]
 
