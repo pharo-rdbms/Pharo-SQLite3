@@ -1,4 +1,4 @@
-This section explains how to get started with [SQLite3](../README) in [Pharo](http://www.pharo.org).
+This section explains how to get started with [SQLite3](../README.md) in [Pharo](http://www.pharo.org).
 
 ## Creating a connection
 The first step is to create a connection to a SQLite3 database.
