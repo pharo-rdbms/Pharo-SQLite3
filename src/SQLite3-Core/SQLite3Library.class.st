@@ -563,7 +563,7 @@ SQLite3Library >> clearBindings: sHandle on: dbHandle [
 
 { #category : #'connection handling' }
 SQLite3Library >> close: aHandle [	
-	^ self self apiClose: aHandle
+	^ self apiClose: aHandle
 ]
 
 { #category : #'connection handling' }
