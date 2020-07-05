@@ -172,6 +172,13 @@ SQLite3BaseConnection >> finalize: anSQLText [
 	"no-op"	
 ]
 
+{ #category : #'public API - open/close' }
+SQLite3BaseConnection >> forceClose [
+
+	dbHandle ifNotNil: [ library close: dbHandle ].
+	self close
+]
+
 { #category : #'public API - introspection' }
 SQLite3BaseConnection >> getAutoCommit [
 
