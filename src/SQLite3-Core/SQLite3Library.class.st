@@ -813,15 +813,11 @@ SQLite3Library >> typeFor: aStatement at: aColumn [
 
 { #category : #'private - accessing' }
 SQLite3Library >> unix32LibraryName [ 
-	(#('/usr/lib/i386-linux-gnu' '/usr/lib32' '/usr/lib'),
-			((OSEnvironment current at: 'LD_LIBRARY_PATH' ifAbsent: [ '' ]) substrings: ':'))
-		do: [ :path | 
-			#('libsqlite3.so.0' 'libsqlite3.so') do: [ :libraryName |
-			| libraryPath |
-			libraryPath := path asFileReference / libraryName.
-			libraryPath exists
-				ifTrue: [ ^ libraryPath fullName ] ] ].
+	"For Docker containerization, the library is placed in /pkg/vm/ where all the VM files are."
+	'/pkg/vm/libsqlite3.so' asFileReference exists 
+		ifTrue: [ ^ '/pkg/vm/libsqlite3.so' ].
 	self error: 'Module not found.'
+
 ]
 
 { #category : #'private - accessing' }
@@ -833,14 +829,9 @@ SQLite3Library >> unix32ModuleName [
 
 { #category : #'private - accessing' }
 SQLite3Library >> unix64LibraryName [ 
-	(#('/usr/lib/x86_64-linux-gnu' '/lib/x86_64-linux-gnu' '/usr/lib'),
-			((OSEnvironment current at: 'LD_LIBRARY_PATH' ifAbsent: [ '' ]) substrings: ':'))
-		do: [ :path | 
-			#('libsqlite3.so.0' 'libsqlite3.so') do: [ :libraryName |
-				| libraryPath |
-				libraryPath := path asFileReference /  libraryName.
-				libraryPath exists
-					ifTrue: [ ^ libraryPath fullName ]]].
+	"For Docker containerization, the library is placed in /pkg/vm/ where all the VM files are."
+	'/pkg/vm/libsqlite3.so' asFileReference exists 
+		ifTrue: [ ^ '/pkg/vm/libsqlite3.so' ].
 	self error: 'Module not found.'
 
 ]
