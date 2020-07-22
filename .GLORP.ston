@@ -1,0 +1,16 @@
+SmalltalkCISpec {
+  #loading : [
+    SCIMetacelloLoadSpec {
+      #baseline : 'SQLite3',
+      #directory : 'src',
+      #load : [ 'CI' ],
+      #platforms : [  #pharo ]
+    }
+  ],
+  #postLoading : [
+    'scripts/setupSQLite3AsDatabaseDriver.st'
+  ],
+  #testing : {
+    #packages : [ 'Glorp-Integration-Tests' ]
+  }
+}
