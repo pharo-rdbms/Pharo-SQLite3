@@ -1,6 +1,6 @@
 Extension { #name : #GlorpBooleanTest }
 
-{ #category : #'*SQLite3-Glorp' }
+{ #category : #'*SQLite3-Glorp-Tests' }
 GlorpBooleanTest >> expectedFailures [
 
 	"testBoolean is working with version 3.32.3 of SQLite"

@@ -1,6 +1,6 @@
 Extension { #name : #GlorpBlobTest }
 
-{ #category : #'*SQLite3-Glorp' }
+{ #category : #'*SQLite3-Glorp-Tests' }
 GlorpBlobTest >> expectedFailures [
 
 	"testBlob is working with version 3.32.3 of SQLite"

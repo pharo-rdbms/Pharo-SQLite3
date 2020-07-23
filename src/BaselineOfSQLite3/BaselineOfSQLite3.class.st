@@ -20,14 +20,15 @@ BaselineOfSQLite3 >> baseline: spec [
 				package: 'SQLite3-Core';
 				package: 'SQLite3-Core-Benchmarks' with: [ spec requires: #('SQLite3-Core') ];
 				package: 'SQLite3-Core-Tests' with: [ spec requires: #('SQLite3-Core') ];
-				package: 'SQLite3-Glorp' with: [ spec requires: #('SQLite3-Core' 'Glorp-Core') ].
+				package: 'SQLite3-Glorp' with: [ spec requires: #('SQLite3-Core' 'Glorp-Core') ];
+				package: 'SQLite3-Glorp-Tests' with: [ spec requires: #('SQLite3-Glorp' 'Glorp-Tests') ].
 			"Groups"
 			spec
 				group: 'Core' with: #('SQLite3-Core');
 				group: 'Tests' with: #('SQLite3-Core-Tests');
 				group: 'Benchmarks' with: #('SQLite3-Core-Benchmarks');
 				group: 'glorp' with: 'SQLite3-Glorp';
-				group: 'CI' with: #('SQLite3-Glorp' 'Glorp-Tests' 'Tests');
+				group: 'CI' with: #('SQLite3-Glorp-Tests' 'Tests');
 				group: 'all' with: #('Core' 'Tests' 'Benchmarks');
 				group: 'default' with: #('all')
 			]
