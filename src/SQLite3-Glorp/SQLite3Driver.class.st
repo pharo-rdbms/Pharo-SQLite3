@@ -3,7 +3,8 @@ Class {
 	#superclass : #DatabaseDriver,
 	#instVars : [
 		'isInTransaction',
-		'transactionMutex'
+		'transactionMutex',
+		'rowCount'
 	],
 	#category : #'SQLite3-Glorp'
 }
@@ -11,7 +12,11 @@ Class {
 { #category : #executing }
 SQLite3Driver >> basicExecuteSQLString: aString [
 
-	^ self basicExecuteSQLString: aString binding: #()
+	| result |
+
+	result := self basicExecuteSQLString: aString binding: #().
+	rowCount := result rowCount.
+	^ result
 ]
 
 { #category : #executing }
@@ -64,7 +69,8 @@ SQLite3Driver >> initialize [
 
 	super initialize.
 	isInTransaction := false.
-	transactionMutex := Semaphore forMutualExclusion
+	transactionMutex := Semaphore forMutualExclusion.
+	rowCount := 0
 ]
 
 { #category : #testing }
@@ -90,4 +96,10 @@ SQLite3Driver >> rollbackTransaction [
 					isInTransaction := false
 					]
 			]
+]
+
+{ #category : #accessing }
+SQLite3Driver >> rowCount [
+
+	^ rowCount
 ]
