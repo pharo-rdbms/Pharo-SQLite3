@@ -348,7 +348,9 @@ SQLite3PreparedStatement >> stepOk: aValue [
 	(aValue = SQLITE_BUSY)
 		ifTrue: [ connection signal: SQLite3Busy with: aValue ].
 	(aValue = SQLITE_MISUSE)
-		ifTrue: [ connection signal: SQLite3Misuse with: aValue ].				
+		ifTrue: [ connection signal: SQLite3Misuse with: aValue ].
+	(aValue = SQLITE_CONSTRAINT)
+		ifTrue:  [ connection signal: SQLite3ConstraintViolation with: aValue].				
 
 	"Catch any error not specifically handled above."
 	connection signal: SQLite3AbstractError with: aValue

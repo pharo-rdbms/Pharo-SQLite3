@@ -416,6 +416,14 @@ SQLiteBaseConnectionTest >> testColumnNamesNoSuchTable [
 	self assert: (columns isNil).
 ]
 
+{ #category : #'tests - connections' }
+SQLiteBaseConnectionTest >> testConstraintViolation [
+	db
+		basicExecute: 'create table x (value integer primary key);';
+		basicExecute: 'insert into x values(1);'.
+	self should: [ db basicExecute: 'insert into x values(1);' ] raise: SQLite3ConstraintViolation 
+]
+
 { #category : #'tests - execution' }
 SQLiteBaseConnectionTest >> testDataValuesAvailable [
 	| s | 
