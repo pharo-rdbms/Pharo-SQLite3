@@ -18,8 +18,3 @@ SQLite3StatementExternalObject class >> finalizeResourceData: aHandle [
 SQLite3StatementExternalObject >> finalizeResourceData: aHandle [
 	SQLite3Library current apiFinalize: aHandle.
 ]
-
-{ #category : #'external resource management' }
-SQLite3StatementExternalObject >> manualRelease [
-	self class finalizationRegistry remove: self ifAbsent: [  ]
-]
