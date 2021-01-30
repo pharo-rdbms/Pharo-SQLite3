@@ -44,3 +44,11 @@ SQLite3Connection >> execute: anSQLText with: aCollection [
 	^(self prepare: anSQLText) execute: aCollection
 
 ]
+
+{ #category : #'public API - operating' }
+SQLite3Connection >> execute: anSQLText with: aCollection doing: aBlock [
+	| cursor |
+	cursor := self execute: anSQLText with: aCollection.
+	[aBlock value: cursor]
+		ensure: [ cursor finalizeStatement ]
+]

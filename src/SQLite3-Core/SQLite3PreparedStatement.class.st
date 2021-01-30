@@ -242,12 +242,16 @@ SQLite3PreparedStatement >> execute: bindings [
 
 { #category : #initialization }
 SQLite3PreparedStatement >> finalize [
-	| result |
+	"Finalize the statement as required by the SQLite3 API. As per the API, the user is expected to finalize a statement after use.
 	
-	result := connection finalize: self sqlText.
-	"Let FFIExternalResourceManager take care."
-	"SQLite3Library current apiFinalize: handle."
-	handle := nil.
+	Since executing a new statement without having finalized the previous one might cause SQLITE_BUSY errors, we can't rely on the garbage collector to execute the finalization, or we'll be exposed to non-deterministic behaviour."
+
+	handle
+		ifNotNil:
+			[ "Remove the statement object from its finalization registry. This should happen before the actual finalization to avoid finalizing the statement twice, which might result in 'undefined and undesirable behavior such as segfaults and heap corruption' as per the SQLite3 API"
+			handle manualRelease.
+			connection finalize: handle.
+			handle := nil ].
 	^ 0
 ]
 
