@@ -47,6 +47,11 @@ SQLite3Cursor >> connection [
 	^statement connection
 ]
 
+{ #category : #API }
+SQLite3Cursor >> finalizeStatement [
+	statement finalize
+]
+
 { #category : #initialization }
 SQLite3Cursor >> initialize [
 	"Initializes the receiver"
