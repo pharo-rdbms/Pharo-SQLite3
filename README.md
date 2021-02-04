@@ -1,5 +1,6 @@
 # Pharo-SQlite3
 [![Build Status](https://travis-ci.org/pharo-rdbms/Pharo-SQLite3.svg?branch=master)](https://travis-ci.org/pharo-rdbms/Pharo-SQLite3)
+[![GLORP Integration Tests](https://github.com/pharo-rdbms/Pharo-SQLite3/workflows/GLORP%20Integration%20Tests/badge.svg?branch=master)](https://github.com/pharo-rdbms/Pharo-SQLite3/actions?query=workflow%3AGLORP%20Integration%20Tests)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Pharo version](https://img.shields.io/badge/Pharo-6.1-%23aac9ff.svg)](https://pharo.org/download)
 [![Pharo version](https://img.shields.io/badge/Pharo-7.0-%23aac9ff.svg)](https://pharo.org/download)
@@ -17,12 +18,12 @@ Standalone [SQLite3](https://www.sqlite.org) database binding for [Pharo](http:/
   * [License](#license)
   * [Migration](#migration)
 
-# Quick Start 
+# Quick Start
 
 ## Installation
 
 ```Smalltalk
-Metacello new 
+Metacello new
 	repository: 'github://pharo-rdbms/Pharo-SQLite3/src';
 	baseline: 'SQLite3';
 	load
@@ -42,15 +43,15 @@ The project goes back to a binding to SQLite database for Squeak later ported to
 
 The full history is described in the [history details](doc/history.md).
 
-# Roadmap 
+# Roadmap
 
 - Implement support for
   [SQLcipher](https://github.com/sqlcipher/sqlcipher). This was available
   in NBSQLite, the SQLite binding using Pharo 4's NativeBoost FFI.
 
-- Implement driver for [Voyage](https://github.com/pharo-nosql/voyage). 
+- Implement driver for [Voyage](https://github.com/pharo-nosql/voyage).
 
-# Contributors 
+# Contributors
 
 Contributors in order of appearance:
 
@@ -70,4 +71,3 @@ Contributors in order of appearance:
 ## Migration
 
 If you want to migrate your code from an older SQLite binding then check the [Migration Guide](doc/migration.md).
-

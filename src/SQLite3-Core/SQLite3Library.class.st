@@ -616,6 +616,11 @@ SQLite3Library >> execute: anSQLText on: aDBHandle [
 	
 ]
 
+{ #category : #operating }
+SQLite3Library >> finalize: aStatementHandle on: aDBHandle [
+	^ self checkForOk: (self apiFinalize: aStatementHandle) on: aDBHandle
+]
+
 { #category : #accessing }
 SQLite3Library >> floatFrom: aStatement at: aColumn [
 

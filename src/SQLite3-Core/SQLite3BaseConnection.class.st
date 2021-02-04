@@ -168,8 +168,8 @@ SQLite3BaseConnection >> filename [
 ]
 
 { #category : #'public API - operating' }
-SQLite3BaseConnection >> finalize: anSQLText [ 
-	"no-op"	
+SQLite3BaseConnection >> finalize: aStatementHandle [
+	library finalize: aStatementHandle on: dbHandle
 ]
 
 { #category : #'public API - introspection' }
