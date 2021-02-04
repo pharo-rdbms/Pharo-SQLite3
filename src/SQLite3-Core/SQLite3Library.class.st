@@ -6,6 +6,7 @@ Class {
 	#superclass : #FFILibrary,
 	#classVars : [
 		'DataTypeMap',
+		'DateTimeTypeMap',
 		'TypeMap'
 	],
 	#pools : [
@@ -34,11 +35,6 @@ SQLite3Library class >> current [
 	^self uniqueInstance
 ]
 
-{ #category : #'private - accessing' }
-SQLite3Library class >> dateTimeTypes [
-	^ #('datetime' 'date' 'timestamp' 'time')
-]
-
 { #category : #'unified FFI - binding' }
 SQLite3Library class >> ffiBindingOf: aTypeName [
 	 
@@ -50,7 +46,8 @@ SQLite3Library class >> initialize [
 
 	self 
 		initializeTypeMap;
-		initializeDataTypeMap
+		initializeDataTypeMap;
+		initializeDateTimeTypeMap
 ]
 
 { #category : #'private - initialization' }
@@ -63,6 +60,16 @@ SQLite3Library class >> initializeDataTypeMap [
 		4			#byteArrayAt:
 		5			#nilAt:
 	)
+]
+
+{ #category : #'private - accessing' }
+SQLite3Library class >> initializeDateTimeTypeMap [
+	DateTimeTypeMap := { 
+		'datetime' -> #dateTimeAt:.
+		'date' -> #dateAt:.
+		'timestamp' -> #timestampAt:. 
+		'time' -> #timeAt: } asDictionary
+
 ]
 
 { #category : #'private - initialization' }
@@ -811,7 +818,7 @@ SQLite3Library >> typeFor: aStatement at: aColumn [
 	(selector = #stringAt:) ifTrue: [
 		declared notNil ifTrue: [ 
 			"Handle column type of date/time as a special case."
-			(self class dateTimeTypes includes: declared asLowercase) ifTrue: [ ^ #dateTimeAt: ]]].
+			^DateTimeTypeMap at: declared asLowercase ifAbsent: [ selector ]]].
 	^ selector
 
 ]

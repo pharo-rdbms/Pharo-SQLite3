@@ -219,6 +219,11 @@ SQLite3PreparedStatement >> dataValuesAvailable [
 ]
 
 { #category : #fetching }
+SQLite3PreparedStatement >> dateAt: aColumn [	
+	^ Date fromString: (self library stringFrom: handle at: aColumn)
+]
+
+{ #category : #fetching }
 SQLite3PreparedStatement >> dateTimeAt: aColumn [	
 	^ DateAndTime fromString: (self library stringFrom: handle at: aColumn)
 ]
@@ -364,6 +369,16 @@ SQLite3PreparedStatement >> stepOk: aValue [
 { #category : #fetching }
 SQLite3PreparedStatement >> stringAt: aColumn [	 
 	^ self library stringFrom: handle at: aColumn
+]
+
+{ #category : #fetching }
+SQLite3PreparedStatement >> timeAt: aColumn [	
+	^ Time fromString: (self library stringFrom: handle at: aColumn)
+]
+
+{ #category : #fetching }
+SQLite3PreparedStatement >> timestampAt: aColumn [	
+	^ DateAndTime fromString: (self library stringFrom: handle at: aColumn)
 ]
 
 { #category : #fetching }
