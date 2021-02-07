@@ -11,6 +11,7 @@ SmalltalkCISpec {
     'scripts/setupSQLite3AsDatabaseDriver.st'
   ],
   #testing : {
-    #packages : [ 'Glorp-Integration-Tests' ]
+    #packages : [ 'Glorp-Integration-Tests' ],
+    #format: #lcov
   }
 }
