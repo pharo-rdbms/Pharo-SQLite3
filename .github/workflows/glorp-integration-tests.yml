@@ -22,10 +22,9 @@ jobs:
           smalltalk-version: ${{ matrix.smalltalk }}
       - name: Load Image and Run Integration Tests
         run: smalltalkci -s ${{ matrix.smalltalk }} .GLORP.ston
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         timeout-minutes: 15
         env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RDBMS: ${{ matrix.rdbms }}
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
