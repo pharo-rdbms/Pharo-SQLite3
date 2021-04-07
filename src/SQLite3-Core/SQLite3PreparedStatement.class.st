@@ -33,6 +33,16 @@ SQLite3PreparedStatement >> at: aColumn putByteArray: anObject [
 ]
 
 { #category : #bindings }
+SQLite3PreparedStatement >> at: aColumn putDate: aDate [
+
+	| string |
+
+	string := SQLite3DateTimeString
+		streamContents: [ :stream | BasicDatePrinter new printDate: aDate format: #() on: stream ].
+	^ self library with: handle at: aColumn putString: string
+]
+
+{ #category : #bindings }
 SQLite3PreparedStatement >> at: aColumn putDateTime: aDateTime [
 	| s |
 	
@@ -71,6 +81,15 @@ SQLite3PreparedStatement >> at: aColumn putObject: anObject [
 { #category : #bindings }
 SQLite3PreparedStatement >> at: aColumn putString: aString [
 	^ self library with: handle at: aColumn putString: aString
+]
+
+{ #category : #bindings }
+SQLite3PreparedStatement >> at: aColumn putTime: aTime [
+
+	| string |
+
+	string := SQLite3DateTimeString streamContents: [ :stream | aTime printOn: stream ].
+	^ self library with: handle at: aColumn putString: string
 ]
 
 { #category : #public }
@@ -190,27 +209,33 @@ SQLite3PreparedStatement >> connection: anObject [
 { #category : #bindings }
 SQLite3PreparedStatement >> dataTypeForObject: anObject [
 
-	anObject ifNil: [ ^#at:putNil: ].
+	anObject ifNil: [ ^ #at:putNil: ].
 
-	(anObject isKindOf: Boolean)
-		ifTrue: [ ^#at:putBoolean: ].
+	( anObject isKindOf: Boolean )
+		ifTrue: [ ^ #at:putBoolean: ].
 
-	(anObject isKindOf: Integer)
-		ifTrue: [ ^#at:putInteger: ].
-		
-	(self isFloatLike: anObject)
-		ifTrue: [ ^#at:putFloat: ].
-		
-	(anObject isKindOf: String)
-		ifTrue: [ ^#at:putString: ].
-		
-	(anObject isKindOf: ByteArray)
-		ifTrue: [ ^#at:putByteArray: ].
-		
-	(self isDateAndTimeLike: anObject)
-		ifTrue: [ ^#at:putDateTime: ].
-		
-	^ #at:putObject: 
+	( anObject isKindOf: Integer )
+		ifTrue: [ ^ #at:putInteger: ].
+
+	( self isFloatLike: anObject )
+		ifTrue: [ ^ #at:putFloat: ].
+
+	( anObject isKindOf: String )
+		ifTrue: [ ^ #at:putString: ].
+
+	( anObject isKindOf: ByteArray )
+		ifTrue: [ ^ #at:putByteArray: ].
+
+	( anObject isKindOf: DateAndTime )
+		ifTrue: [ ^ #at:putDateTime: ].
+
+	( anObject isKindOf: Time )
+		ifTrue: [ ^ #at:putTime: ].
+
+	( anObject isKindOf: Date )
+		ifTrue: [ ^ #at:putDate: ].
+
+	^ #at:putObject:
 ]
 
 { #category : #'public - accessing' }
@@ -219,13 +244,15 @@ SQLite3PreparedStatement >> dataValuesAvailable [
 ]
 
 { #category : #fetching }
-SQLite3PreparedStatement >> dateAt: aColumn [	
-	^ Date fromString: (self library stringFrom: handle at: aColumn)
+SQLite3PreparedStatement >> dateAt: aColumn [
+
+	^ Date fromString: ( self stringAt: aColumn )
 ]
 
 { #category : #fetching }
-SQLite3PreparedStatement >> dateTimeAt: aColumn [	
-	^ DateAndTime fromString: (self library stringFrom: handle at: aColumn)
+SQLite3PreparedStatement >> dateTimeAt: aColumn [
+
+	^ DateAndTime fromString: ( self stringAt: aColumn )
 ]
 
 { #category : #'private - accessing' }
@@ -282,15 +309,6 @@ SQLite3PreparedStatement >> initialize [
 { #category : #fetching }
 SQLite3PreparedStatement >> integerAt: aColumn [ 
 	^self library integerFrom: handle at: aColumn
-]
-
-{ #category : #'private - testing' }
-SQLite3PreparedStatement >> isDateAndTimeLike: anObject [
-
-	^ ((anObject isKindOf: DateAndTime) or: [ anObject isKindOf: Date ])
-			or: [ anObject isKindOf: Time ]
-		
-
 ]
 
 { #category : #'private - testing' }
@@ -372,13 +390,15 @@ SQLite3PreparedStatement >> stringAt: aColumn [
 ]
 
 { #category : #fetching }
-SQLite3PreparedStatement >> timeAt: aColumn [	
-	^ Time fromString: (self library stringFrom: handle at: aColumn)
+SQLite3PreparedStatement >> timeAt: aColumn [
+
+	^ Time fromString: ( self stringAt: aColumn )
 ]
 
 { #category : #fetching }
-SQLite3PreparedStatement >> timestampAt: aColumn [	
-	^ DateAndTime fromString: (self library stringFrom: handle at: aColumn)
+SQLite3PreparedStatement >> timestampAt: aColumn [
+
+	^ DateAndTime fromString: ( self stringAt: aColumn )
 ]
 
 { #category : #fetching }
