@@ -12,6 +12,9 @@ SmalltalkCISpec {
   ],
   #testing : {
     #packages : [ 'Glorp-Integration-Tests' ],
-    #format: #lcov
+    #coverage : {
+      #packages : [ 'SQLite3-*' ],
+      #format: #lcov
+    }
   }
 }
