@@ -8,14 +8,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        smalltalk: [ Pharo64-8.0, Pharo64-9.0 ]
-    name: ${{ matrix.smalltalk }} + ${{ matrix.rdbms }}
+        smalltalk: [ Pharo64-7.0, Pharo64-8.0, Pharo64-9.0 ]
+    name: ${{ matrix.smalltalk }}
     steps:
       - uses: actions/checkout@v2
       - name: Install SQLite3
         run: ./scripts/install-SQLite3.sh
-        env:
-          RDBMS: ${{ matrix.rdbms }}
       - name: Set up Smalltalk CI
         uses: hpi-swa/setup-smalltalkCI@v1
         with:
@@ -25,7 +23,6 @@ jobs:
         timeout-minutes: 15
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          RDBMS: ${{ matrix.rdbms }}
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
         with:
