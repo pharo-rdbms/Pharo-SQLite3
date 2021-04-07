@@ -372,8 +372,8 @@ SQLite3PreparedStatement >> stringAt: aColumn [
 ]
 
 { #category : #fetching }
-SQLite3PreparedStatement >> timeAt: aColumn [	
-	^ Time fromString: (self library stringFrom: handle at: aColumn)
+SQLite3PreparedStatement >> timeAt: aColumn [
+	^ (self dateTimeAt: aColumn) asTime
 ]
 
 { #category : #fetching }
