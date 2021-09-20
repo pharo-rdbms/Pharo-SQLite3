@@ -10,5 +10,5 @@ Class {
 { #category : #'instance finalization' }
 SQLite3DatabaseExternalObject class >> finalizeResourceData: resourceData [
 	SQLite3Library current 
-		ffiCall: #(int sqlite3_close (ExternalAddress resourceData))
+		ffiCall: #(int sqlite3_close (void *resourceData))
 ]
