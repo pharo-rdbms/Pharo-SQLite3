@@ -868,7 +868,9 @@ SQLite3Library >> unix64ModuleName [
 SQLite3Library >> utf8StringToPharo: anUTF8String [
 	"Converts from SQLite UTF-8 to Pharo Multibyte Characters"
 	
-	^(ZnCharacterReadStream on: anUTF8String asByteArray readStream) upToEnd
+	^ SystemVersion current major >= 9
+		ifTrue: [ anUTF8String ]
+		ifFalse: [ (ZnCharacterReadStream on: anUTF8String asByteArray readStream) upToEnd ]
 ]
 
 { #category : #'private - accessing' }
