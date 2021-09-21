@@ -22,6 +22,10 @@ BaselineOfSQLite3 >> baseline: spec [
 				package: 'SQLite3-Core-Tests' with: [ spec requires: #('SQLite3-Core') ];
 				package: 'SQLite3-Glorp' with: [ spec requires: #('SQLite3-Core' 'Glorp-Core') ];
 				package: 'SQLite3-Glorp-Tests' with: [ spec requires: #('SQLite3-Glorp' 'Glorp-Tests') ].
+			"Pharo version compatibility"
+			SystemVersion current major >= 9 
+				ifTrue: [ spec package: 'SQLite3-Pharo9' with: [ spec requires: #('SQLite3-Core') ] ]
+				ifFalse: [  ].
 			"Groups"
 			spec
 				group: 'Core' with: #('SQLite3-Core');
