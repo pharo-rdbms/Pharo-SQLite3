@@ -9,8 +9,9 @@ Class {
 
 { #category : #baselines }
 BaselineOfSQLite3 >> baseline: spec [
-
 	<baseline>
+	| versionPackage |
+
 	spec
 		for: #pharo
 		do: [ spec blessing: #baseline.
@@ -23,12 +24,13 @@ BaselineOfSQLite3 >> baseline: spec [
 				package: 'SQLite3-Glorp' with: [ spec requires: #('SQLite3-Core' 'Glorp-Core') ];
 				package: 'SQLite3-Glorp-Tests' with: [ spec requires: #('SQLite3-Glorp' 'Glorp-Tests') ].
 			"Pharo version compatibility"
-			SystemVersion current major >= 9 
-				ifTrue: [ spec package: 'SQLite3-Pharo9' with: [ spec requires: #('SQLite3-Core') ] ]
-				ifFalse: [ spec package: 'SQLite3-Pharo8' with: [ spec requires: #('SQLite3-Core') ] ].
+			versionPackage := SystemVersion current major >= 9 
+				ifTrue: [ 'SQLite3-Pharo9' ]
+				ifFalse: [ 'SQLite3-Pharo8' ].
+			spec package: versionPackage with: [ spec requires: #('SQLite3-Core') ].
 			"Groups"
 			spec
-				group: 'Core' with: #('SQLite3-Core');
+				group: 'Core' with: { 'SQLite3-Core'. versionPackage };
 				group: 'Tests' with: #('SQLite3-Core-Tests');
 				group: 'Benchmarks' with: #('SQLite3-Core-Benchmarks');
 				group: 'glorp' with: 'SQLite3-Glorp';
