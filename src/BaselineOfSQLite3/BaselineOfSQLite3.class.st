@@ -25,7 +25,7 @@ BaselineOfSQLite3 >> baseline: spec [
 			"Pharo version compatibility"
 			SystemVersion current major >= 9 
 				ifTrue: [ spec package: 'SQLite3-Pharo9' with: [ spec requires: #('SQLite3-Core') ] ]
-				ifFalse: [  ].
+				ifFalse: [ spec package: 'SQLite3-Pharo8' with: [ spec requires: #('SQLite3-Core') ] ].
 			"Groups"
 			spec
 				group: 'Core' with: #('SQLite3-Core');
