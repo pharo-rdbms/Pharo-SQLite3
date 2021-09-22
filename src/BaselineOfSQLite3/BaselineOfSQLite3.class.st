@@ -60,6 +60,7 @@ BaselineOfSQLite3 >> versionSpecificBaseline: spec [
 			[ spec 
 				package: 'SQLite3-Pharo8';
 				group: 'Core' with: 'SQLite3-Pharo8';
+				group: 'CI' with: 'SQLite3-Pharo8';
 				group: 'glorp' with: 'SQLite3-Pharo8' ].
 
 	spec
@@ -68,6 +69,7 @@ BaselineOfSQLite3 >> versionSpecificBaseline: spec [
 			[ spec 
 				package: 'SQLite3-Pharo8';
 				group: 'Core' with: 'SQLite3-Pharo8';
+				group: 'CI' with: 'SQLite3-Pharo8';
 				group: 'glorp' with: 'SQLite3-Pharo8' ].
 
 	spec
@@ -76,6 +78,7 @@ BaselineOfSQLite3 >> versionSpecificBaseline: spec [
 			[ spec 
 				package: 'SQLite3-Pharo9';
 				group: 'Core' with: 'SQLite3-Pharo9';
+				group: 'CI' with: 'SQLite3-Pharo9';
 				group: 'glorp' with: 'SQLite3-Pharo9' ].
 
 ]
