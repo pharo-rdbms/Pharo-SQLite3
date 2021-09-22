@@ -10,7 +10,6 @@ Class {
 { #category : #baselines }
 BaselineOfSQLite3 >> baseline: spec [
 	<baseline>
-	| versionPackage |
 
 	spec
 		for: #pharo
@@ -23,21 +22,17 @@ BaselineOfSQLite3 >> baseline: spec [
 				package: 'SQLite3-Core-Tests' with: [ spec requires: #('SQLite3-Core') ];
 				package: 'SQLite3-Glorp' with: [ spec requires: #('SQLite3-Core' 'Glorp-Core') ];
 				package: 'SQLite3-Glorp-Tests' with: [ spec requires: #('SQLite3-Glorp' 'Glorp-Tests') ].
-			"Pharo version compatibility"
-			versionPackage := SystemVersion current major >= 9 
-				ifTrue: [ 'SQLite3-Pharo9' ]
-				ifFalse: [ 'SQLite3-Pharo8' ].
-			spec package: versionPackage with: [ spec requires: #('SQLite3-Core') ].
 			"Groups"
 			spec
-				group: 'Core' with: { 'SQLite3-Core'. versionPackage };
+				group: 'Core' with: #('SQLite3-Core');
 				group: 'Tests' with: #('SQLite3-Core-Tests');
 				group: 'Benchmarks' with: #('SQLite3-Core-Benchmarks');
 				group: 'glorp' with: 'SQLite3-Glorp';
 				group: 'CI' with: #('SQLite3-Glorp-Tests' 'Tests');
 				group: 'all' with: #('Core' 'Tests' 'Benchmarks');
 				group: 'default' with: #('all')
-			]
+			].
+	self versionSpecificBaseline: spec.
 ]
 
 { #category : #baselines }
@@ -53,4 +48,31 @@ BaselineOfSQLite3 >> setUpDependencies: spec [
 		baseline: 'Glorp' with: [ spec repository: 'github://pharo-rdbms/glorp:master/' ];
 		project: 'Glorp-Core' copyFrom: 'Glorp' with: [ spec loads: 'Core' ];
 		project: 'Glorp-Tests' copyFrom: 'Glorp' with: [ spec loads: 'Tests' ]
+]
+
+{ #category : #baselines }
+BaselineOfSQLite3 >> versionSpecificBaseline: spec [
+	"Add version specific packages to the spec"
+
+	spec
+		for: #'pharo7.x'
+		do: 
+			[ spec 
+				package: 'SQLite3-Pharo8';
+				group: 'Core' with: 'SQLite3-Pharo8' ].
+
+	spec
+		for: #'pharo8.x'
+		do: 
+			[ spec 
+				package: 'SQLite3-Pharo8';
+				group: 'Core' with: 'SQLite3-Pharo8' ].
+
+	spec
+		for: #'pharo9.x'
+		do: 
+			[ spec 
+				package: 'SQLite3-Pharo9';
+				group: 'Core' with: 'SQLite3-Pharo9' ].
+
 ]
