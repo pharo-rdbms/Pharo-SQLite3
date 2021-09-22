@@ -779,11 +779,6 @@ SQLite3Library >> step: aStatementHandle [
 
 ]
 
-{ #category : #operating }
-SQLite3Library >> stringFrom: aStatement at: aColumn [
-	^ self utf8StringToPharo: (self apiColumnText: aStatement atColumn: aColumn)
-]
-
 { #category : #stepping }
 SQLite3Library >> threadsafe [
 	"http://sqlite.org/c3ref/threadsafe.html"
@@ -862,13 +857,6 @@ SQLite3Library >> unix64ModuleName [
 	"Remove later - this is just to satisfy old Pharo 6"
 	
 	^self unix64LibraryName
-]
-
-{ #category : #'private - conversion' }
-SQLite3Library >> utf8StringToPharo: anUTF8String [
-	"Converts from SQLite UTF-8 to Pharo Multibyte Characters"
-	
-	^(ZnCharacterReadStream on: anUTF8String asByteArray readStream) upToEnd
 ]
 
 { #category : #'private - accessing' }

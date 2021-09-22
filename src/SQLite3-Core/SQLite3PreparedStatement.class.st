@@ -385,7 +385,11 @@ SQLite3PreparedStatement >> stepOk: aValue [
 ]
 
 { #category : #fetching }
-SQLite3PreparedStatement >> stringAt: aColumn [	 
+SQLite3PreparedStatement >> stringAt: aColumn [
+	"Answer the string from the specified column"
+
+	"#stringFrom:at: is supplied in a version specific package.
+	If there are no implementers the appropriate package needs to be loaded. :-)"
 	^ self library stringFrom: handle at: aColumn
 ]
 
