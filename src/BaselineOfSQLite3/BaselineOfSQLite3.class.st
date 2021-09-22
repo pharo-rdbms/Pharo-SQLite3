@@ -13,24 +13,24 @@ BaselineOfSQLite3 >> baseline: spec [
 
 	spec
 		for: #pharo
-		do: [ spec blessing: #baseline.
-			Stdio stdout
-				<< 'AKG: loading baseline';
-				lf; flush.
+		do: [ 
 			self setUpDependencies: spec.
-			"Packages"
 			spec
 				package: 'SQLite3-Core';
-				package: 'SQLite3-Core-Benchmarks' with: [ spec requires: #('SQLite3-Core') ];
-				package: 'SQLite3-Core-Tests' with: [ spec requires: #('SQLite3-Core') ];
-				package: 'SQLite3-Glorp' with: [ spec requires: #('SQLite3-Core' 'Glorp-Core') ];
-				package: 'SQLite3-Glorp-Tests' with: [ spec requires: #('SQLite3-Glorp' 'Glorp-Tests') ].
-			"Groups"
-			spec
-				group: 'Core' with: #('SQLite3-Core');
-				group: 'Tests' with: #('SQLite3-Core-Tests');
-				group: 'Benchmarks' with: #('SQLite3-Core-Benchmarks');
+        group: 'Core' with: 'SQLite3-Core';
+
+				package: 'SQLite3-Core-Benchmarks' with: [ spec requires: 'SQLite3-Core' ];
+				group: 'Benchmarks' with: 'SQLite3-Core-Benchmarks';
+				
+        package: 'SQLite3-Core-Tests' with: [ spec requires: 'Core' ];
+				group: 'Tests' with: 'SQLite3-Core-Tests';
+				
+        package: 'SQLite3-Glorp' with: [ spec requires: #('Core' 'Glorp-Core') ];
 				group: 'glorp' with: 'SQLite3-Glorp';
+				
+        package: 'SQLite3-Glorp-Tests' with: [ spec requires: #('SQLite3-Glorp' 'Glorp-Tests') ].
+
+			spec
 				group: 'CI' with: #('SQLite3-Glorp-Tests' 'Tests');
 				group: 'all' with: #('Core' 'Tests' 'Benchmarks');
 				group: 'default' with: #('all')
@@ -66,9 +66,8 @@ BaselineOfSQLite3 >> versionSpecificBaseline: spec [
 				lf; flush.
 			spec 
 				package: 'SQLite3-Pharo8';
-				group: 'Core' with: 'SQLite3-Pharo8';
-				group: 'CI' with: 'SQLite3-Pharo8';
-				group: 'glorp' with: 'SQLite3-Pharo8' ].
+				group: 'Core' with: 'SQLite3-Pharo8'
+				].
 
 	spec
 		for: #'pharo8.x'
@@ -79,9 +78,8 @@ BaselineOfSQLite3 >> versionSpecificBaseline: spec [
 				lf; flush.
 			spec 
 				package: 'SQLite3-Pharo8';
-				group: 'Core' with: 'SQLite3-Pharo8';
-				group: 'CI' with: 'SQLite3-Pharo8';
-				group: 'glorp' with: 'SQLite3-Pharo8' ].
+				group: 'Core' with: 'SQLite3-Pharo8'
+        ].
 
 	spec
 		for: #'pharo9.x'
@@ -92,8 +90,7 @@ BaselineOfSQLite3 >> versionSpecificBaseline: spec [
 				lf; flush.
 			spec 
 				package: 'SQLite3-Pharo9';
-				group: 'Core' with: 'SQLite3-Pharo9';
-				group: 'CI' with: 'SQLite3-Pharo9';
-				group: 'glorp' with: 'SQLite3-Pharo9' ].
+				group: 'Core' with: 'SQLite3-Pharo9'
+        ].
 
 ]
