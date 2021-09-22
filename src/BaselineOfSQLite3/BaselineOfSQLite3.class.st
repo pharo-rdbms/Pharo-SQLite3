@@ -14,6 +14,9 @@ BaselineOfSQLite3 >> baseline: spec [
 	spec
 		for: #pharo
 		do: [ spec blessing: #baseline.
+			Stdio stdout
+				<< 'AKG: loading baseline';
+				lf; flush.
 			self setUpDependencies: spec.
 			"Packages"
 			spec
@@ -57,7 +60,11 @@ BaselineOfSQLite3 >> versionSpecificBaseline: spec [
 	spec
 		for: #'pharo7.x'
 		do: 
-			[ spec 
+			[ 
+			Stdio stdout
+				<< 'AKG: loading 7';
+				lf; flush.
+			spec 
 				package: 'SQLite3-Pharo8';
 				group: 'Core' with: 'SQLite3-Pharo8';
 				group: 'CI' with: 'SQLite3-Pharo8';
@@ -66,7 +73,11 @@ BaselineOfSQLite3 >> versionSpecificBaseline: spec [
 	spec
 		for: #'pharo8.x'
 		do: 
-			[ spec 
+			[ 
+			Stdio stdout
+				<< 'AKG: loading 8';
+				lf; flush.
+			spec 
 				package: 'SQLite3-Pharo8';
 				group: 'Core' with: 'SQLite3-Pharo8';
 				group: 'CI' with: 'SQLite3-Pharo8';
@@ -75,7 +86,11 @@ BaselineOfSQLite3 >> versionSpecificBaseline: spec [
 	spec
 		for: #'pharo9.x'
 		do: 
-			[ spec 
+			[ 
+			Stdio stdout
+				<< 'AKG: loading 9';
+				lf; flush.
+			spec 
 				package: 'SQLite3-Pharo9';
 				group: 'Core' with: 'SQLite3-Pharo9';
 				group: 'CI' with: 'SQLite3-Pharo9';
