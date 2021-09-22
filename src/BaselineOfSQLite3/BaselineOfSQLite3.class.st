@@ -59,20 +59,23 @@ BaselineOfSQLite3 >> versionSpecificBaseline: spec [
 		do: 
 			[ spec 
 				package: 'SQLite3-Pharo8';
-				group: 'Core' with: 'SQLite3-Pharo8' ].
+				group: 'Core' with: 'SQLite3-Pharo8';
+				group: 'glorp' with: 'SQLite3-Pharo8' ].
 
 	spec
 		for: #'pharo8.x'
 		do: 
 			[ spec 
 				package: 'SQLite3-Pharo8';
-				group: 'Core' with: 'SQLite3-Pharo8' ].
+				group: 'Core' with: 'SQLite3-Pharo8';
+				group: 'glorp' with: 'SQLite3-Pharo8' ].
 
 	spec
 		for: #'pharo9.x'
 		do: 
 			[ spec 
 				package: 'SQLite3-Pharo9';
-				group: 'Core' with: 'SQLite3-Pharo9' ].
+				group: 'Core' with: 'SQLite3-Pharo9';
+				group: 'glorp' with: 'SQLite3-Pharo9' ].
 
 ]
