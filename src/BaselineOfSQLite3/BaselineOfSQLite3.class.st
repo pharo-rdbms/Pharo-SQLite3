@@ -48,7 +48,7 @@ BaselineOfSQLite3 >> projectClass [
 BaselineOfSQLite3 >> setUpDependencies: spec [
 
 	spec
-		baseline: 'Glorp' with: [ spec repository: 'github://pharo-rdbms/glorp:v9.0.2/' ];
+		baseline: 'Glorp' with: [ spec repository: 'github://pharo-rdbms/glorp:v9.0.3/' ];
 		project: 'Glorp-Core' copyFrom: 'Glorp' with: [ spec loads: 'Core' ];
 		project: 'Glorp-Tests' copyFrom: 'Glorp' with: [ spec loads: 'Glorp-Integration-Tests' ]
 ]
