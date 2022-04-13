@@ -17,7 +17,7 @@ Class {
 SQLiteConnectionTest >> populateRowsInto: tableName of: database [
 	| rand rows schema insert rn rt |
 	 rand := Random new.	
-	rows := rand nextInt: 100.
+	rows := rand nextInteger: 100.
 
 	schema := 'create table ', tableName, ' (rk integer primary key, rn integer, rt text);'.
 	insert := 'insert into ', tableName, ' values (?, ?, ?)'.
@@ -25,7 +25,7 @@ SQLiteConnectionTest >> populateRowsInto: tableName of: database [
 	database basicExecute: 'begin'. 
 	database	basicExecute: schema.	
 	1 to: rows do: [ :i |
-		rn := i * (rand nextInt: 10).
+		rn := i * (rand nextInteger: 10).
 		rt := i asString, '-ZZZ'.
 		database execute: insert with: (Array with: i with: rn with: rt) ].	
 	database basicExecute: 'commit'.
@@ -1079,7 +1079,7 @@ SQLiteConnectionTest >> testRows [
 	self assert: (rows first at: 3) equals: '1-ZZZ'.
 	
 	1 to: 5 do: [ :x |
-		any := Random new nextInt: rowCount.
+		any := Random new nextInteger: rowCount.
 		self assert: ((rows at: any) at: 'rk') equals: any.
 		self assert: ((rows at: any) at: 'rt') equals: (any asString, '-ZZZ').
 		self assert: (((rows at: any) at: 'rn') \\ any) equals: 0.
