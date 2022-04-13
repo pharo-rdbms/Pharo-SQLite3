@@ -67,7 +67,7 @@ BaselineOfSQLite3 >> versionSpecificBaseline: spec [
 				].
 	
 	spec
-		for: #'pharo9.x'
+		for: #( #'pharo9.x' #'pharo10.x' )
 		do: 
 			[ 
 			spec 

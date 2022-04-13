@@ -2,7 +2,7 @@ SmalltalkCISpec {
   #loading : [
     SCIMetacelloLoadSpec {
       #baseline : 'SQLite3',
-      #directory : 'src',
+      #directory : '../src',
       #load : [ 'CI' ],
       #platforms : [  #pharo ]
     }

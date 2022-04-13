@@ -1,6 +1,6 @@
 name: GLORP Integration Tests
 
-on: [push,pull_request]
+on: [push,pull_request,workflow_dispatch]
 
 jobs:
    build:
@@ -19,7 +19,7 @@ jobs:
         with:
           smalltalk-image: ${{ matrix.smalltalk }}
       - name: Load Image and Run Integration Tests
-        run: smalltalkci -s ${{ matrix.smalltalk }} .GLORP.ston
+        run: smalltalkci -s ${{ matrix.smalltalk }} .smalltalkci/.GLORP.ston
         timeout-minutes: 15
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
