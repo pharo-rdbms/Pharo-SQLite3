@@ -8,7 +8,7 @@ SmalltalkCISpec {
     }
   ],
   #postLoading : [
-    'scripts/setupSQLite3AsDatabaseDriver.st'
+    '../scripts/setupSQLite3AsDatabaseDriver.st'
   ],
   #testing : {
     #packages : [ 'Glorp-Integration-Tests' ],
