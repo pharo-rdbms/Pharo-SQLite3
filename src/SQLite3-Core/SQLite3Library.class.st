@@ -676,7 +676,7 @@ SQLite3Library >> loadExtension: dbHandle with: aFilename [
 SQLite3Library >> macLibraryName [
 	| pluginDir |
 	pluginDir := FileSystem /'usr'/'lib'.
-	#('libsqlite3.dylib' 'libsqlite3.0.dylib')
+	#('libsqlite3.dylib' 'libsqlite3.0.dylib' 'sqlite3/libtclsqlite3.dylib')
 		detect: [ :each | (pluginDir / each) exists ] 
 		ifFound: [ :libName | ^ (pluginDir / libName) fullName  ].
 
