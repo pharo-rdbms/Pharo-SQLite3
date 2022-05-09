@@ -10,7 +10,7 @@ AbstractFileReference >> databaseSize [
 
 { #category : #'*SQLite3-Inspector-Extensions' }
 AbstractFileReference >> inspectionSQLite3Info [
-	<inspectorPresentationOrder: 40 title: 'SQLite3 - Info'>
+	<inspectorPresentationOrder: -2 title: 'SQLite3 - Info'>
 	
 	| label1 label2 |
 	label1 := SpLabeledPresenter
@@ -35,7 +35,7 @@ AbstractFileReference >> inspectionSQLite3InfoContext: aContext [
 
 { #category : #'*SQLite3-Inspector-Extensions' }
 AbstractFileReference >> inspectionSQLite3Tables [
-	<inspectorPresentationOrder: 40 title: 'SQLite3 - Tables'>
+	<inspectorPresentationOrder: -1 title: 'SQLite3 - Tables'>
 	
 	^ SpTablePresenter new
 			items: (SQLite3Database tableInfoFor: self fullName);
