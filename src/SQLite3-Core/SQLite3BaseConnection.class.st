@@ -1,5 +1,7 @@
 "
 I represent a connection to an SQLite database. I provide a thin wrapper over the SQLite C API.
+
+Do not use this class directory, please check and use my subclass SQLite3Connection
 "
 Class {
 	#name : #SQLite3BaseConnection,
