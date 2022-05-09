@@ -40,7 +40,7 @@ SQLiteConnectionTest >> populateRowsInto: tableName of: database [
 SQLiteConnectionTest >> setUp [ 
 
 	super setUp.
-	db := SQLite3Connection on: ':memory:'.
+	db := SQLite3Connection memory.
 	db open.
 
 ]
