@@ -9,7 +9,7 @@ Class {
 		'values',
 		'columnNames'
 	],
-	#category : #'SQLite3-Core-Database'
+	#category : #'SQLite3-Core-Base'
 }
 
 { #category : #'instance creation' }
@@ -124,6 +124,21 @@ SQLite3Row >> doesNotUnderstand: aMessage [
 SQLite3Row >> first [
 	^ self values ifEmpty: [] ifNotEmpty: [:v | v first ]
 
+]
+
+{ #category : #converting }
+SQLite3Row >> inspectionSQLite3Row [
+	<inspectorPresentationOrder: 10 title: 'SQlite3 - Contents'>
+	 
+	| presenter |
+	presenter := SpTablePresenter new.
+	presenter items: (Array with: self).
+	self columnNames do: [:each | 
+		presenter addColumn: (SpStringTableColumn title: each evaluated: [ :assoc | self at: each ])
+		
+	].	
+		
+	^presenter	
 ]
 
 { #category : #accessing }
