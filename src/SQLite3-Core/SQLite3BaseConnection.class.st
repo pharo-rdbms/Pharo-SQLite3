@@ -23,7 +23,7 @@ SQLite3BaseConnection class >> libraryVersion [
 { #category : #examples }
 SQLite3BaseConnection class >> memory [
 
-	^self on: ':memory:'
+	^ self on: ':memory:'
 ]
 
 { #category : #'instance creation' }
