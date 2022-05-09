@@ -15,7 +15,7 @@ Class {
 		'isOpen',
 		'handle'
 	],
-	#category : #'SQLite3-Core-Connections'
+	#category : #'SQLite3-Core-Utilities'
 }
 
 { #category : #creating }
