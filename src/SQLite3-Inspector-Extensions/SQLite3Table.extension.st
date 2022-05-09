@@ -2,7 +2,7 @@ Extension { #name : #SQLite3Table }
 
 { #category : #'*SQLite3-Inspector-Extensions' }
 SQLite3Table >> inspectionSQLite3Columns [
-	<inspectorPresentationOrder: 11 title: 'Sqlite3 - Columns'>
+	<inspectorPresentationOrder: 11 title: 'SQLite3 - Columns'>
 	 
 	^ SpTablePresenter new
 		items: self columnNames;
@@ -12,7 +12,7 @@ SQLite3Table >> inspectionSQLite3Columns [
 
 { #category : #'*SQLite3-Inspector-Extensions' }
 SQLite3Table >> inspectionSQLite3Schema [
-	<inspectorPresentationOrder: 10 title: 'Sqlite3 - Schema'>
+	<inspectorPresentationOrder: 10 title: 'SQLite3 - Schema'>
 	 
 	^ SpTextPresenter new
 		text: self schema;
@@ -21,7 +21,7 @@ SQLite3Table >> inspectionSQLite3Schema [
 
 { #category : #'*SQLite3-Inspector-Extensions' }
 SQLite3Table >> inspectionSQLite3TableProperties [
-	<inspectorPresentationOrder: 40 title: 'Table Properties'>
+	<inspectorPresentationOrder: 40 title: 'SQLite3 - Table Properties'>
 	 
 	^ SpTablePresenter new
 		items: self properties associations;
