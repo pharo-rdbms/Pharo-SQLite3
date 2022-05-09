@@ -2,12 +2,26 @@ Extension { #name : #SQLite3Table }
 
 { #category : #'*SQLite3-Inspector-Extensions' }
 SQLite3Table >> inspectionSQLite3Columns [
-	<inspectorPresentationOrder: 11 title: 'SQLite3 - Columns'>
+	<inspectorPresentationOrder: 13 title: 'SQLite3 - Columns'>
 	 
 	^ SpTablePresenter new
 		items: self columnNames;
 		addColumn: (SpStringTableColumn title: 'Column Name' evaluated: [ :each | each asString ]);		 
 		yourself
+]
+
+{ #category : #'*SQLite3-Inspector-Extensions' }
+SQLite3Table >> inspectionSQLite3Data [
+	<inspectorPresentationOrder: 11 title: 'SQLite3 - Data'>
+	 
+	| presenter |
+	presenter := SpTablePresenter new.
+	presenter items: self rows.
+	
+	self columnNames do: [:col |
+		presenter addColumn: (SpStringTableColumn title: col evaluated: [ :each | each at: col ])		 
+	 ].
+	^presenter
 ]
 
 { #category : #'*SQLite3-Inspector-Extensions' }

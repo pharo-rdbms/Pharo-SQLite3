@@ -57,17 +57,6 @@ SQLite3Database >> initConnection: aConnection [
 	connection := aConnection 
 ]
 
-{ #category : #executing }
-SQLite3Database >> inspectionSQLite3Tables [
-	<inspectorPresentationOrder: 10 title: 'Tables'>
-	 
-	^ SpTablePresenter new
-		items: self tables;
-		addColumn: (SpStringTableColumn title: 'Name' evaluated: [ :assoc | assoc name ]);
-		addColumn: (SpStringTableColumn title: 'Number of rows' evaluated: [ :assoc | assoc numberOfRows ]);		
-		yourself
-]
-
 { #category : #printing }
 SQLite3Database >> printOn: aStream [
 
