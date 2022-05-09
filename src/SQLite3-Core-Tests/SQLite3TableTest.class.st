@@ -61,7 +61,8 @@ SQLite3TableTest >> testSampleTableProperties [
 	self assert: (props at: #type) equals: 'table'.
 	self assert: (props at: #tbl_name) equals: 'SAMPLE'.
 	self assert: (props at: #rootpage) equals: 2.
-	self assert: (props at: #name) equals: 'SAMPLE'
+	self assert: (props at: #name) equals: 'SAMPLE'.
+	self assert: (props at: #sql) equals: self tableCreationScript 
 ]
 
 { #category : #'tests - sample' }
