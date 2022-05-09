@@ -33,13 +33,10 @@ SQLite3Database class >> on: aFilename [
 { #category : #accessing }
 SQLite3Database class >> tableInfoFor: aFileName [
 	
-	| db result |
+	| db |
 	db := self on: aFileName.
-	db connection open.
-	 
- 	result := db tables collect: [:each | each name -> each numberOfRows ].
-	db connection close.
-	^result
+	db connection open.	 
+	^ db tables
 ]
 
 { #category : #accessing }
