@@ -49,6 +49,6 @@ SQLite3Connection >> execute: anSQLText with: aCollection [
 SQLite3Connection >> execute: anSQLText with: aCollection doing: aBlock [
 	| cursor |
 	cursor := self execute: anSQLText with: aCollection.
-	[aBlock value: cursor]
-		ensure: [ cursor finalizeStatement ]
+	^ [aBlock value: cursor]
+			ensure: [ cursor finalizeStatement ]
 ]
