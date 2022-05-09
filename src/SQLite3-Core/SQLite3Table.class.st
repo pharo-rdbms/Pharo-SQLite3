@@ -84,3 +84,9 @@ SQLite3Table >> rows [
 			LIMIT 1000;'
 		  doing: [ :result | result rows collect: [ :each | each ] ]
 ]
+
+{ #category : #accessing }
+SQLite3Table >> schema [
+
+	^ self properties at: #sql ifAbsent: ''
+]

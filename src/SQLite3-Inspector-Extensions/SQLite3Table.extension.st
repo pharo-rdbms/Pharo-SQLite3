@@ -43,9 +43,3 @@ SQLite3Table >> inspectionSQLite3TableProperties [
 		addColumn: (SpStringTableColumn title: 'Value' evaluated: [ :assoc | assoc value ]);	
 		yourself
 ]
-
-{ #category : #'*SQLite3-Inspector-Extensions' }
-SQLite3Table >> schema [
-
-	^ self properties at: #sql ifAbsent: ''
-]
