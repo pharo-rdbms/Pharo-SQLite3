@@ -16,6 +16,12 @@ Class {
 	#category : #'SQLite3-Core-Connections'
 }
 
+{ #category : #testing }
+SQLite3BaseConnection class >> isAbstract [
+
+	^ self == SQLite3BaseConnection
+]
+
 { #category : #'instance creation' }
 SQLite3BaseConnection class >> libraryVersion [
 	"Native Library Version http://sqlite.org/c3ref/libversion.html sqlite3_libversion"
