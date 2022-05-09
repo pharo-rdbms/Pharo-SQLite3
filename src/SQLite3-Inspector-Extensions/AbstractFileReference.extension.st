@@ -1,7 +1,7 @@
 Extension { #name : #AbstractFileReference }
 
 { #category : #'*SQLite3-Inspector-Extensions' }
-AbstractFileReference >> inspectionSQlite3 [
+AbstractFileReference >> inspectionSQLite3 [
 	<inspectorPresentationOrder: 40 title: 'SQlite3'>
 	
 	^ SpTablePresenter new
@@ -11,7 +11,7 @@ AbstractFileReference >> inspectionSQlite3 [
 ]
 
 { #category : #'*SQLite3-Inspector-Extensions' }
-AbstractFileReference >> inspectionSQlite3Context: aContext [
+AbstractFileReference >> inspectionSQLite3Context: aContext [
 
 	
 	^ aContext active: self isSQlite3Database
