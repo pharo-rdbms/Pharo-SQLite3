@@ -782,6 +782,7 @@ SQLite3Library >> step: aStatementHandle [
 { #category : #stepping }
 SQLite3Library >> threadsafe [
 	"http://sqlite.org/c3ref/threadsafe.html"
+	
 	^self apiThreadsafe 
 	
 

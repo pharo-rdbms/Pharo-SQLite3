@@ -48,7 +48,8 @@ SQLite3BaseConnection class >> openOn: aFilename [
 { #category : #'instance creation' }
 SQLite3BaseConnection class >> threadsafe [
 	"Native Library Version http://sqlite.org/c3ref/libversion.html sqlite3_libversion"
-	^SQLite3Library current threadsafe != 0 
+	
+	^SQLite3Library current threadsafe ~= 0 
 ]
 
 { #category : #'public API - backups' }
