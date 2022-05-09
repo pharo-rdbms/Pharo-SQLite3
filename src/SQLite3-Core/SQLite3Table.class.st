@@ -20,6 +20,14 @@ SQLite3Table class >> properties: aDictionary in: aDatabase [
 ]
 
 { #category : #accessing }
+SQLite3Table >> columnNames [
+
+	^ self database
+		execute: 'SELECT * FROM ', self name , ';'
+		doing: [:result | result next columnNames ]
+]
+
+{ #category : #accessing }
 SQLite3Table >> database [
 
 	^ database
@@ -38,10 +46,11 @@ SQLite3Table >> name [
 ]
 
 { #category : #accessing }
-SQLite3Table >> numberOfRows [ 
+SQLite3Table >> numberOfRows [
+
 	^ self database
 		execute: 'SELECT COUNT(*) FROM ', self name , ';'
-		doing: [ :each | each next at: 1 ]
+		doing: [:result | result next at: 1 ]
 ]
 
 { #category : #printing }
