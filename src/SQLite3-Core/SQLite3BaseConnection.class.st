@@ -22,11 +22,11 @@ SQLite3BaseConnection class >> isAbstract [
 	^ self == SQLite3BaseConnection
 ]
 
-{ #category : #'instance creation' }
+{ #category : #accessing }
 SQLite3BaseConnection class >> libraryVersion [
 	"Native Library Version http://sqlite.org/c3ref/libversion.html sqlite3_libversion"
 	
-	^ SQLite3Library current apiLibVersion 
+	^ SQLite3Library current libraryVersion
 ]
 
 { #category : #examples }

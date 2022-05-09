@@ -659,6 +659,7 @@ SQLite3Library >> library [
 { #category : #accessing }
 SQLite3Library >> libraryVersion [
 	"See http://sqlite.org/c3ref/libversion.html"
+	
 	^self apiLibVersion 
 ]
 
