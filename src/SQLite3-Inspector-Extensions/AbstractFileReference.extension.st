@@ -2,9 +2,10 @@ Extension { #name : #AbstractFileReference }
 
 { #category : #'*SQLite3-Inspector-Extensions' }
 AbstractFileReference >> inspectionSQLite3 [
-	<inspectorPresentationOrder: 40 title: 'SQlite3'>
-	
+	<inspectorPresentationOrder: 40 title: 'SQLite3: Tables'>
+ 
 	^ SpTablePresenter new
+		items: (SQLite3Database tableInfoFor: self fullName);
 		addColumn: (SpStringTableColumn title: 'Table Name' evaluated: [ :assoc | assoc key ]);
 		addColumn: (SpStringTableColumn title: 'Number of Rows' evaluated: [ :assoc | assoc value ]);	
 		yourself
@@ -12,7 +13,6 @@ AbstractFileReference >> inspectionSQLite3 [
 
 { #category : #'*SQLite3-Inspector-Extensions' }
 AbstractFileReference >> inspectionSQLite3Context: aContext [
-
 	
 	^ aContext active: self isSQlite3Database
 ]
