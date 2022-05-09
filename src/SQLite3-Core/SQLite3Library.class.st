@@ -645,6 +645,14 @@ SQLite3Library >> integerFrom: aStatement at: aColumn [
 	^ self apiColumnInt: aStatement atColumn: aColumn
 ]
 
+{ #category : #testing }
+SQLite3Library >> isThreadsafe [
+	"http://sqlite.org/c3ref/threadsafe.html"
+	
+	^ self apiThreadsafe 
+	
+]
+
 { #category : #accessing }
 SQLite3Library >> lastInsertRowId: dbHandle [
 
@@ -780,13 +788,13 @@ SQLite3Library >> step: aStatementHandle [
 
 ]
 
-{ #category : #stepping }
+{ #category : #testing }
 SQLite3Library >> threadsafe [
-	"http://sqlite.org/c3ref/threadsafe.html"
-	
-	^self apiThreadsafe 
-	
-
+	"This method is deprecated so consider to migrate."
+	self deprecated:  'Please use #isThreadsafe instead' transformWith:  '`@receiver threadsafe' 
+						-> '`@receiver isThreadsafe'.
+						
+	^ self isThreadsafe 
 ]
 
 { #category : #introspection }
