@@ -25,7 +25,8 @@ SQLite3BaseConnection class >> isAbstract [
 { #category : #'instance creation' }
 SQLite3BaseConnection class >> libraryVersion [
 	"Native Library Version http://sqlite.org/c3ref/libversion.html sqlite3_libversion"
-	^SQLite3Library current apiLibVersion 
+	
+	^ SQLite3Library current apiLibVersion 
 ]
 
 { #category : #examples }
@@ -57,7 +58,7 @@ SQLite3BaseConnection class >> openOn: aFilename [
 SQLite3BaseConnection class >> threadsafe [
 	"Native Library Version http://sqlite.org/c3ref/libversion.html sqlite3_libversion"
 	
-	^SQLite3Library current threadsafe ~= 0 
+	^ SQLite3Library current threadsafe ~= 0 
 ]
 
 { #category : #'public API - backups' }
