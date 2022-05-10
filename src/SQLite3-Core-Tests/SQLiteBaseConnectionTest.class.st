@@ -551,6 +551,12 @@ SQLiteBaseConnectionTest >> testIsAbstract [
 	self assert: SQLite3BaseConnection isAbstract 
 ]
 
+{ #category : #tests }
+SQLiteBaseConnectionTest >> testIsThreadsafe [
+
+	self assert: (SQLite3BaseConnection isThreadsafe isKindOf: Boolean)
+]
+
 { #category : #'tests - multilingual' }
 SQLiteBaseConnectionTest >> testMultilingualStrings [
 	| data s idx | 
