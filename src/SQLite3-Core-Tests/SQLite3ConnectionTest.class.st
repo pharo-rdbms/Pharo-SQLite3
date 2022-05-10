@@ -50,7 +50,7 @@ SQLite3ConnectionTest >> tearDown [
 	
 	[ db close ] on: SQLite3Misuse do: [ ].
 	[ target ifNotNil:[target close] ] on: SQLite3Misuse do: [ ].
-	super tearDown.
+	super tearDown
 ]
 
 { #category : #tests }
