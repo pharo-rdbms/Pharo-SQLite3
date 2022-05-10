@@ -545,6 +545,12 @@ SQLiteBaseConnectionTest >> testInteger [
 	s finalize
 ]
 
+{ #category : #tests }
+SQLiteBaseConnectionTest >> testIsAbstract [ 
+
+	self assert: SQLite3BaseConnection isAbstract 
+]
+
 { #category : #'tests - multilingual' }
 SQLiteBaseConnectionTest >> testMultilingualStrings [
 	| data s idx | 
