@@ -59,3 +59,10 @@ SQLite3ColumnTest >> testPrintString [
 	self assert: firstColumn printString equals: 'a SQLite3Column("ID")'.
 	self assert: secondColumn printString equals: 'a SQLite3Column("NAME")'	
 ]
+
+{ #category : #tests }
+SQLite3ColumnTest >> testType [
+	
+	self assert: firstColumn type equals: 'INTEGER'.
+	self assert: secondColumn type equals: 'NVARCHAR(120)' 
+]
