@@ -53,6 +53,12 @@ SQLite3TableTest >> testSampleTable [
 ]
 
 { #category : #'tests - sample' }
+SQLite3TableTest >> testSampleTableColumnNames [
+
+	self assert: table columnNames size equals: 2
+]
+
+{ #category : #'tests - sample' }
 SQLite3TableTest >> testSampleTableProperties [
 	|props|
 	props := table properties.

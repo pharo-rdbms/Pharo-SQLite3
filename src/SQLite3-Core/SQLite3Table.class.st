@@ -22,9 +22,16 @@ SQLite3Table class >> properties: aDictionary in: aDatabase [
 { #category : #accessing }
 SQLite3Table >> columnNames [
 
+	^ self columns collect: [:each | each name ]
+]
+
+{ #category : #accessing }
+SQLite3Table >> columns [
 	^ self database
-		execute: 'SELECT * FROM ', self name , ';'
-		doing: [:result | result next columnNames ]
+		execute: 'pragma table_info(', self name , ');'
+		doing: [:result | 
+			result rows collect: [ :each |SQLite3Column readFromTableInfoResult: each ]]
+			
 ]
 
 { #category : #accessing }
