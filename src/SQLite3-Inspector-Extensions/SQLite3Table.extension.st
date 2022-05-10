@@ -7,7 +7,8 @@ SQLite3Table >> inspectionSQLite3Columns [
 	^ SpTablePresenter new
 		items: self columns;
 		addColumn: (SpStringTableColumn title: 'Column Name' evaluated: [ :each | each name ]);	
-		addColumn: (SpStringTableColumn title: 'Column Type' evaluated: [ :each | each type ]);			
+		addColumn: (SpStringTableColumn title: 'Column Type' evaluated: [ :each | each type ]);
+		addColumn: (SpStringTableColumn title: 'Non-empty values' evaluated: [ :each | each hasNotNullConstraint ifTrue: 'NOT NULL' ifFalse: '' ]);				
 		yourself
 ]
 
