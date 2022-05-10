@@ -5,8 +5,9 @@ SQLite3Table >> inspectionSQLite3Columns [
 	<inspectorPresentationOrder: 13 title: 'SQLite3 - Columns'>
 	 
 	^ SpTablePresenter new
-		items: self columnNames;
-		addColumn: (SpStringTableColumn title: 'Column Name' evaluated: [ :each | each asString ]);		 
+		items: self columns;
+		addColumn: (SpStringTableColumn title: 'Column Name' evaluated: [ :each | each name ]);	
+		addColumn: (SpStringTableColumn title: 'Column Type' evaluated: [ :each | each type ]);			
 		yourself
 ]
 
