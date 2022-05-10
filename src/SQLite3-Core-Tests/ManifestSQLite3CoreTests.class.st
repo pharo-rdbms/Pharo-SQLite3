@@ -9,7 +9,7 @@ Class {
 
 { #category : #'code-critics' }
 ManifestSQLite3CoreTests class >> ruleEmptyExceptionHandlerRuleV1FalsePositive [
-	^ #(#(#(#RGMethodDefinition #(#SQLite3ConnectionTest #tearDown #false)) #'2022-05-10T08:25:11.111+02:00') )
+	^ #(#(#(#RGMethodDefinition #(#SQLite3ConnectionTest #tearDown #false)) #'2022-05-10T08:25:11.111+02:00') #(#(#RGMethodDefinition #(#SQLite3BaseConnectionTest #tearDown #false)) #'2022-05-10T08:27:13.419+02:00') )
 ]
 
 { #category : #'code-critics' }

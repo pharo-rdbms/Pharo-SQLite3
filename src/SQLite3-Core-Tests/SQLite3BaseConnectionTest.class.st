@@ -98,7 +98,7 @@ SQLite3BaseConnectionTest >> setUp [
 SQLite3BaseConnectionTest >> tearDown [
 	
 	[ db close ] on: SQLite3Misuse do: [ ].
-	super tearDown.
+	super tearDown
 
 ]
 
