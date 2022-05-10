@@ -59,29 +59,30 @@ SQLite3BaseConnectionTest >> invalidFileNameOnCurrentOperatingSystem [
 
 { #category : #tests }
 SQLite3BaseConnectionTest >> noTestColumnNamesBobbyGo [
+
 	"In this test, Bobby Tables strikes naive SQL string construction."
+
 	"20190302, pierce: #basicExecute: uses prepare/step/finalize internally and is no longer susceptible to injection attacks. "
+
 	| tables bobby |
-	
 	res := db basicExecute: 'create table x (xk integer, xv integer);'.
-	self assert: (res = 0).
-	res := db basicExecute: 'create table students (sk integer, sname varchar);'.
-	self assert: (res = 0).
+	self assert: res equals: 0.
+	res := db basicExecute:
+		       'create table students (sk integer, sname varchar);'.
+	self assert: res equals: 0.
 
 	tables := db tableNames.
-	self assert: (tables size = 2).
-	self assert: (tables first = 'x').	
-	self assert: (tables second = 'students').	
+	self assert: tables size equals: 2.
+	self assert: tables first equals: 'x'.
+	self assert: tables second equals: 'students'.
 
-	bobby := 'x); drop table students; --'.	
-	res := db basicExecute: 'pragma table_info(', bobby, ')'.
-	self assert: (res = 0).
+	bobby := 'x); drop table students; --'.
+	res := db basicExecute: 'pragma table_info(' , bobby , ')'.
+	self assert: res equals: 0.
 
 	tables := db tableNames.
-	self assert: (tables size = 1).
-	self assert: (tables first = 'x').	
-
-
+	self assert: tables size equals: 1.
+	self assert: tables first equals: 'x'
 ]
 
 { #category : #running }
