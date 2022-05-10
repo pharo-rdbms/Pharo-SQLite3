@@ -46,6 +46,12 @@ SQLite3TableTest >> testName [
 	self assert: instance name equals: 'SimpleTable'
 ]
 
+{ #category : #tests }
+SQLite3TableTest >> testPrintString [
+
+	self assert: table printString equals: 'a SQLite3Table("SAMPLE")'
+]
+
 { #category : #'tests - sample' }
 SQLite3TableTest >> testSampleTable [
 
@@ -56,6 +62,12 @@ SQLite3TableTest >> testSampleTable [
 SQLite3TableTest >> testSampleTableColumnNames [
 
 	self assert: table columnNames size equals: 2
+]
+
+{ #category : #'tests - sample' }
+SQLite3TableTest >> testSampleTableColumns [
+
+	self assert: table columns size equals: 2
 ]
 
 { #category : #'tests - sample' }
