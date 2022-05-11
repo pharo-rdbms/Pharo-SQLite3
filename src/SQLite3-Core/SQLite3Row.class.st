@@ -9,7 +9,7 @@ Class {
 		'values',
 		'columnNames'
 	],
-	#category : #'SQLite3-Core-Database'
+	#category : #'SQLite3-Core-Base'
 }
 
 { #category : #'instance creation' }
