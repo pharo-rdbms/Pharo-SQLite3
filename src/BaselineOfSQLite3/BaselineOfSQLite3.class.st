@@ -28,9 +28,6 @@ BaselineOfSQLite3 >> baseline: spec [
 				package: 'SQLite3-Glorp' with: [ spec requires: #('Core' 'Glorp-Core') ];
 				group: 'glorp' with: 'SQLite3-Glorp';
 				
-				package: 'SQLite3-Inspector-Extensions' with: [ spec requires: #('Core') ];
-				group: 'Tools' with: 'SQLite3-Inspector-Extensions';
-				
 				package: 'SQLite3-Glorp-Tests' with: [ spec requires: #('SQLite3-Glorp' 'Glorp-Tests') ].
 
 			spec
@@ -70,8 +67,14 @@ BaselineOfSQLite3 >> versionSpecificBaseline: spec [
 		spec
 			package: 'SQLite3-Pharo9';
 			group: 'Core' with: 'SQLite3-Pharo9' ].
+	
 	spec for: #'pharo10.x' do: [ 
 		spec
 			package: 'SQLite3-Pharo10';
-			group: 'Core' with: 'SQLite3-Pharo10' ]
+			group: 'Core' with: 'SQLite3-Pharo10'.
+			
+		spec 
+			package: 'SQLite3-Inspector-Extensions' with: [ spec requires: #('Core') ];
+			group: 'Tools' with: 'SQLite3-Inspector-Extensions'	
+	]
 ]
