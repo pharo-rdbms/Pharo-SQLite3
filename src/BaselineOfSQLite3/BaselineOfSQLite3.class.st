@@ -28,8 +28,8 @@ BaselineOfSQLite3 >> baseline: spec [
 				package: 'SQLite3-Glorp' with: [ spec requires: #('Core' 'Glorp-Core') ];
 				group: 'glorp' with: 'SQLite3-Glorp';
 				
-				package: 'SQLite3-Glorp-Tests' with: [ spec requires: #('SQLite3-Glorp' 'Glorp-Tests');
-				group: 'Tools' with: #()	 ].
+				package: 'SQLite3-Glorp-Tests' with: [ spec requires: #('SQLite3-Glorp' 'Glorp-Tests')  ];
+				group: 'Tools' with: #().
 
 			spec
 				group: 'CI' with: #('SQLite3-Glorp-Tests' 'Tests');
