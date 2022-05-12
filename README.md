@@ -68,6 +68,11 @@ Contributors in order of appearance:
 - Guillermo Polito
 - Esteban Maringolo
 - Julien Deplangue
+- Todd Blanchard
+- Renaud de Villemeur
+- vonbecmann
+- Gabriel Omar Cotelli
+- Konrad Hinsen
 
 ## LICENSE
 [MIT License](LICENSE)
