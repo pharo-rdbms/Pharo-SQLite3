@@ -30,6 +30,14 @@ SQLite3Database class >> on: aFilename [
 	^ self forConnection: (SQLite3Connection on: aFilename)
 ]
 
+{ #category : #'instance creation' }
+SQLite3Database class >> openOn: aFilename [
+
+	^ (self on: aFilename)
+			open;
+			yourself
+]
+
 { #category : #accessing }
 SQLite3Database class >> tableInfoFor: aFileName [
 	
@@ -37,6 +45,12 @@ SQLite3Database class >> tableInfoFor: aFileName [
 	db := self on: aFileName.
 	db connection open.	 
 	^ db tables
+]
+
+{ #category : #'open/close' }
+SQLite3Database >> close [
+
+	^ self connection close
 ]
 
 { #category : #accessing }
@@ -55,6 +69,12 @@ SQLite3Database >> execute: anSQLStatement doing: aBlock [
 SQLite3Database >> initConnection: aConnection [
 
 	connection := aConnection 
+]
+
+{ #category : #'open/close' }
+SQLite3Database >> open [
+
+	^ self connection open
 ]
 
 { #category : #printing }
