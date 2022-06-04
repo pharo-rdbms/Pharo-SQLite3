@@ -645,6 +645,14 @@ SQLite3Library >> integerFrom: aStatement at: aColumn [
 	^ self apiColumnInt: aStatement atColumn: aColumn
 ]
 
+{ #category : #testing }
+SQLite3Library >> isThreadsafe [
+	"http://sqlite.org/c3ref/threadsafe.html"
+	
+	^ self apiThreadsafe 
+	
+]
+
 { #category : #accessing }
 SQLite3Library >> lastInsertRowId: dbHandle [
 
@@ -659,6 +667,7 @@ SQLite3Library >> library [
 { #category : #accessing }
 SQLite3Library >> libraryVersion [
 	"See http://sqlite.org/c3ref/libversion.html"
+	
 	^self apiLibVersion 
 ]
 
@@ -676,7 +685,7 @@ SQLite3Library >> loadExtension: dbHandle with: aFilename [
 SQLite3Library >> macLibraryName [
 	| pluginDir |
 	pluginDir := FileSystem /'usr'/'lib'.
-	#('libsqlite3.dylib' 'libsqlite3.0.dylib')
+	#('libsqlite3.dylib' 'libsqlite3.0.dylib' 'sqlite3/libtclsqlite3.dylib')
 		detect: [ :each | (pluginDir / each) exists ] 
 		ifFound: [ :libName | ^ (pluginDir / libName) fullName  ].
 
@@ -779,12 +788,13 @@ SQLite3Library >> step: aStatementHandle [
 
 ]
 
-{ #category : #stepping }
+{ #category : #testing }
 SQLite3Library >> threadsafe [
-	"http://sqlite.org/c3ref/threadsafe.html"
-	^self apiThreadsafe 
-	
-
+	"This method is deprecated so consider to migrate."
+	self deprecated:  'Please use #isThreadsafe instead' transformWith:  '`@receiver threadsafe' 
+						-> '`@receiver isThreadsafe'.
+						
+	^ self isThreadsafe 
 ]
 
 { #category : #introspection }

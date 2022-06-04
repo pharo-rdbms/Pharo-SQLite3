@@ -96,7 +96,7 @@ SQLite3Cursor >> nextOfClass: aRowClass [
 				ifFalse: [ | msgs |
 					"custom object"
 					msgs := self mutators.
-					1 to: msgs count do: [ :c | 
+					1 to: msgs size do: [ :c | 
 						(rr respondsTo: (msgs at: c))
 							ifTrue: [ rr perform: (msgs at: c) with: (statement valueOfColumn: c - 1) ] ] 
 						].

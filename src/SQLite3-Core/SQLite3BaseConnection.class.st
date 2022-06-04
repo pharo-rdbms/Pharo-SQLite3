@@ -1,5 +1,7 @@
 "
 I represent a connection to an SQLite database. I provide a thin wrapper over the SQLite C API.
+
+Do not use this class directly, please check and use my subclass SQLite3Connection
 "
 Class {
 	#name : #SQLite3BaseConnection,
@@ -14,16 +16,30 @@ Class {
 	#category : #'SQLite3-Core-Connections'
 }
 
-{ #category : #'instance creation' }
+{ #category : #testing }
+SQLite3BaseConnection class >> isAbstract [
+
+	^ self == SQLite3BaseConnection
+]
+
+{ #category : #testing }
+SQLite3BaseConnection class >> isThreadsafe [
+	"Native Library Version http://sqlite.org/c3ref/libversion.html sqlite3_libversion"
+	
+	^ SQLite3Library current isThreadsafe ~= 0 
+]
+
+{ #category : #accessing }
 SQLite3BaseConnection class >> libraryVersion [
 	"Native Library Version http://sqlite.org/c3ref/libversion.html sqlite3_libversion"
-	^SQLite3Library current apiLibVersion 
+	
+	^ SQLite3Library current libraryVersion
 ]
 
 { #category : #examples }
 SQLite3BaseConnection class >> memory [
 
-	^self on: ':memory:'
+	^ self on: ':memory:'
 ]
 
 { #category : #'instance creation' }
@@ -45,10 +61,13 @@ SQLite3BaseConnection class >> openOn: aFilename [
 
 ]
 
-{ #category : #'instance creation' }
-SQLite3BaseConnection class >> threadsafe [
-	"Native Library Version http://sqlite.org/c3ref/libversion.html sqlite3_libversion"
-	^SQLite3Library current threadsafe != 0 
+{ #category : #testing }
+SQLite3BaseConnection class >> threadsafe [		
+	"This method is deprecated so consider to migrate."
+	self deprecated:  'Please use #isThreadsafe instead' transformWith:  '`@receiver threadsafe' 
+						-> '`@receiver isThreadsafe'.
+						
+	^ self isThreadsafe 
 ]
 
 { #category : #'public API - backups' }
