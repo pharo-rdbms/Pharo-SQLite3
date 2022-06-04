@@ -213,9 +213,9 @@ SQLite3Library >> apiClearBindings: aStatement [
 
 { #category : #'private - api' }
 SQLite3Library >> apiClose: handle [
-	"int sqlite3_close(sqlite3*)"
+	"int sqlite3_close_v2(sqlite3*)"
 	 
-	^self ffiCall: #(int sqlite3_close(sqlite3 *handle)) 
+	^self ffiCall: #(int sqlite3_close_v2(sqlite3 *handle)) 
 	 
 ]
 
