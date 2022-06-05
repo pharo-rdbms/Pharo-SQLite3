@@ -8,7 +8,8 @@ Class {
 		'connection',
 		'handle',
 		'changes',
-		'columnNames'
+		'columnNames',
+		'bindings'
 	],
 	#pools : [
 		'SQLite3Constants'
@@ -36,18 +37,23 @@ SQLite3PreparedStatement >> at: aColumn putByteArray: anObject [
 SQLite3PreparedStatement >> at: aColumn putDate: aDate [
 
 	| string |
-
-	string := SQLite3DateTimeString
-		streamContents: [ :stream | BasicDatePrinter new printDate: aDate format: #() on: stream ].
-	^ self library with: handle at: aColumn putString: string
+	string := self bindingAt: aDate ifAbsentPut: [ 
+		          SQLite3DateTimeString streamContents: [ :stream | 
+			          BasicDatePrinter new
+				          printDate: aDate
+				          format: #(  )
+				          on: stream ] ].
+	^ self library with: handle at: aColumn putText: string
 ]
 
 { #category : #bindings }
 SQLite3PreparedStatement >> at: aColumn putDateTime: aDateTime [
+
 	| s |
-	
-	s := SQLite3DateTimeString streamContents: [ :stream | aDateTime asDateAndTime printOn: stream ].
-	^ self library with: handle at: aColumn putString: s
+	s := self bindingAt: aDateTime ifAbsentPut: [ 
+		     SQLite3DateTimeString streamContents: [ :stream | 
+			     aDateTime asDateAndTime printOn: stream ] ].
+	^ self library with: handle at: aColumn putText: s
 ]
 
 { #category : #bindings }
@@ -80,16 +86,21 @@ SQLite3PreparedStatement >> at: aColumn putObject: anObject [
 
 { #category : #bindings }
 SQLite3PreparedStatement >> at: aColumn putString: aString [
-	^ self library with: handle at: aColumn putString: aString
+
+	| s |
+	s := self bindingAt: aString
+		     ifAbsentPut: [ self library pharoStringToUTF8: aString ].
+	^ self library with: handle at: aColumn putText: s
 ]
 
 { #category : #bindings }
 SQLite3PreparedStatement >> at: aColumn putTime: aTime [
 
 	| string |
-
-	string := SQLite3DateTimeString streamContents: [ :stream | aTime printOn: stream ].
-	^ self library with: handle at: aColumn putString: string
+	string := self bindingAt: aTime ifAbsentPut: [ 
+		          SQLite3DateTimeString streamContents: [ :stream | 
+			          aTime printOn: stream ] ].
+	^ self library with: handle at: aColumn putText: string
 ]
 
 { #category : #public }
@@ -148,6 +159,11 @@ Parameters that are not assigned values using sqlite3_bind() are treated as NULL
 				ifTrue: [ self perform: (self dataTypeForObject: v) with: idx with: v ] ]
 ]
 
+{ #category : #bindings }
+SQLite3PreparedStatement >> bindingAt: anObject ifAbsentPut: aBlock [
+	^bindings at: anObject ifAbsentPut: aBlock
+]
+
 { #category : #fetching }
 SQLite3PreparedStatement >> booleanAt: aColumn [ 
 	^self library booleanFrom: handle at: aColumn
@@ -182,9 +198,12 @@ SQLite3PreparedStatement >> checkOk: aValue [
 ]
 
 { #category : #bindings }
-SQLite3PreparedStatement >> clearBindings [ 
+SQLite3PreparedStatement >> clearBindings [
 
-	^self library clearBindings: handle on: connection handle
+	| cleared |
+	cleared := self library clearBindings: handle on: connection handle.
+	bindings removeAll.
+	^cleared
 ]
 
 { #category : #public }
@@ -302,6 +321,7 @@ SQLite3PreparedStatement >> handle [
 SQLite3PreparedStatement >> initialize [
 
 	super initialize.
+	bindings := IdentityDictionary new.
 	handle := SQLite3StatementExternalObject new.
 	handle autoRelease
 ]
