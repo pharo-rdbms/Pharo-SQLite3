@@ -289,15 +289,15 @@ SQLite3PreparedStatement >> dbHandle [
 ]
 
 { #category : #operating }
-SQLite3PreparedStatement >> execute: bindings [ 
+SQLite3PreparedStatement >> execute: parameters [
 
 	| result |
 	self checkOk: self reset.
 	self clearBindings.
-	self bindParameters: bindings. 
+	self bindParameters: parameters.
 	result := self step.
 	changes := connection changes.
-	^SQLite3Cursor on: self
+	^ SQLite3Cursor on: self
 ]
 
 { #category : #initialization }
