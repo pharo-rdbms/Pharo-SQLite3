@@ -136,7 +136,8 @@ SQLite3PreparedStatement >> bindParameterIndex: aName [
 ]
 
 { #category : #bindings }
-SQLite3PreparedStatement >> bindParameters: bindings [
+SQLite3PreparedStatement >> bindParameters: parameters [
+
 	"A 'variable' or 'parameter' token specifies a placeholder in the expression for a value that is filled in at runtime using the sqlite3_bind() family of C/C++ interfaces. Parameters can take several forms:
 
 ?NNN		A question mark followed by a number NNN holds a spot for the NNN-th parameter. NNN must be between 1 and SQLITE_MAX_VARIABLE_NUMBER.
@@ -146,26 +147,22 @@ SQLite3PreparedStatement >> bindParameters: bindings [
 $AAAA		A dollar-sign followed by an identifier name also holds a spot for a named parameter with the name $AAAA. The identifier name in this case can include one or more occurrences of '::' and a suffix enclosed in '(...)' containing any text at all. This syntax is the form of a variable name in the Tcl programming language. The presence of this syntax results from the fact that SQLite is really a Tcl extension that has escaped into the wild.
 Parameters that are not assigned values using sqlite3_bind() are treated as NULL. The sqlite3_bind_parameter_index() interface can be used to translate a symbolic parameter name into its equivalent numeric index."
 
-	(bindings isCollection and: [ bindings isString not ])
-		ifFalse: [ SQLite3AbstractError
-				signal: 'Unable to execute SQL on instance of ' , bindings class asString ].
-			
-	bindings
-		keysAndValuesDo: [ :k :v | 
-			| idx |
-			k isInteger
-				ifTrue: [ idx := k ]
-				ifFalse: [ idx := self bindParameterIndex: k.
-					idx = 0
-						ifTrue: [ idx := self bindParameterIndex: '@' , k ].
-					idx = 0
-						ifTrue: [ idx := self bindParameterIndex: ':' , k ].
-					idx = 0
-						ifTrue: [ idx := self bindParameterIndex: '$' , k ].
-					(idx = 0 and: [ k isAllDigits ])
-						ifTrue: [ idx := k asInteger ] ].
-			idx > 0
-				ifTrue: [ self perform: (self dataTypeForObject: v) with: idx with: v ] ]
+	(parameters isCollection and: [ parameters isString not ]) ifFalse: [ 
+		SQLite3AbstractError signal:
+			'Unable to execute SQL on instance of ' , parameters class asString ].
+
+	parameters keysAndValuesDo: [ :k :v | 
+		| idx |
+		k isInteger
+			ifTrue: [ idx := k ]
+			ifFalse: [ 
+				idx := self bindParameterIndex: k.
+				idx = 0 ifTrue: [ idx := self bindParameterIndex: '@' , k ].
+				idx = 0 ifTrue: [ idx := self bindParameterIndex: ':' , k ].
+				idx = 0 ifTrue: [ idx := self bindParameterIndex: '$' , k ].
+				(idx = 0 and: [ k isAllDigits ]) ifTrue: [ idx := k asInteger ] ].
+		idx > 0 ifTrue: [ 
+			self perform: (self dataTypeForObject: v) with: idx with: v ] ]
 ]
 
 { #category : #bindings }
