@@ -30,7 +30,10 @@ SQLite3PreparedStatement >> at: aColumn putBoolean: aBoolean [
 
 { #category : #bindings }
 SQLite3PreparedStatement >> at: aColumn putByteArray: anObject [
-	^ self library with: handle at: aColumn putBlob: anObject
+
+	| byteArray |
+	byteArray := self bindingAt: anObject ifAbsentPut: [ anObject ].
+	^ self library with: handle at: aColumn putBlob: byteArray
 ]
 
 { #category : #bindings }
@@ -81,7 +84,13 @@ SQLite3PreparedStatement >> at: aColumn putNil: anObject [
 
 { #category : #bindings }
 SQLite3PreparedStatement >> at: aColumn putObject: anObject [
-	^ self library with: handle at: aColumn putBlob: (FLSerializer serializeToByteArray: anObject)
+
+	| blob |
+	blob := self bindingAt: anObject ifAbsentPut: [ FLSerializer serializeToByteArray: anObject ].
+	^ self library
+		  with: handle
+		  at: aColumn
+		  putBlob: blob
 ]
 
 { #category : #bindings }

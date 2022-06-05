@@ -883,7 +883,13 @@ SQLite3Library >> win32ModuleName [
 
 { #category : #operating }
 SQLite3Library >> with: aStatement at: aColumn putBlob: aByteArray [
-	^ self apiBindBlob: aStatement atColumn: aColumn with: aByteArray with: aByteArray size with: -1 
+
+	^ self
+		  apiBindBlob: aStatement
+		  atColumn: aColumn
+		  with: aByteArray
+		  with: aByteArray size
+		  with: 0
 ]
 
 { #category : #operating }
