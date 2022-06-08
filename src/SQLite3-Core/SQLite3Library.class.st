@@ -186,7 +186,7 @@ SQLite3Library >> apiBindParameterIndex: aStatement for: aName [
 ]
 
 { #category : #'private - api' }
-SQLite3Library >> apiBindString: aStatement atColumn: aColumn with: aString with: anInteger with: anotherInteger [
+SQLite3Library >> apiBindText: aStatement atColumn: aColumn with: aString with: anInteger with: anotherInteger [
 	"int sqlite3_bind_text(sqlite3_stmt*, int, const char*, int, void(*)(void*))"
 	 
 	^ self ffiCall: #(int sqlite3_bind_text (sqlite3_stmt* aStatement, int aColumn, String aString, int anInteger, int anotherInteger))
@@ -883,7 +883,13 @@ SQLite3Library >> win32ModuleName [
 
 { #category : #operating }
 SQLite3Library >> with: aStatement at: aColumn putBlob: aByteArray [
-	^ self apiBindBlob: aStatement atColumn: aColumn with: aByteArray with: aByteArray size with: -1 
+
+	^ self
+		  apiBindBlob: aStatement
+		  atColumn: aColumn
+		  with: aByteArray
+		  with: aByteArray size
+		  with: 0
 ]
 
 { #category : #operating }
@@ -897,11 +903,9 @@ SQLite3Library >> with: aStatement at: aColumn putInteger: anInteger [
 ]
 
 { #category : #operating }
-SQLite3Library >> with: aStatement at: aColumn putString: aString [
-	| s |
-	
-	s := self pharoStringToUTF8: aString.
-	^self apiBindString: aStatement atColumn: aColumn with: s with: s size with: -1 
+SQLite3Library >> with: aStatement at: aColumn putText: aByteArray [
+
+	^self apiBindText: aStatement atColumn: aColumn with: aByteArray with: aByteArray size with: 0 
 ]
 
 { #category : #operating }

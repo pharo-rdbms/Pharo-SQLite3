@@ -8,7 +8,8 @@ Class {
 		'connection',
 		'handle',
 		'changes',
-		'columnNames'
+		'columnNames',
+		'bindings'
 	],
 	#pools : [
 		'SQLite3Constants'
@@ -29,25 +30,33 @@ SQLite3PreparedStatement >> at: aColumn putBoolean: aBoolean [
 
 { #category : #bindings }
 SQLite3PreparedStatement >> at: aColumn putByteArray: anObject [
-	^ self library with: handle at: aColumn putBlob: anObject
+
+	| byteArray |
+	byteArray := self bindingAt: anObject ifAbsentPut: [ anObject ].
+	^ self library with: handle at: aColumn putBlob: byteArray
 ]
 
 { #category : #bindings }
 SQLite3PreparedStatement >> at: aColumn putDate: aDate [
 
 	| string |
-
-	string := SQLite3DateTimeString
-		streamContents: [ :stream | BasicDatePrinter new printDate: aDate format: #() on: stream ].
-	^ self library with: handle at: aColumn putString: string
+	string := self bindingAt: aDate ifAbsentPut: [ 
+		          SQLite3DateTimeString streamContents: [ :stream | 
+			          BasicDatePrinter new
+				          printDate: aDate
+				          format: #(  )
+				          on: stream ] ].
+	^ self library with: handle at: aColumn putText: string
 ]
 
 { #category : #bindings }
 SQLite3PreparedStatement >> at: aColumn putDateTime: aDateTime [
+
 	| s |
-	
-	s := SQLite3DateTimeString streamContents: [ :stream | aDateTime asDateAndTime printOn: stream ].
-	^ self library with: handle at: aColumn putString: s
+	s := self bindingAt: aDateTime ifAbsentPut: [ 
+		     SQLite3DateTimeString streamContents: [ :stream | 
+			     aDateTime asDateAndTime printOn: stream ] ].
+	^ self library with: handle at: aColumn putText: s
 ]
 
 { #category : #bindings }
@@ -75,21 +84,32 @@ SQLite3PreparedStatement >> at: aColumn putNil: anObject [
 
 { #category : #bindings }
 SQLite3PreparedStatement >> at: aColumn putObject: anObject [
-	^ self library with: handle at: aColumn putBlob: (FLSerializer serializeToByteArray: anObject)
+
+	| blob |
+	blob := self bindingAt: anObject ifAbsentPut: [ FLSerializer serializeToByteArray: anObject ].
+	^ self library
+		  with: handle
+		  at: aColumn
+		  putBlob: blob
 ]
 
 { #category : #bindings }
 SQLite3PreparedStatement >> at: aColumn putString: aString [
-	^ self library with: handle at: aColumn putString: aString
+
+	| s |
+	s := self bindingAt: aString
+		     ifAbsentPut: [ self library pharoStringToUTF8: aString ].
+	^ self library with: handle at: aColumn putText: s
 ]
 
 { #category : #bindings }
 SQLite3PreparedStatement >> at: aColumn putTime: aTime [
 
 	| string |
-
-	string := SQLite3DateTimeString streamContents: [ :stream | aTime printOn: stream ].
-	^ self library with: handle at: aColumn putString: string
+	string := self bindingAt: aTime ifAbsentPut: [ 
+		          SQLite3DateTimeString streamContents: [ :stream | 
+			          aTime printOn: stream ] ].
+	^ self library with: handle at: aColumn putText: string
 ]
 
 { #category : #public }
@@ -116,7 +136,8 @@ SQLite3PreparedStatement >> bindParameterIndex: aName [
 ]
 
 { #category : #bindings }
-SQLite3PreparedStatement >> bindParameters: bindings [
+SQLite3PreparedStatement >> bindParameters: parameters [
+
 	"A 'variable' or 'parameter' token specifies a placeholder in the expression for a value that is filled in at runtime using the sqlite3_bind() family of C/C++ interfaces. Parameters can take several forms:
 
 ?NNN		A question mark followed by a number NNN holds a spot for the NNN-th parameter. NNN must be between 1 and SQLITE_MAX_VARIABLE_NUMBER.
@@ -126,26 +147,27 @@ SQLite3PreparedStatement >> bindParameters: bindings [
 $AAAA		A dollar-sign followed by an identifier name also holds a spot for a named parameter with the name $AAAA. The identifier name in this case can include one or more occurrences of '::' and a suffix enclosed in '(...)' containing any text at all. This syntax is the form of a variable name in the Tcl programming language. The presence of this syntax results from the fact that SQLite is really a Tcl extension that has escaped into the wild.
 Parameters that are not assigned values using sqlite3_bind() are treated as NULL. The sqlite3_bind_parameter_index() interface can be used to translate a symbolic parameter name into its equivalent numeric index."
 
-	(bindings isCollection and: [ bindings isString not ])
-		ifFalse: [ SQLite3AbstractError
-				signal: 'Unable to execute SQL on instance of ' , bindings class asString ].
-			
-	bindings
-		keysAndValuesDo: [ :k :v | 
-			| idx |
-			k isInteger
-				ifTrue: [ idx := k ]
-				ifFalse: [ idx := self bindParameterIndex: k.
-					idx = 0
-						ifTrue: [ idx := self bindParameterIndex: '@' , k ].
-					idx = 0
-						ifTrue: [ idx := self bindParameterIndex: ':' , k ].
-					idx = 0
-						ifTrue: [ idx := self bindParameterIndex: '$' , k ].
-					(idx = 0 and: [ k isAllDigits ])
-						ifTrue: [ idx := k asInteger ] ].
-			idx > 0
-				ifTrue: [ self perform: (self dataTypeForObject: v) with: idx with: v ] ]
+	(parameters isCollection and: [ parameters isString not ]) ifFalse: [ 
+		SQLite3AbstractError signal:
+			'Unable to execute SQL on instance of ' , parameters class asString ].
+
+	parameters keysAndValuesDo: [ :k :v | 
+		| idx |
+		k isInteger
+			ifTrue: [ idx := k ]
+			ifFalse: [ 
+				idx := self bindParameterIndex: k.
+				idx = 0 ifTrue: [ idx := self bindParameterIndex: '@' , k ].
+				idx = 0 ifTrue: [ idx := self bindParameterIndex: ':' , k ].
+				idx = 0 ifTrue: [ idx := self bindParameterIndex: '$' , k ].
+				(idx = 0 and: [ k isAllDigits ]) ifTrue: [ idx := k asInteger ] ].
+		idx > 0 ifTrue: [ 
+			self perform: (self dataTypeForObject: v) with: idx with: v ] ]
+]
+
+{ #category : #bindings }
+SQLite3PreparedStatement >> bindingAt: anObject ifAbsentPut: aBlock [
+	^bindings at: anObject ifAbsentPut: aBlock
 ]
 
 { #category : #fetching }
@@ -182,9 +204,12 @@ SQLite3PreparedStatement >> checkOk: aValue [
 ]
 
 { #category : #bindings }
-SQLite3PreparedStatement >> clearBindings [ 
+SQLite3PreparedStatement >> clearBindings [
 
-	^self library clearBindings: handle on: connection handle
+	| cleared |
+	cleared := self library clearBindings: handle on: connection handle.
+	bindings removeAll.
+	^cleared
 ]
 
 { #category : #public }
@@ -261,15 +286,15 @@ SQLite3PreparedStatement >> dbHandle [
 ]
 
 { #category : #operating }
-SQLite3PreparedStatement >> execute: bindings [ 
+SQLite3PreparedStatement >> execute: parameters [
 
 	| result |
 	self checkOk: self reset.
 	self clearBindings.
-	self bindParameters: bindings. 
+	self bindParameters: parameters.
 	result := self step.
 	changes := connection changes.
-	^SQLite3Cursor on: self
+	^ SQLite3Cursor on: self
 ]
 
 { #category : #initialization }
@@ -302,6 +327,7 @@ SQLite3PreparedStatement >> handle [
 SQLite3PreparedStatement >> initialize [
 
 	super initialize.
+	bindings := IdentityDictionary new.
 	handle := SQLite3StatementExternalObject new.
 	handle autoRelease
 ]
