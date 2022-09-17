@@ -439,7 +439,7 @@ SQLite3ConnectionTest >> testExecuteWithInsertBooleanNilThenSelect [
 	self assert: res equals: 0.
 
 	rs := db execute: 'insert into x values (NULL, ?)' with: (Array with: nil).
-	self assert: (rs next isNil)..
+	self assert: (rs next isNil).
 	rs close.
 
 	res := db commitTransaction.
