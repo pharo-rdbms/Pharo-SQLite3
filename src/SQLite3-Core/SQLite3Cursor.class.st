@@ -6,7 +6,6 @@ Class {
 	#name : #SQLite3Cursor,
 	#superclass : #Object,
 	#instVars : [
-		'connection',
 		'statement',
 		'moreRows',
 		'rowClass',
