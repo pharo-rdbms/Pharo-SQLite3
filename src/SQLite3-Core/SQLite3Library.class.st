@@ -186,7 +186,7 @@ SQLite3Library >> apiBindParameterIndex: aStatement for: aName [
 ]
 
 { #category : #'private - api' }
-SQLite3Library >> apiBindString: aStatement atColumn: aColumn with: aString with: anInteger with: anotherInteger [
+SQLite3Library >> apiBindText: aStatement atColumn: aColumn with: aString with: anInteger with: anotherInteger [
 	"int sqlite3_bind_text(sqlite3_stmt*, int, const char*, int, void(*)(void*))"
 	 
 	^ self ffiCall: #(int sqlite3_bind_text (sqlite3_stmt* aStatement, int aColumn, String aString, int anInteger, int anotherInteger))
@@ -213,9 +213,9 @@ SQLite3Library >> apiClearBindings: aStatement [
 
 { #category : #'private - api' }
 SQLite3Library >> apiClose: handle [
-	"int sqlite3_close(sqlite3*)"
+	"int sqlite3_close_v2(sqlite3*)"
 	 
-	^self ffiCall: #(int sqlite3_close(sqlite3 *handle)) 
+	^self ffiCall: #(int sqlite3_close_v2(sqlite3 *handle)) 
 	 
 ]
 
@@ -645,6 +645,14 @@ SQLite3Library >> integerFrom: aStatement at: aColumn [
 	^ self apiColumnInt: aStatement atColumn: aColumn
 ]
 
+{ #category : #testing }
+SQLite3Library >> isThreadsafe [
+	"http://sqlite.org/c3ref/threadsafe.html"
+	
+	^ self apiThreadsafe 
+	
+]
+
 { #category : #accessing }
 SQLite3Library >> lastInsertRowId: dbHandle [
 
@@ -659,6 +667,7 @@ SQLite3Library >> library [
 { #category : #accessing }
 SQLite3Library >> libraryVersion [
 	"See http://sqlite.org/c3ref/libversion.html"
+	
 	^self apiLibVersion 
 ]
 
@@ -676,7 +685,7 @@ SQLite3Library >> loadExtension: dbHandle with: aFilename [
 SQLite3Library >> macLibraryName [
 	| pluginDir |
 	pluginDir := FileSystem /'usr'/'lib'.
-	#('libsqlite3.dylib' 'libsqlite3.0.dylib')
+	#('libsqlite3.dylib' 'libsqlite3.0.dylib' 'sqlite3/libtclsqlite3.dylib')
 		detect: [ :each | (pluginDir / each) exists ] 
 		ifFound: [ :libName | ^ (pluginDir / libName) fullName  ].
 
@@ -779,12 +788,13 @@ SQLite3Library >> step: aStatementHandle [
 
 ]
 
-{ #category : #stepping }
+{ #category : #testing }
 SQLite3Library >> threadsafe [
-	"http://sqlite.org/c3ref/threadsafe.html"
-	^self apiThreadsafe 
-	
-
+	"This method is deprecated so consider to migrate."
+	self deprecated:  'Please use #isThreadsafe instead' transformWith:  '`@receiver threadsafe' 
+						-> '`@receiver isThreadsafe'.
+						
+	^ self isThreadsafe 
 ]
 
 { #category : #introspection }
@@ -873,7 +883,13 @@ SQLite3Library >> win32ModuleName [
 
 { #category : #operating }
 SQLite3Library >> with: aStatement at: aColumn putBlob: aByteArray [
-	^ self apiBindBlob: aStatement atColumn: aColumn with: aByteArray with: aByteArray size with: -1 
+
+	^ self
+		  apiBindBlob: aStatement
+		  atColumn: aColumn
+		  with: aByteArray
+		  with: aByteArray size
+		  with: 0
 ]
 
 { #category : #operating }
@@ -887,11 +903,9 @@ SQLite3Library >> with: aStatement at: aColumn putInteger: anInteger [
 ]
 
 { #category : #operating }
-SQLite3Library >> with: aStatement at: aColumn putString: aString [
-	| s |
-	
-	s := self pharoStringToUTF8: aString.
-	^self apiBindString: aStatement atColumn: aColumn with: s with: s size with: -1 
+SQLite3Library >> with: aStatement at: aColumn putText: aByteArray [
+
+	^self apiBindText: aStatement atColumn: aColumn with: aByteArray with: aByteArray size with: 0 
 ]
 
 { #category : #operating }

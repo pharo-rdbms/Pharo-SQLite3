@@ -5,9 +5,6 @@
 [![Coverage Status](https://codecov.io/github/pharo-rdbms/Pharo-SQLite3/coverage.svg?branch=master)](https://codecov.io/gh/pharo-rdbms/Pharo-SQLite3/branch/master)
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Pharo version](https://img.shields.io/badge/Pharo-6.1-%23aac9ff.svg)](https://pharo.org/download)
-[![Pharo version](https://img.shields.io/badge/Pharo-7.0-%23aac9ff.svg)](https://pharo.org/download)
-[![Pharo version](https://img.shields.io/badge/Pharo-8.0-%23aac9ff.svg)](https://pharo.org/download)
 [![Pharo version](https://img.shields.io/badge/Pharo-9.0-%23aac9ff.svg)](https://pharo.org/download)
 [![Pharo 10](https://img.shields.io/badge/Pharo-10-%23aac9ff.svg)](https://pharo.org/download)
 
@@ -71,6 +68,11 @@ Contributors in order of appearance:
 - Guillermo Polito
 - Esteban Maringolo
 - Julien Deplangue
+- Todd Blanchard
+- Renaud de Villemeur
+- vonbecmann
+- Gabriel Omar Cotelli
+- Konrad Hinsen
 - [GitHub contributors](https://github.com/pharo-rdbms/Pharo-SQLite3/graphs/contributors)
 
 ## LICENSE
