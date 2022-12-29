@@ -476,8 +476,8 @@ SQLite3BaseConnectionTest >> testDeclaredColumnTypes [
 	self assert: res equals: 0.
 	columns := db declaredColumnTypesFor: 'x'.
 	self assert: columns size equals: 3.
-	self assert: columns first equals: 'integer'.
-	self assert: columns second equals: 'blob'.
+	self assert: columns first equals: 'INTEGER'.
+	self assert: columns second equals: 'BLOB'.
 	self assert: columns third equals: 'boolean'
 ]
 
