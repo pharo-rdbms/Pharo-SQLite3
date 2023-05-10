@@ -40,23 +40,22 @@ SQLite3PreparedStatement >> at: aColumn putByteArray: anObject [
 SQLite3PreparedStatement >> at: aColumn putDate: aDate [
 
 	| string |
+
 	string := self bindingAt: aDate ifAbsentPut: [ 
-		          SQLite3DateTimeString streamContents: [ :stream | 
-			          BasicDatePrinter new
-				          printDate: aDate
-				          format: #(  )
-				          on: stream ] ].
+		          String streamContents: [ :stream | 
+			          BasicDatePrinter new printDate: aDate format: #(  ) on: stream ] ].
 	^ self library with: handle at: aColumn putText: string
 ]
 
 { #category : #bindings }
 SQLite3PreparedStatement >> at: aColumn putDateTime: aDateTime [
 
-	| s |
-	s := self bindingAt: aDateTime ifAbsentPut: [ 
-		     SQLite3DateTimeString streamContents: [ :stream | 
-			     aDateTime asDateAndTime printOn: stream ] ].
-	^ self library with: handle at: aColumn putText: s
+	| string |
+
+	string := self
+		     bindingAt: aDateTime
+		     ifAbsentPut: [ String streamContents: [ :stream | aDateTime asDateAndTime printOn: stream ] ].
+	^ self library with: handle at: aColumn putText: string
 ]
 
 { #category : #bindings }
@@ -97,8 +96,8 @@ SQLite3PreparedStatement >> at: aColumn putObject: anObject [
 SQLite3PreparedStatement >> at: aColumn putString: aString [
 
 	| s |
-	s := self bindingAt: aString
-		     ifAbsentPut: [ self library pharoStringToUTF8: aString ].
+
+	s := self bindingAt: aString ifAbsentPut: [ aString ].
 	^ self library with: handle at: aColumn putText: s
 ]
 
@@ -106,9 +105,10 @@ SQLite3PreparedStatement >> at: aColumn putString: aString [
 SQLite3PreparedStatement >> at: aColumn putTime: aTime [
 
 	| string |
-	string := self bindingAt: aTime ifAbsentPut: [ 
-		          SQLite3DateTimeString streamContents: [ :stream | 
-			          aTime printOn: stream ] ].
+
+	string := self
+		          bindingAt: aTime
+		          ifAbsentPut: [ String streamContents: [ :stream | aTime printOn: stream ] ].
 	^ self library with: handle at: aColumn putText: string
 ]
 

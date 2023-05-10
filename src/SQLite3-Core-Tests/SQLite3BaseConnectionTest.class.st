@@ -50,6 +50,15 @@ SQLite3BaseConnectionTest >> deactivatedTestTracing [
 	self assert: actual contents equals: expected
 ]
 
+{ #category : #private }
+SQLite3BaseConnectionTest >> executeInDB: anSQLText [
+
+	| result |
+
+	result := db basicExecute: anSQLText.
+	self assert: result equals: 0
+]
+
 { #category : #tests }
 SQLite3BaseConnectionTest >> invalidFileNameOnCurrentOperatingSystem [
 	^Smalltalk os isWindows
@@ -131,40 +140,34 @@ SQLite3BaseConnectionTest >> testBasicExecuteSyntaxError [
 
 { #category : #'tests - types' }
 SQLite3BaseConnectionTest >> testBooleanColumnTypeMismatch [
-	| s | 
-	
-	res := db basicExecute: 'create table x (xk integer primary key, xv notboolean);'.
-	self assert: res equals: 0.
 
-	s := db prepare: 'select xv from x'.
-	s basicExecute: [  :row |
-		self should: [ row booleanAt: 0 ] raise: SQLite3AbstractError ].
-	s finalize.
-	
+	self executeInDB: 'create table x (xk integer primary key, xv notboolean);'.
+
+	self withPreparedStatement: 'select xv from x' do: [ :statement | 
+		statement basicExecute: [ :row | self should: [ row booleanAt: 0 ] raise: SQLite3AbstractError ] ]
 ]
 
 { #category : #'tests - types' }
 SQLite3BaseConnectionTest >> testBooleanObject [
-	| s | 
-	
-	res := db basicExecute: 'create table x (xk integer primary key, xv boolean);'.
-	self assert: res equals: 0.
 
-	res := db basicExecute: 'begin'.
-	self assert: res equals: 0.
-	s := db prepare: 'insert into x values (NULL, ?)'.
-	s at: 1 putObject: true.
-	s step. s finalize.
-	res := db basicExecute: 'commit'.
-	self assert: res equals: 0.
-	
-	s := db prepare: 'select xv from x'.
-	s basicExecute: [  :row |
-		| v |
-		v := row objectAt: 0.
-		self assert: v equals: true ].
-	s finalize.
-	
+	self executeInDB: 'create table x (xk integer primary key, xv boolean);'.
+	self executeInDB: 'begin'.
+
+	self withPreparedStatement: 'insert into x values (NULL, ?)' do: [ :statement | 
+		statement at: 1 putObject: true.
+		statement step
+		].
+
+	self executeInDB: 'commit'.
+
+	self withPreparedStatement: 'select xv from x' do: [ :statement | 
+		statement basicExecute: [ :row | 
+			| value |
+
+			value := row objectAt: 0.
+			self assert: value equals: true
+			]
+		]
 ]
 
 { #category : #'tests - writing' }
@@ -442,30 +445,66 @@ SQLite3BaseConnectionTest >> testDataValuesAvailable [
 ]
 
 { #category : #'tests - types' }
-SQLite3BaseConnectionTest >> testDateAndTime [
-	| data s | 
-	
-	data := DateAndTime year: 2015 month: 4 day: 1.
-	
-	res := db basicExecute: 'create table x (xv datetime);'.
-	self assert: res equals: 0.
+SQLite3BaseConnectionTest >> testDate [
 
-	res := db basicExecute: 'begin'.
-	self assert: res equals: 0.
-	s := db prepare: 'insert into x values (?)'.
-	s at: 1 putDateTime: data.
-	s step. s finalize.
-	res := db basicExecute: 'commit'.
-	self assert: res equals: 0.
-	
-	s := db prepare: 'select xv from x'.
-	s basicExecute: [  :row |
-		| v |
-		v := row dateTimeAt: 0.
-		self assert: v year equals: 2015.
-		self assert: v month equals: 4.
-		self assert: v dayOfMonth equals: 1 ].
-	s finalize
+	| data |
+
+	data := Date year: 2015 month: 4 day: 1.
+
+	self executeInDB: 'create table x (xv date);'.
+
+	self executeInDB: 'begin'.
+	self withPreparedStatement: 'insert into x values (?)' do: [ :statement | 
+		statement at: 1 putDateTime: data.
+		statement step
+		].
+
+	self executeInDB: 'commit'.
+
+	self withPreparedStatement: 'select xv from x' do: [ :statement | 
+		statement basicExecute: [ :row | 
+			| value |
+
+			value := row dateTimeAt: 0.
+			self
+				assert: value year equals: 2015;
+				assert: value month equals: 4;
+				assert: value dayOfMonth equals: 1
+			]
+		]
+]
+
+{ #category : #'tests - types' }
+SQLite3BaseConnectionTest >> testDateAndTime [
+
+	| data |
+
+	data := DateAndTime year: 2015 month: 4 day: 1.
+
+	self executeInDB: 'create table x (xv datetime);'.
+
+	self executeInDB: 'begin'.
+	self withPreparedStatement: 'insert into x values (?)' do: [ :statement | 
+		statement at: 1 putDateTime: data.
+		statement step
+		].
+
+	self executeInDB: 'commit'.
+
+	self withPreparedStatement: 'select xv from x' do: [ :statement | 
+		statement basicExecute: [ :row | 
+			| value |
+
+			value := row dateTimeAt: 0.
+			self
+				assert: value year equals: 2015;
+				assert: value month equals: 4;
+				assert: value dayOfMonth equals: 1;
+				assert: value hours equals: 0;
+				assert: value minutes equals: 0;
+				assert: value seconds equals: 0
+			]
+		]
 ]
 
 { #category : #'tests - columns' }
@@ -513,37 +552,36 @@ SQLite3BaseConnectionTest >> testDoubleClose [
 
 { #category : #'tests - types' }
 SQLite3BaseConnectionTest >> testFloat [
-	| s |	
-	res := db basicExecute: 'create table x (xk integer primary key, xv real);'.
-	self assert: res equals: 0.
-	res := db basicExecute: 'insert into x values (NULL, 1.141);'.
-	self assert: res equals: 0.
-	
-	s := db prepare: 'select * from x'.
-	s basicExecute: [ :row |
-		self assert: (row nameOfColumn: 1) equals: 'xv'.
-		self assert: (row floatAt: 1) equals: 1.141 ].
-	s finalize
+
+	self executeInDB: 'create table x (xk integer primary key, xv real);'.
+	self executeInDB: 'insert into x values (NULL, 1.141);'.
+
+	self withPreparedStatement: 'select * from x' do: [ :statement | 
+		statement basicExecute: [ :row | 
+			self assert: ( row nameOfColumn: 1 ) equals: 'xv'.
+			self assert: ( row floatAt: 1 ) equals: 1.141
+			]
+		]
 ]
 
 { #category : #'tests - types' }
 SQLite3BaseConnectionTest >> testInteger [
-	"The large integer comes from Glorp's testInt8."
-	| s |	
-		
-	res := db basicExecute: 'create table x (xk integer primary key, xv integer);'.
-	self assert: res equals: 0.
 
-	s := db prepare: 'insert into x values (NULL, ?)'.
-	s at: 1 putInteger: 3212321555.
-	s step. 		
-	s finalize.	
-	
-	s := db prepare: 'select * from x'.
-	s basicExecute: [ :row |
-		self assert: (row nameOfColumn: 1) equals: 'xv'.
-		self assert: (row integerAt: 1) equals: 3212321555 ].
-	s finalize
+	"The large integer comes from Glorp's testInt8."
+
+	self executeInDB: 'create table x (xk integer primary key, xv integer);'.
+
+	self withPreparedStatement: 'insert into x values (NULL, ?)' do: [ :statement | 
+		statement at: 1 putInteger: 3212321555.
+		statement step
+		].
+
+	self withPreparedStatement: 'select * from x' do: [ :statement | 
+		statement basicExecute: [ :row | 
+			self assert: ( row nameOfColumn: 1 ) equals: 'xv'.
+			self assert: ( row integerAt: 1 ) equals: 3212321555
+			]
+		]
 ]
 
 { #category : #tests }
@@ -608,30 +646,34 @@ SQLite3BaseConnectionTest >> testMultilingualTableName [
 
 { #category : #'tests - types' }
 SQLite3BaseConnectionTest >> testObjectBlob [
-	| data s | 
-	
-	data := OrderedCollection with: 1 with: 'two' with: 3.3.
-	
-	res := db basicExecute: 'create table x (xk integer primary key, xv blob);'.
-	self assert: res equals: 0.
 
-	res := db basicExecute: 'begin'.
-	self assert: res equals: 0.
-	s := db prepare: 'insert into x values (NULL, ?)'.
-	s at: 1 putObject: data.
-	s step. s finalize.
-	res := db basicExecute: 'commit'.
-	self assert: res equals: 0.
-	
-	s := db prepare: 'select xv from x'.
-	s basicExecute: [  :row |
-		| v |
-		v := row objectAt: 0.
-		self assert: v size equals: 3.
-		self assert: v first equals: 1.
-		self assert: v second equals: 'two'.
-		self assert: v third equals: 3.3 ].
-	s finalize
+	| data |
+
+	data := OrderedCollection with: 1 with: 'two' with: 3.3.
+
+	self
+		executeInDB: 'create table x (xk integer primary key, xv blob);';
+		executeInDB: 'begin'.
+
+	self withPreparedStatement: 'insert into x values (NULL, ?)' do: [ :statement | 
+		statement at: 1 putObject: data.
+		statement step
+		].
+
+	self executeInDB: 'commit'.
+
+	self withPreparedStatement: 'select xv from x' do: [ :statement | 
+		statement basicExecute: [ :row | 
+			| value |
+
+			value := row objectAt: 0.
+			self
+				assert: value size equals: 3;
+				assert: value first equals: 1;
+				assert: value second equals: 'two';
+				assert: value third equals: 3.3
+			]
+		]
 ]
 
 { #category : #tests }
@@ -721,25 +763,28 @@ SQLite3BaseConnectionTest >> testResultSetColumnIntrospection [
 
 { #category : #'tests - types' }
 SQLite3BaseConnectionTest >> testScaledDecimal [
+
 	"This test is a simplified version of GlorpNumericTest>>tesNumeric."
-	| s number float |
-	
+
+	| number float |
+
 	number := Number readFrom: '12345678s'.
 	float := number asFloat.
 
-	res := db basicExecute: 'create table x (xk integer primary key, xv real);'.
-	self assert: res equals: 0.
-	
-	s := db prepare: 'insert into x values (NULL, ?)'.
-	s at: 1 putFloat: number.
-	s step. 		
-	s finalize.	
-	
-	s := db prepare: 'select * from x'.
-	s basicExecute: [ :row |
-		self assert: (row nameOfColumn: 1) equals: 'xv'.
-		self assert: (row floatAt: 1) equals: float ].
-	s finalize
+	self executeInDB: 'create table x (xk integer primary key, xv real);'.
+
+	self withPreparedStatement: 'insert into x values (NULL, ?)' do: [ :statement | 
+		statement at: 1 putFloat: number.
+		statement step
+		].
+
+	self withPreparedStatement: 'select * from x' do: [ :statement | 
+		statement basicExecute: [ :row | 
+			self
+				assert: ( row nameOfColumn: 1 ) equals: 'xv';
+				assert: ( row floatAt: 1 ) equals: float
+			]
+		]
 ]
 
 { #category : #'tests - tables' }
@@ -765,32 +810,39 @@ SQLite3BaseConnectionTest >> testTableNamesOfEmptyDatabase [
 
 { #category : #'tests - types' }
 SQLite3BaseConnectionTest >> testTime [
-	"SQLite3 converts a given Time instance into a DateAndTime and stores that."
-	| data today s | 
-	
-	data := Time noon.
-	today := DateAndTime today.
-	
-	res := db basicExecute: 'create table x (xv time);'.
-	self assert: res equals: 0.
 
-	res := db basicExecute: 'begin'.
-	self assert: res equals: 0.
-	s := db prepare: 'insert into x values (?)'.
-	s at: 1 putDateTime: data.
-	s step. s finalize.
-	res := db basicExecute: 'commit'.
-	self assert: res equals: 0.
-	
-	s := db prepare: 'select xv from x'.
-	s basicExecute: [  :row |
-		| v |
-		v := row dateTimeAt: 0.
-		self assert: v year equals: today year.
-		self assert: v month equals: today month.
-		self assert: v dayOfMonth equals: today dayOfMonth.
-		self assert: v hour equals: data hour. 
-		self assert: v minute equals: data minute. 
-		self assert: v second equals: data second ].
-	s finalize
+	| data |
+
+	data := Time noon.
+
+	self
+		executeInDB: 'create table x (xv time);';
+		executeInDB: 'begin'.
+
+	self withPreparedStatement: 'insert into x values (?)' do: [ :statement | 
+		statement at: 1 putTime: data.
+		statement step
+		].
+	self executeInDB: 'commit'.
+
+	self withPreparedStatement: 'select xv from x' do: [ :statement | 
+		statement basicExecute: [ :row | 
+			| value |
+
+			value := row timeAt: 0.
+			self
+				assert: value hour equals: data hour;
+				assert: value minute equals: data minute;
+				assert: value second equals: data second
+			]
+		]
+]
+
+{ #category : #private }
+SQLite3BaseConnectionTest >> withPreparedStatement: anSQLText do: aBlock [
+
+	| statement |
+
+	statement := db prepare: anSQLText.
+	[ aBlock value: statement ] ensure: [ statement finalize ]
 ]
