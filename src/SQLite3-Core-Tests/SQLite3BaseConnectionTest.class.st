@@ -113,9 +113,10 @@ SQLite3BaseConnectionTest >> tearDown [
 
 { #category : #'tests - connections' }
 SQLite3BaseConnectionTest >> testBadOpen [
+
 	| newConnection |
-	newConnection := SQLite3BaseConnection
-		on: self invalidFileNameOnCurrentOperatingSystem.
+
+	newConnection := SQLite3BaseConnection on: self invalidFileNameOnCurrentOperatingSystem.
 	self should: [ newConnection open ] raise: SQLite3CantOpen.
 	self deny: newConnection isOpen
 ]
@@ -123,11 +124,9 @@ SQLite3BaseConnectionTest >> testBadOpen [
 { #category : #'tests - execution' }
 SQLite3BaseConnectionTest >> testBasicExecuteOk [
 
-	res := db basicExecute: 'create table x (xk integer, xv integer);'.
-	self assert: res equals: 0.
-	res := db basicExecute: 'drop table x;'.
-	self assert: res equals: 0.
-	
+	self executeInDB: 'create table x (xk integer, xv integer);'.
+	self executeInDB: 'drop table x;'.
+
 ]
 
 { #category : #'tests - execution' }
@@ -172,276 +171,244 @@ SQLite3BaseConnectionTest >> testBooleanObject [
 
 { #category : #'tests - writing' }
 SQLite3BaseConnectionTest >> testBooleanWriteIntegerOneThenRead [
-	| s | 
-	
-	res := db basicExecute: 'create table x (xk integer primary key, xv boolean);'.
-	self assert: res equals: 0.
 
-	res := db basicExecute: 'begin'.
-	self assert: res equals: 0.
-	s := db prepare: 'insert into x values (NULL, ?)'.
-	s at: 1 putInteger: 1.
-	s step. s finalize.
-	res := db basicExecute: 'commit'.
-	self assert: res equals: 0.
-	
-	s := db prepare: 'select xv from x'.
-	s basicExecute: [  :row |
-		| v |
-		v := row booleanAt: 0.
-		self assert: v equals: true ].
-	s finalize
+	self executeInDB: 'create table x (xk integer primary key, xv boolean);'.
+	self executeInDB: 'begin'.
+	self withPreparedStatement: 'insert into x values (NULL, ?)' do: [ :statement | 
+		statement at: 1 putInteger: 1.
+		statement step
+		].
+	self executeInDB: 'commit'.
+
+	self withPreparedStatement: 'select xv from x' do: [ :statement | 
+		statement basicExecute: [ :row | 
+			| value |
+
+			value := row booleanAt: 0.
+			self assert: value equals: true
+			]
+		]
 ]
 
 { #category : #'tests - writing' }
 SQLite3BaseConnectionTest >> testBooleanWriteIntegerTwoThenRead [
-	| s | 
-	
-	res := db basicExecute: 'create table x (xk integer primary key, xv boolean);'.
-	self assert: res equals: 0.
 
-	res := db basicExecute: 'begin'.
-	self assert: res equals: 0.
-	s := db prepare: 'insert into x values (NULL, ?)'.
-	s at: 1 putInteger: 2.
-	s step. s finalize.
-	res := db basicExecute: 'commit'.
-	self assert: res equals: 0.
-	
-	s := db prepare: 'select xv from x'.
-	s basicExecute: [  :row |
-		self should: [ row booleanAt: 0 ] raise: SQLite3AbstractError ].
-	s finalize
+	self executeInDB: 'create table x (xk integer primary key, xv boolean);'.
+	self executeInDB: 'begin'.
+	self withPreparedStatement: 'insert into x values (NULL, ?)' do: [ :statement | 
+		statement at: 1 putInteger: 2.
+		statement step
+		].
+	self executeInDB: 'commit'.
+
+	self withPreparedStatement: 'select xv from x' do: [ :statement | 
+		statement basicExecute: [ :row | self should: [ row booleanAt: 0 ] raise: SQLite3AbstractError ] ]
 ]
 
 { #category : #'tests - writing' }
 SQLite3BaseConnectionTest >> testBooleanWriteIntegerZeroThenRead [
-	| s | 
-	
-	res := db basicExecute: 'create table x (xk integer primary key, xv boolean);'.
-	self assert: res equals: 0.
 
-	res := db basicExecute: 'begin'.
-	self assert: res equals: 0.
-	s := db prepare: 'insert into x values (NULL, ?)'.
-	s at: 1 putInteger: 0.
-	s step. s finalize.
-	res := db basicExecute: 'commit'.
-	self assert: res equals: 0.
-	
-	s := db prepare: 'select xv from x'.
-	s basicExecute: [  :row |
-		| v |
-		v := row booleanAt: 0.
-		self assert: v equals: false ].
-	s finalize
+	self executeInDB: 'create table x (xk integer primary key, xv boolean);'.
+	self executeInDB: 'begin'.
+	self withPreparedStatement: 'insert into x values (NULL, ?)' do: [ :statement | 
+		statement at: 1 putInteger: 0.
+		statement step
+		].
+	self executeInDB: 'commit'.
+
+	self withPreparedStatement: 'select xv from x' do: [ :statement | 
+		statement basicExecute: [ :row | 
+			| value |
+
+			value := row booleanAt: 0.
+			self assert: value equals: false
+			]
+		]
 ]
 
 { #category : #'tests - writing' }
 SQLite3BaseConnectionTest >> testBooleanWriteNilThenRead [
-	| s | 
-	
-	res := db basicExecute: 'create table x (xk integer primary key, xv boolean);'.
-	self assert: res equals: 0.
 
-	res := db basicExecute: 'begin'.
-	self assert: res equals: 0.
-	s := db prepare: 'insert into x values (NULL, ?)'.
-	s at: 1 putNil: nil.
-	s step. s finalize.
-	res := db basicExecute: 'commit'.
-	self assert: res equals: 0.
-	
-	s := db prepare: 'select xv from x'.
-	s basicExecute: [  :row |
-		| v |
-		v := row booleanAt: 0.
-		self assert: v equals: nil ].
-	s finalize
+	self executeInDB: 'create table x (xk integer primary key, xv boolean);'.
+	self executeInDB: 'begin'.
+	self withPreparedStatement: 'insert into x values (NULL, ?)' do: [ :statement | 
+		statement at: 1 putNil: nil.
+		statement step
+		].
+	self executeInDB: 'commit'.
+
+
+	self withPreparedStatement: 'select xv from x' do: [ :statement | 
+		statement basicExecute: [ :row | 
+			| value |
+
+			value := row booleanAt: 0.
+			self assert: value isNil
+			]
+		]
 ]
 
 { #category : #'tests - writing' }
 SQLite3BaseConnectionTest >> testBooleanWriteSQLNullThenRead [
-	| s | 
-	
-	res := db basicExecute: 'create table x (xk integer primary key, xv boolean);'.
-	self assert: res equals: 0.
 
-	res := db basicExecute: 'begin'.
-	self assert: res equals: 0.
-	s := db prepare: 'insert into x values (NULL, NULL)'.
-	s step. s finalize.
-	res := db basicExecute: 'commit'.
-	self assert: res equals: 0.
-	
-	s := db prepare: 'select xv from x'.
-	s basicExecute: [  :row |
-		| v |
-		v := row booleanAt: 0.
-		self assert: v equals: nil ].
-	s finalize
+	self executeInDB: 'create table x (xk integer primary key, xv boolean);'.
+	self executeInDB: 'begin'.
+	self withPreparedStatement: 'insert into x values (NULL, NULL)' do: [ :statement | statement step ].
+	self executeInDB: 'commit'.
+
+	self withPreparedStatement: 'select xv from x' do: [ :statement | 
+		statement basicExecute: [ :row | 
+			| value |
+
+			value := row booleanAt: 0.
+			self assert: value isNil
+			]
+		]
 ]
 
 { #category : #'tests - writing' }
 SQLite3BaseConnectionTest >> testBooleanWriteStringFalseThenRead [
-	| s | 
-	
-	res := db basicExecute: 'create table x (xk integer primary key, xv boolean);'.
-	self assert: res equals: 0.
 
-	res := db basicExecute: 'begin'.
-	self assert: res equals: 0.
-	s := db prepare: 'insert into x values (NULL, ?)'.
-	s at: 1 putString: 'false'.
-	s step. s finalize.
-	res := db basicExecute: 'commit'.
-	self assert: res equals: 0.
-	
-	s := db prepare: 'select xv from x'.
-	s basicExecute: [  :row |
-		| v |
-		v := row booleanAt: 0.
-		self assert: v equals: false ].
-	s finalize
+	self executeInDB: 'create table x (xk integer primary key, xv boolean);'.
+	self executeInDB: 'begin'.
+	self withPreparedStatement: 'insert into x values (NULL, ?)' do: [ :statement | 
+		statement at: 1 putString: 'false'.
+		statement step
+		].
+	self executeInDB: 'commit'.
+
+	self withPreparedStatement: 'select xv from x' do: [ :statement | 
+		statement basicExecute: [ :row | 
+			| value |
+
+			value := row booleanAt: 0.
+			self assert: value equals: false
+			]
+		]
 ]
 
 { #category : #'tests - writing' }
 SQLite3BaseConnectionTest >> testBooleanWriteStringTrueThenRead [
-	| s | 
-	
-	res := db basicExecute: 'create table x (xk integer primary key, xv boolean);'.
-	self assert: res equals: 0.
 
-	res := db basicExecute: 'begin'.
-	self assert: res equals: 0.
-	s := db prepare: 'insert into x values (NULL, ?)'.
-	s at: 1 putString: 'true'.
-	s step. s finalize.
-	res := db basicExecute: 'commit'.
-	self assert: res equals: 0.
-	
-	s := db prepare: 'select xv from x'.
-	s basicExecute: [  :row |
-		| v |
-		v := row booleanAt: 0.
-		self assert: v equals: true ].
-	s finalize
+	self executeInDB: 'create table x (xk integer primary key, xv boolean);'.
+	self executeInDB: 'begin'.
+	self withPreparedStatement: 'insert into x values (NULL, ?)' do: [ :statement | 
+		statement at: 1 putString: 'true'.
+		statement step
+		].
+	self executeInDB: 'commit'.
+
+	self withPreparedStatement: 'select xv from x' do: [ :statement | 
+		statement basicExecute: [ :row | 
+			| value |
+
+			value := row booleanAt: 0.
+			self assert: value equals: true
+			]
+		]
 ]
 
 { #category : #'tests - writing' }
 SQLite3BaseConnectionTest >> testBooleanWriteStringTwoThenRead [
-	| s | 
-	
-	res := db basicExecute: 'create table x (xk integer primary key, xv boolean);'.
-	self assert: res equals: 0.
 
-	res := db basicExecute: 'begin'.
-	self assert: res equals: 0.
-	s := db prepare: 'insert into x values (NULL, ?)'.
-	s at: 1 putString: '2'.
-	s step. s finalize.
-	res := db basicExecute: 'commit'.
-	self assert: res equals: 0.
-	
-	s := db prepare: 'select xv from x'.
-	s basicExecute: [  :row |
-		self should: [ row booleanAt: 0 ] raise: SQLite3AbstractError ].
-	s finalize
+	self executeInDB: 'create table x (xk integer primary key, xv boolean);'.
+	self executeInDB: 'begin'.
+	self withPreparedStatement: 'insert into x values (NULL, ?)' do: [ :statement | 
+		statement at: 1 putString: '2'.
+		statement step
+		].
+	self executeInDB: 'commit'.
+
+	self withPreparedStatement: 'select xv from x' do: [ :statement | 
+		statement basicExecute: [ :row | self should: [ row booleanAt: 0 ] raise: SQLite3AbstractError ] ]
 ]
 
 { #category : #'tests - writing' }
 SQLite3BaseConnectionTest >> testBooleanWriteThenRead [
-	| s | 
-	
-	res := db basicExecute: 'create table x (xk integer primary key, xv boolean);'.
-	self assert: res equals: 0.
 
-	res := db basicExecute: 'begin'.
-	self assert: res equals: 0.
-	s := db prepare: 'insert into x values (NULL, ?)'.
-	s at: 1 putBoolean: true.
-	s step. s finalize.
-	res := db basicExecute: 'commit'.
-	self assert: res equals: 0.
-	
-	s := db prepare: 'select xv from x'.
-	s basicExecute: [  :row |
-		| v |
-		v := row booleanAt: 0.
-		self assert: v equals: true ].
-	s finalize
+	self executeInDB: 'create table x (xk integer primary key, xv boolean);'.
+	self executeInDB: 'begin'.
+	self withPreparedStatement: 'insert into x values (NULL, ?)' do: [ :statement | 
+		statement at: 1 putBoolean: true.
+		statement step
+		].
+	self executeInDB: 'commit'.
+
+	self withPreparedStatement: 'select xv from x' do: [ :statement | 
+		statement basicExecute: [ :row | 
+			| value |
+
+			value := row booleanAt: 0.
+			self assert: value equals: true
+			]
+		]
 ]
 
 { #category : #'tests - columns' }
 SQLite3BaseConnectionTest >> testColumnNames [
+
 	| columns |
-	
-	res := db basicExecute: 'create table x (xk integer, xv integer);'.
-	self assert: res equals: 0.
+
+	self executeInDB: 'create table x (xk integer, xv integer);'.
 	columns := db columnNamesFor: 'x'.
 	self assert: columns size equals: 2.
 	self assert: columns first equals: 'xk'.
-	self assert: columns second equals: 'xv'.
-	
-
+	self assert: columns second equals: 'xv'
 ]
 
 { #category : #'tests - columns' }
 SQLite3BaseConnectionTest >> testColumnNamesBobbyStop [
+
 	"In this test, Bobby Tables strikes again, but fails, because #columnNamesFor: uses parameter binding."
+
 	| columns tables |
-	
-	res := db basicExecute: 'create table x (xk integer, xv integer);'.
-	self assert: res equals: 0.
-	res := db basicExecute: 'create table students (sk integer, sname varchar);'.
-	self assert: res equals: 0.
+
+	self executeInDB: 'create table x (xk integer, xv integer);'.
+	self executeInDB: 'create table students (sk integer, sname varchar);'.
 
 	tables := db tableNames.
 	self assert: tables size equals: 2.
-	self assert: tables first equals: 'x'.	
-	self assert: tables second equals: 'students'.	
-	
+	self assert: tables first equals: 'x'.
+	self assert: tables second equals: 'students'.
+
 	columns := db columnNamesFor: 'x; drop table students; --'.
-	self assert: (columns isNil).
+	self assert: columns isNil.
 
 	tables := db tableNames.
 	self assert: tables size equals: 2.
-	self assert: tables first equals: 'x'.	
+	self assert: tables first equals: 'x'.
 	self assert: tables second equals: 'students'
 ]
 
 { #category : #'tests - columns' }
 SQLite3BaseConnectionTest >> testColumnNamesNoSuchTable [
+
 	| columns |
-	
-	res := db basicExecute: 'create table x (xk integer, xv integer);'.
-	self assert: res equals: 0.
+
+	self executeInDB: 'create table x (xk integer, xv integer);'.
 	columns := db columnNamesFor: 'y'.
-	self assert: (columns isNil).
+	self assert: columns isNil
 ]
 
 { #category : #'tests - connections' }
 SQLite3BaseConnectionTest >> testConstraintViolation [
-	db
-		basicExecute: 'create table x (value integer primary key);';
-		basicExecute: 'insert into x values(1);'.
-	self should: [ db basicExecute: 'insert into x values(1);' ] raise: SQLite3ConstraintViolation 
+
+	self
+		executeInDB: 'create table x (value integer primary key);';
+		executeInDB: 'insert into x values(1);'.
+	self should: [ db basicExecute: 'insert into x values(1);' ] raise: SQLite3ConstraintViolation
 ]
 
 { #category : #'tests - execution' }
 SQLite3BaseConnectionTest >> testDataValuesAvailable [
-	| s | 
-	
-	res := db basicExecute: 'create table x (xk integer primary key, iv integer, tv text);'.
-	self assert: res equals: 0.
 
-	res := db basicExecute: 'insert into x values (NULL, 1, "duh");'.	
-	self assert: res equals: 0.
-	
-	s := db prepare: 'select * from x'.
-	s basicExecute: [  :row |
-		self assert: row dataValuesAvailable equals: 3 ].
-	s finalize
+	self executeInDB: 'create table x (xk integer primary key, iv integer, tv text);'.
+	self executeInDB: 'insert into x values (NULL, 1, "duh");'.
+
+	self
+		withPreparedStatement: 'select * from x'
+		do: [ :statement | 
+		statement basicExecute: [ :row | self assert: row dataValuesAvailable equals: 3 ] ]
 ]
 
 { #category : #'tests - types' }
@@ -509,10 +476,10 @@ SQLite3BaseConnectionTest >> testDateAndTime [
 
 { #category : #'tests - columns' }
 SQLite3BaseConnectionTest >> testDeclaredColumnTypes [
+
 	| columns |
-	
-	res := db basicExecute: 'create table x (xk integer, xv blob, xb boolean);'.
-	self assert: res equals: 0.
+
+	self executeInDB: 'create table x (xk integer, xv blob, xb boolean);'.
 	columns := db declaredColumnTypesFor: 'x'.
 	self assert: columns size equals: 3.
 	self assert: columns first equals: 'INTEGER'.
@@ -522,24 +489,19 @@ SQLite3BaseConnectionTest >> testDeclaredColumnTypes [
 
 { #category : #'tests - multilingual' }
 SQLite3BaseConnectionTest >> testDefaultMultilingualStrings [
-	| s | 
-	
-	res := db basicExecute: 'create table x (xk integer primary key, xm1 text default ''中文'', xm2 text default ''áěšřčá'');'.
-	self assert: res equals: 0.
 
-	res := db basicExecute: 'begin'.
-	self assert: res equals: 0.
-	(db prepare: 'insert into x (xk) values (NULL)')
-		step;
-		finalize.
-	res := db basicExecute: 'commit'.
-	self assert: res equals: 0.
-	
-	s := db prepare: 'select xm1, xm2 from x order by xk'.
-	s basicExecute: [  :row |
-		self assert: (row stringAt: 0) equals: '中文' .
-		self assert: (row stringAt: 1) equals: 'áěšřčá' ].
-	s finalize
+	self executeInDB:
+		'create table x (xk integer primary key, xm1 text default ''中文'', xm2 text default ''áěšřčá'');'.
+	self executeInDB: 'begin'.
+	self withPreparedStatement: 'insert into x (xk) values (NULL)' do: [ :statement | statement step ].
+	self executeInDB: 'commit'.
+
+	self withPreparedStatement: 'select xm1, xm2 from x order by xk' do: [ :statement | 
+		statement basicExecute: [ :row | 
+			self assert: ( row stringAt: 0 ) equals: '中文'.
+			self assert: ( row stringAt: 1 ) equals: 'áěšřčá'
+			]
+		]
 ]
 
 { #category : #'tests - connections' }
@@ -598,50 +560,44 @@ SQLite3BaseConnectionTest >> testIsThreadsafe [
 
 { #category : #'tests - multilingual' }
 SQLite3BaseConnectionTest >> testMultilingualStrings [
-	| data s idx | 
-	
-	data := OrderedCollection with: 'English' with: '中文' with: 'にほんご', 'áěšřčá'.
-	
-	res := db basicExecute: 'create table x (xk integer primary key, xv varchar);'.
-	self assert: res equals: 0.
 
-	res := db basicExecute: 'begin'.
-	self assert: res equals: 0.
-	s := db prepare: 'insert into x values (NULL, ?)'.
-	data do: [ :ea |
-		s at: 1 putString: ea.
-		s step; clearBindings; reset ].
-	s finalize.
-	res := db basicExecute: 'commit'.
-	self assert: res equals: 0.
-	
-	idx := 1.
-	s := db prepare: 'select xv from x order by xk asc'.
-	s basicExecute: [  :row |
-		self assert: (row stringAt: 0) equals: (data at: idx).
-		idx := idx + 1 ].
-	s finalize
+	| data index |
+
+	data := OrderedCollection with: 'English' with: '中文' with: 'にほんご' , 'áěšřčá'.
+	self executeInDB: 'create table x (xk integer primary key, xv varchar);'.
+	self executeInDB: 'begin'.
+	self withPreparedStatement: 'insert into x values (NULL, ?)' do: [ :statement | 
+		data do: [ :ea | 
+			statement at: 1 putString: ea.
+			statement
+				step;
+				clearBindings;
+				reset
+			]
+		].
+	self executeInDB: 'commit'.
+
+	index := 1.
+	self withPreparedStatement: 'select xv from x order by xk asc' do: [ :statement | 
+		statement basicExecute: [ :row | 
+			self assert: ( row stringAt: 0 ) equals: ( data at: index ).
+			index := index + 1
+			]
+		]
 ]
 
 { #category : #'tests - multilingual' }
 SQLite3BaseConnectionTest >> testMultilingualTableName [
-	| s | 
-	
-	res := db basicExecute: 'create table 表一 (xk integer primary key, xm1 text default ''中文'');'.
-	self assert: res equals: 0.
 
-	res := db basicExecute: 'begin'.
-	self assert: res equals: 0.
-	(db prepare: 'insert into 表一 (xk) values (NULL)')
-		step;
-		finalize.
-	res := db basicExecute: 'commit'.
-	self assert: res equals: 0.
-	
-	s := db prepare: 'select xm1 from 表一 order by xk'.
-	s basicExecute: [  :row |
-		self assert: (row stringAt: 0) equals: '中文' ].
-	s finalize
+	self executeInDB: 'create table 表一 (xk integer primary key, xm1 text default ''中文'');'.
+	self executeInDB: 'begin'.
+	self withPreparedStatement: 'insert into 表一 (xk) values (NULL)' do: [ :statement | statement step ].
+	self executeInDB: 'commit'.
+
+	self
+		withPreparedStatement: 'select xm1 from 表一 order by xk'
+		do: [ :statement | 
+		statement basicExecute: [ :row | self assert: ( row stringAt: 0 ) equals: '中文' ] ]
 ]
 
 { #category : #'tests - types' }
@@ -678,87 +634,83 @@ SQLite3BaseConnectionTest >> testObjectBlob [
 
 { #category : #tests }
 SQLite3BaseConnectionTest >> testPrepareStep [
-	| s i sql | 
-	
-	res := db basicExecute: 'create table x (xk integer primary key, iv integer, tv text);'.
-	self assert: res equals: 0.
 
-	res := db basicExecute: 'begin'.
-	self assert: res equals: 0.
-	s := db prepare: 'insert into x values (NULL, ?, ?)'.
-	sql := s sqlText.
-	self assert: sql equals: 'insert into x values (NULL, ?, ?)'.
-	1 to: 10 do: [ :x |
-		s at: 1 putInteger: x * x.
-		s at: 2 putString: x asString, ' * ', x asString.
-		s step. s clearBindings. s reset. ].		
-	s finalize.
-	res := db basicExecute: 'commit'.
-	self assert: res equals: 0.
-	
-	s := db prepare: 'select * from x'.
-	sql := s sqlText.
-	self assert: sql equals: 'select * from x'.
-	s basicExecute: [  :row |
-		i := row integerAt: 0.
-		self assert: (row integerAt: 1) equals: (i * i).
-		self assert: (row stringAt: 2) equals: (i asString, ' * ', i asString) ].
-	s finalize
+	self executeInDB: 'create table x (xk integer primary key, iv integer, tv text);'.
+	self executeInDB: 'begin'.
+	self withPreparedStatement: 'insert into x values (NULL, ?, ?)' do: [ :statement | 
+		self assert: statement sqlText equals: 'insert into x values (NULL, ?, ?)'.
+		1 to: 10 do: [ :x | 
+			statement at: 1 putInteger: x * x.
+			statement at: 2 putString: ( '<1p> * <1p>' expandMacrosWith: x ).
+			statement step.
+			statement clearBindings.
+			statement reset
+			]
+		].
+	self executeInDB: 'commit'.
+
+	self withPreparedStatement: 'select * from x' do: [ :statement | 
+		| i |
+
+		self assert: statement sqlText equals: 'select * from x'.
+		statement basicExecute: [ :row | 
+			i := row integerAt: 0.
+			self assert: ( row integerAt: 1 ) equals: i * i.
+			self assert: ( row stringAt: 2 ) equals: ( '<1p> * <1p>' expandMacrosWith: i )
+			]
+		]
 ]
 
 { #category : #tests }
 SQLite3BaseConnectionTest >> testPrepareStepSelective [
-	| s i sql count | 
-	
-	res := db basicExecute: 'create table x (xk integer primary key, iv integer, tv text);'.
-	self assert: res equals: 0.
 
-	res := db basicExecute: 'begin'.
-	self assert: res equals: 0.
-	s := db prepare: 'insert into x values (NULL, ?, ?)'.
-	sql := s sqlText.
-	self assert: sql equals: 'insert into x values (NULL, ?, ?)'.
-	1 to: 10 do: [ :x |
-		s at: 1 putInteger: x * x.
-		s at: 2 putString: x asString, ' * ', x asString.
-		s step. s clearBindings. s reset. ].		
-	s finalize.
-	res := db basicExecute: 'commit'.
-	self assert: res equals: 0.
-	
+	| i count |
+
+	self executeInDB: 'create table x (xk integer primary key, iv integer, tv text);'.
+	self executeInDB: 'begin'.
+	self withPreparedStatement: 'insert into x values (NULL, ?, ?)' do: [ :statement | 
+		self assert: statement sqlText equals: 'insert into x values (NULL, ?, ?)'.
+		1 to: 10 do: [ :x | 
+			statement
+				at: 1 putInteger: x * x;
+				at: 2 putString: x asString , ' * ' , x asString;
+				step;
+				clearBindings;
+				reset
+			]
+		].
+	self executeInDB: 'commit'.
+
 	count := 0.
-	s := db prepare: 'select * from x where iv < ?'.
-	sql := s sqlText.
-	self assert: sql equals: 'select * from x where iv < ?'.
-	s at: 1 putInteger: 27.
-	s basicExecute: [  :row |
-		count := count + 1.
-		i := row integerAt: 0.
-		self assert: (row integerAt: 1) equals: (i * i).
-		self assert: (row stringAt: 2) equals: (i asString, ' * ', i asString) ].
-	s finalize.
+	self withPreparedStatement: 'select * from x where iv < ?' do: [ :statement | 
+		self assert: statement sqlText equals: 'select * from x where iv < ?'.
+		statement at: 1 putInteger: 27.
+		statement basicExecute: [ :row | 
+			count := count + 1.
+			i := row integerAt: 0.
+			self assert: ( row integerAt: 1 ) equals: i * i.
+			self assert: ( row stringAt: 2 ) equals: i asString , ' * ' , i asString
+			]
+		].
 	self assert: count equals: 5
 ]
 
 { #category : #tests }
 SQLite3BaseConnectionTest >> testResultSetColumnIntrospection [
-	| s | 
 
-	res := db basicExecute: 'create table x (xk integer primary key, iv integer, tv text);'.
-	self assert: res equals: 0.
+	self executeInDB: 'create table x (xk integer primary key, iv integer, tv text);'.
+	self executeInDB: 'insert into x values (NULL, 1, "duh");'.
 
-	res := db basicExecute: 'insert into x values (NULL, 1, "duh");'.	
-	self assert: res equals: 0.
-	
-	s := db prepare: 'select * from x'.
-	s basicExecute: [  :row |
-		self assert: (row nameOfColumn: 0) equals: 'xk'.
-		self assert: (row valueOfColumn: 0) equals: 1.
-		self assert: (row nameOfColumn: 1) equals: 'iv'.
-		self assert: (row valueOfColumn: 1) equals: 1.
-		self assert: (row nameOfColumn: 2) equals: 'tv'.
-		self assert: (row valueOfColumn: 2) equals: 'duh' ].
-	s finalize
+	self withPreparedStatement: 'select * from x' do: [ :statement | 
+		statement basicExecute: [ :row | 
+			self assert: ( row nameOfColumn: 0 ) equals: 'xk'.
+			self assert: ( row valueOfColumn: 0 ) equals: 1.
+			self assert: ( row nameOfColumn: 1 ) equals: 'iv'.
+			self assert: ( row valueOfColumn: 1 ) equals: 1.
+			self assert: ( row nameOfColumn: 2 ) equals: 'tv'.
+			self assert: ( row valueOfColumn: 2 ) equals: 'duh'
+			]
+		]
 ]
 
 { #category : #'tests - types' }
@@ -790,9 +742,9 @@ SQLite3BaseConnectionTest >> testScaledDecimal [
 { #category : #'tests - tables' }
 SQLite3BaseConnectionTest >> testTableNames [
 
-	| tables |	
-	res := db basicExecute: 'create table x (xk integer, xv integer);'.
-	self assert: res equals: 0.
+	| tables |
+
+	self executeInDB: 'create table x (xk integer, xv integer);'.
 	tables := db tableNames.
 	self assert: tables size equals: 1.
 	self assert: tables first equals: 'x'
@@ -801,11 +753,10 @@ SQLite3BaseConnectionTest >> testTableNames [
 { #category : #'tests - tables' }
 SQLite3BaseConnectionTest >> testTableNamesOfEmptyDatabase [
 
-	| tables |	
-	tables := db tableNames.
-	self assert: tables size equals: 0.
-	
+	| tables |
 
+	tables := db tableNames.
+	self assert: tables isEmpty
 ]
 
 { #category : #'tests - types' }
