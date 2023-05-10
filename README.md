@@ -61,18 +61,18 @@ Contributors in order of appearance:
 
 - Avi Bryant
 - Fred Mannby
-- Torsten Bergmann ("astares")
+- [Torsten Bergmann](https://github.com/astares)
 - Andreas Raab
-- Pierce Ng
-- Esteban Lorenzano
-- Guillermo Polito
-- Esteban Maringolo
-- Julien Deplangue
-- Todd Blanchard
-- Renaud de Villemeur
-- vonbecmann
-- Gabriel Omar Cotelli
-- Konrad Hinsen
+- [Pierce Ng](https://github.com/PierceNg)
+- [Esteban Lorenzano](https://github.com/estebanlm)
+- [Guillermo Polito](https://github.com/guillep)
+- [Esteban Maringolo](https://github.com/emaringolo)
+- [Julien Deplangue](https://github.com/juliendelplanque)
+- [Todd Blanchard](https://github.com/tblanchard)
+- [Renaud de Villemeur](https://github.com/rvillemeur)
+- [vonbecmann](https://github.com/vonbecmann)
+- [Gabriel Omar Cotelli](https://github.com/gcotelli)
+- [Konrad Hinsen](https://github.com/khinsen)
 - [GitHub contributors](https://github.com/pharo-rdbms/Pharo-SQLite3/graphs/contributors)
 
 ## LICENSE
