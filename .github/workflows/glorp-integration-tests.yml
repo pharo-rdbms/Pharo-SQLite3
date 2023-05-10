@@ -11,7 +11,7 @@ jobs:
         smalltalk: [ Pharo64-9.0, Pharo64-10 ]
     name: ${{ matrix.smalltalk }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Install SQLite3
         run: ./scripts/install-SQLite3.sh
       - name: Set up Smalltalk CI
@@ -24,7 +24,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v1
+        uses: codecov/codecov-action@v3
         with:
           name: ${{matrix.os}}-${{matrix.smalltalk}}
           token: ${{ secrets.CODECOV_TOKEN }}
