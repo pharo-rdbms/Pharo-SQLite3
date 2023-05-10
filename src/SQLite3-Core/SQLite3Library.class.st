@@ -903,9 +903,18 @@ SQLite3Library >> with: aStatement at: aColumn putInteger: anInteger [
 ]
 
 { #category : #operating }
-SQLite3Library >> with: aStatement at: aColumn putText: aByteArray [
+SQLite3Library >> with: aStatement at: aColumn putText: aString [
 
-	^self apiBindText: aStatement atColumn: aColumn with: aByteArray with: aByteArray size with: 0 
+	| bytes |
+
+	bytes := self pharoStringToUTF8: aString.
+
+	^ self
+		  apiBindText: aStatement
+		  atColumn: aColumn
+		  with: bytes
+		  with: bytes size
+		  with: 0
 ]
 
 { #category : #operating }
