@@ -62,20 +62,22 @@ BaselineOfSQLite3 >> versionSpecificBaseline: spec [
 	spec for: #( #'pharo7.x' #'pharo8.x' ) do: [ 
 		spec
 			package: 'SQLite3-Pharo8';
-			group: 'Core' with: 'SQLite3-Pharo8' ].
+			group: 'Core' with: 'SQLite3-Pharo8'
+		].
 
-	spec for: #( #'pharo9.x' #'pharo10.x' ) do: [ 
+	spec for: #( #'pharo9.x' #'pharo10.x' #'pharo11.x' #'pharo12.x' ) do: [ 
 		spec
 			package: 'SQLite3-Pharo9';
-			group: 'Core' with: 'SQLite3-Pharo9' ].
-	
-	spec for: #'pharo10.x' do: [ 
+			group: 'Core' with: 'SQLite3-Pharo9'
+		].
+
+	spec for: #( #'pharo10.x' #'pharo11.x' #'pharo12.x' ) do: [ 
 		spec
 			package: 'SQLite3-Pharo10';
 			group: 'Core' with: 'SQLite3-Pharo10'.
-			
-		spec 
-			package: 'SQLite3-Inspector-Extensions' with: [ spec requires: #('Core') ];
-			group: 'Tools' with: 'SQLite3-Inspector-Extensions'	
-	]
+
+		spec
+			package: 'SQLite3-Inspector-Extensions' with: [ spec requires: #( 'Core' ) ];
+			group: 'Tools' with: 'SQLite3-Inspector-Extensions'
+		]
 ]
