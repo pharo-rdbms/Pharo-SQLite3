@@ -5,8 +5,10 @@
 [![Coverage Status](https://codecov.io/github/pharo-rdbms/Pharo-SQLite3/coverage.svg?branch=master)](https://codecov.io/gh/pharo-rdbms/Pharo-SQLite3/branch/master)
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Pharo version](https://img.shields.io/badge/Pharo-9.0-%23aac9ff.svg)](https://pharo.org/download)
+[![Pharo 9](https://img.shields.io/badge/Pharo-9.0-%23aac9ff.svg)](https://pharo.org/download)
 [![Pharo 10](https://img.shields.io/badge/Pharo-10-%23aac9ff.svg)](https://pharo.org/download)
+[![Pharo 11](https://img.shields.io/badge/Pharo-11-%23aac9ff.svg)](https://pharo.org/download)
+[![Pharo 12](https://img.shields.io/badge/Pharo-12-%23aac9ff.svg)](https://pharo.org/download)
 
 Standalone [SQLite3](https://www.sqlite.org) database binding for
 [Pharo](http://www.pharo.org) - community owned
