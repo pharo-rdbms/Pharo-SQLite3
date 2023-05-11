@@ -118,6 +118,8 @@ SQLite3BaseConnection >> close [
 
 	"Let FFIExternalResourceManager take care."
 	"dbHandle ifNotNil: [ library close: dbHandle ]."
+	dbHandle ifNil: [ ^ self ].
+	dbHandle beNull.
 	dbHandle := nil.
 	isOpen := false.
 ]

@@ -6,3 +6,9 @@ Class {
 	#superclass : #FFIOpaqueObject,
 	#category : #'SQLite3-Core-UFFI-Support'
 }
+
+{ #category : #initialization }
+SQLite3BackupExternalReference >> beNull [
+	
+	^ handle beNull
+]
