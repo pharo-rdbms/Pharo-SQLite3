@@ -625,7 +625,10 @@ SQLite3Library >> execute: anSQLText on: aDBHandle [
 
 { #category : #operating }
 SQLite3Library >> finalize: aStatementHandle on: aDBHandle [
-	^ self checkForOk: (self apiFinalize: aStatementHandle) on: aDBHandle
+	| result |
+	result := self checkForOk: (self apiFinalize: aStatementHandle) on: aDBHandle.
+	aStatementHandle beNull.
+	^ result
 ]
 
 { #category : #accessing }

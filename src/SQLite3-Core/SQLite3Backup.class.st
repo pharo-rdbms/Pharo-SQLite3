@@ -57,6 +57,7 @@ SQLite3Backup >> finish [
 	handle 
 		ifNotNil: [
 			library apiBackupFinish: handle.
+			handle beNull.
 			handle := nil]
 ]
 
