@@ -344,6 +344,19 @@ SQLite3BaseConnectionTest >> testBooleanWriteThenRead [
 		]
 ]
 
+{ #category : #'tests - connections' }
+SQLite3BaseConnectionTest >> testCloseFile [
+
+	| fileName newConnection path |
+	path := Smalltalk os isWindows ifTrue: [ (Smalltalk os environment at: 'TMP'), '\' ] ifFalse: [ (Smalltalk os environment at: 'TMPDIR'), '/' ].
+	fileName := path, UUID new asString.
+	newConnection := (SQLite3BaseConnection on: fileName).
+	newConnection open; close.
+	newConnection := nil.
+	Smalltalk garbageCollect.
+	self shouldnt: [ File deleteFile: fileName ] raise: CannotDeleteFileException.
+]
+
 { #category : #'tests - columns' }
 SQLite3BaseConnectionTest >> testColumnNames [
 
