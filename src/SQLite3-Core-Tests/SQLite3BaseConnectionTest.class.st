@@ -348,7 +348,7 @@ SQLite3BaseConnectionTest >> testBooleanWriteThenRead [
 SQLite3BaseConnectionTest >> testCloseFile [
 
 	| fileName newConnection path |
-	path := Smalltalk os isWindows ifTrue: [ (Smalltalk os environment at: 'TMP'), '\' ] ifFalse: [ (Smalltalk os environment at: 'TMPDIR'), '/' ].
+	path := Smalltalk os isWindows ifTrue: [ (Smalltalk os environment at: 'TMP'), '\' ] ifFalse: [ '/tmp/' ].
 	fileName := path, UUID new asString.
 	newConnection := (SQLite3BaseConnection on: fileName).
 	newConnection open; close.
