@@ -115,13 +115,13 @@ SQLite3BaseConnection >> clearBindings: aStatement [
 
 { #category : #'public API - open/close' }
 SQLite3BaseConnection >> close [
+	"Do the minimal work to close the connection. 	Let FFIExternalResourceManager take care of calling sqlite_close_v2()."
 
-	"Let FFIExternalResourceManager take care."
-	"dbHandle ifNotNil: [ library close: dbHandle ]."
 	dbHandle ifNil: [ ^ self ].
-	dbHandle beNull.
+	"Set dbHandle to nil to allow its garbage collection.
+	The underlying handle should not be switched to NULL here, SQLite3DatabaseExternalObject class>>doFinalizeResourceData: will take care of that"
 	dbHandle := nil.
-	isOpen := false.
+	isOpen := false
 ]
 
 { #category : #'public API - introspection' }
