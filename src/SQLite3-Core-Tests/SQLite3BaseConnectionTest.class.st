@@ -61,9 +61,17 @@ SQLite3BaseConnectionTest >> executeInDB: anSQLText [
 
 { #category : #utilities }
 SQLite3BaseConnectionTest >> getTempPath [
-^Smalltalk os isWindows
-		        ifTrue: [ (Smalltalk os environment at: 'TMP') , '\' ]
-		        ifFalse: [ '/tmp/' ]
+
+	| env |
+	env := Smalltalk os environment.
+	^ Smalltalk os isWindows
+		  ifTrue: [ "See https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-gettemppath2a"
+			  (env
+				   at: 'TMP'
+				   ifAbsent: [ env at: 'TEMP' ifAbsent: [ env at: 'USERPROFILE' ] ])
+			  , '\' ]
+		  ifFalse: [ "See https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap08.html"
+			(env at: 'TMPDIR' ifAbsent: ['/tmp']), '/' ]
 ]
 
 { #category : #utilities }
