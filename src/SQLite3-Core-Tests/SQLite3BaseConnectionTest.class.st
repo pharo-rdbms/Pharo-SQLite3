@@ -59,11 +59,24 @@ SQLite3BaseConnectionTest >> executeInDB: anSQLText [
 	self assert: result equals: 0
 ]
 
-{ #category : #tests }
+{ #category : #utilities }
+SQLite3BaseConnectionTest >> getTempPath [
+^Smalltalk os isWindows
+		        ifTrue: [ (Smalltalk os environment at: 'TMP') , '\' ]
+		        ifFalse: [ '/tmp/' ]
+]
+
+{ #category : #utilities }
 SQLite3BaseConnectionTest >> invalidFileNameOnCurrentOperatingSystem [
 	^Smalltalk os isWindows
 		ifTrue: [ '/&*no' ]
 		ifFalse: [ '/nosuchfile' ]
+]
+
+{ #category : #utilities }
+SQLite3BaseConnectionTest >> newUniqueFileName [
+
+	^ self getTempPath , UUID new asString
 ]
 
 { #category : #tests }
@@ -347,14 +360,17 @@ SQLite3BaseConnectionTest >> testBooleanWriteThenRead [
 { #category : #'tests - connections' }
 SQLite3BaseConnectionTest >> testCloseFile [
 
-	| fileName newConnection path |
-	path := Smalltalk os isWindows ifTrue: [ (Smalltalk os environment at: 'TMP'), '\' ] ifFalse: [ '/tmp/' ].
-	fileName := path, UUID new asString.
-	newConnection := (SQLite3BaseConnection on: fileName).
-	newConnection open; close.
+	| fileName newConnection |
+	fileName := self newUniqueFileName.
+	newConnection := SQLite3BaseConnection on: fileName.
+	newConnection
+		open;
+		close.
 	newConnection := nil.
 	Smalltalk garbageCollect.
-	self shouldnt: [ File deleteFile: fileName ] raise: CannotDeleteFileException.
+	self
+		shouldnt: [ File deleteFile: fileName ]
+		raise: CannotDeleteFileException
 ]
 
 { #category : #'tests - columns' }
