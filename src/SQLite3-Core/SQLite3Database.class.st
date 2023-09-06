@@ -60,6 +60,12 @@ SQLite3Database >> connection [
 ]
 
 { #category : #executing }
+SQLite3Database >> execute: anSQLStatement [
+
+	^ self connection execute: anSQLStatement
+]
+
+{ #category : #executing }
 SQLite3Database >> execute: anSQLStatement doing: aBlock [
 
 	^ self connection execute: anSQLStatement with: #(  ) doing: aBlock

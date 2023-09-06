@@ -46,6 +46,28 @@ SQLite3TableTest >> testName [
 	self assert: instance name equals: 'SimpleTable'
 ]
 
+{ #category : #'tests - sample' }
+SQLite3TableTest >> testNumberOfRows [
+
+	self assert: table numberOfRows equals: 0
+]
+
+{ #category : #'tests - sample' }
+SQLite3TableTest >> testNumberOfRowsIsOne [
+
+	db execute: 'INSERT INTO SAMPLE(NAME) VALUES (''first example'');'.
+
+	self assert: table numberOfRows equals: 1
+]
+
+{ #category : #'tests - sample' }
+SQLite3TableTest >> testNumberOfRowsIsTwo [
+
+	db execute: 'INSERT INTO SAMPLE(NAME) VALUES (''first example''), (''second example'');'.
+
+	self assert: table numberOfRows equals: 2
+]
+
 { #category : #tests }
 SQLite3TableTest >> testPrintString [
 

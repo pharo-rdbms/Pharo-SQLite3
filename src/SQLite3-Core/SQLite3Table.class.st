@@ -55,9 +55,8 @@ SQLite3Table >> name [
 { #category : #accessing }
 SQLite3Table >> numberOfRows [
 
-	^ self database
-		execute: 'SELECT COUNT(*) FROM ', self name , ';'
-		doing: [:result | result next at: 1 ]
+	^ (self database execute: 'SELECT COUNT(*) FROM ' , self name , ';')
+		  onlyValue
 ]
 
 { #category : #printing }
