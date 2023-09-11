@@ -39,6 +39,20 @@ SQLite3ColumnTest >> tearDown [
 ]
 
 { #category : #tests }
+SQLite3ColumnTest >> testHasNotNullConstraint [
+	
+	self assert: firstColumn hasNotNullConstraint.
+	self deny: secondColumn hasNotNullConstraint 
+]
+
+{ #category : #tests }
+SQLite3ColumnTest >> testIndex [
+
+	self assert: firstColumn index equals: 0.
+	self assert: secondColumn index equals: 1
+]
+
+{ #category : #tests }
 SQLite3ColumnTest >> testInitialization [
 
 	| instance |
@@ -47,10 +61,10 @@ SQLite3ColumnTest >> testInitialization [
 ]
 
 { #category : #tests }
-SQLite3ColumnTest >> testNotNullConstraint [
-	
-	self assert: firstColumn hasNotNullConstraint.
-	self deny: secondColumn hasNotNullConstraint 
+SQLite3ColumnTest >> testName [
+
+	self assert: firstColumn name equals: 'ID'.
+	self assert: secondColumn name equals: 'NAME'
 ]
 
 { #category : #tests }
