@@ -848,6 +848,30 @@ SQLite3ConnectionTest >> testExecuteWithToFail2 [
 	self assert: res equals: 0
 ]
 
+{ #category : #'tests - open / close' }
+SQLite3ConnectionTest >> testForcedClose [
+
+	| fileRef conn |
+	fileRef := FileReference
+		           newTempFilePrefix: 'sqlite3_test_forced_close_'
+		           suffix: '.db'.
+	self assert: fileRef exists not.
+
+	conn := SQLite3Connection on: fileRef fullName.
+	conn open.
+
+	self assert: fileRef exists.
+
+	conn execute: 'create table if not exists BOOK (ID integer primary key, NAME VARCHAR2);'.
+
+	"now force closing"
+	conn forceClose.
+
+	"it must be possible to delete the DB now"
+	fileRef delete.
+	self assert: fileRef exists not
+]
+
 { #category : #tests }
 SQLite3ConnectionTest >> testGetAutocommit [
 
