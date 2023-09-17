@@ -187,6 +187,14 @@ SQLite3BaseConnection >> finalize: aStatementHandle [
 	library finalize: aStatementHandle on: dbHandle
 ]
 
+{ #category : #'public API - open/close' }
+SQLite3BaseConnection >> forceClose [
+	"Forces the release of dbHandle, enabling to delete the database file without closing Pharo"
+	
+	dbHandle ifNotNil: [ library close: dbHandle ].
+	self close
+]
+
 { #category : #'public API - introspection' }
 SQLite3BaseConnection >> getAutoCommit [
 
