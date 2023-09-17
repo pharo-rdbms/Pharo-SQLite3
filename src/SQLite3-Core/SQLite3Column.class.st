@@ -14,8 +14,8 @@ Class {
 }
 
 { #category : #'instance creation' }
-SQLite3Column class >> readFromTableInfoResult: aSQLite3Row [ 
- 
+SQLite3Column class >> readFromTableInfoResult: aSQLite3Row [
+
 	^(self new)
 		name: (aSQLite3Row at: 'name');
 		index: (aSQLite3Row at: 'cid');
@@ -49,7 +49,7 @@ SQLite3Column >> index: anObject [
 ]
 
 { #category : #initialization }
-SQLite3Column >> initialize [ 
+SQLite3Column >> initialize [
 
 	super initialize.
 	hasNotNullConstraint := false

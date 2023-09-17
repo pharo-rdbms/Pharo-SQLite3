@@ -11,6 +11,6 @@ Class {
 
 { #category : #'private - accessing' }
 SQLite3Internal class >> nativeErrorCode [
-	
+
 	^ SQLITE_INTERNAL
 ]

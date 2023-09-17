@@ -9,6 +9,6 @@ Class {
 
 { #category : #initialization }
 SQLite3BackupExternalReference >> beNull [
-	
+
 	^ handle beNull
 ]

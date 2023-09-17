@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #'private - accessing' }
-SQLite3IOErrorNoMemory class >> nativeErrorCode [ 
+SQLite3IOErrorNoMemory class >> nativeErrorCode [
 
 	^ SQLITE_IOERR_NOMEM
 ]

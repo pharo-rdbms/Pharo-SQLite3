@@ -13,7 +13,7 @@ Class {
 { #category : #'instance creation' }
 SQLite3Database class >> forConnection: aConnection [
 
-	^ self new 
+	^ self new
 		initConnection: aConnection;
 		yourself
 ]
@@ -40,10 +40,10 @@ SQLite3Database class >> openOn: aFilename [
 
 { #category : #accessing }
 SQLite3Database class >> tableInfoFor: aFileName [
-	
+
 	| db |
 	db := self on: aFileName.
-	db connection open.	 
+	db connection open.
 	^ db tables
 ]
 
@@ -74,7 +74,7 @@ SQLite3Database >> execute: anSQLStatement doing: aBlock [
 { #category : #'private - initialization' }
 SQLite3Database >> initConnection: aConnection [
 
-	connection := aConnection 
+	connection := aConnection
 ]
 
 { #category : #'open/close' }
@@ -103,13 +103,13 @@ SQLite3Database >> tables [
 			SELECT *
 			FROM sqlite_master
 			WHERE
-			    type =''table'' AND 
+			    type =''table'' AND
     			name NOT LIKE ''sqlite_%'';'
 		with: #(  )
-		doing: [ :result | 
-			result rows collect: [ :eachRow | 
+		doing: [ :result |
+			result rows collect: [ :eachRow |
 				| properties |
-				properties := (eachRow columnNames collect: [ :eachCName | 
+				properties := (eachRow columnNames collect: [ :eachCName |
 					               eachCName -> (eachRow atName: eachCName) ])
 					              asDictionary.
 

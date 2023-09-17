@@ -18,7 +18,7 @@ Class {
 }
 
 { #category : #'private - accessing' }
-SQLite3Busy class >> nativeErrorCode [ 
-	
+SQLite3Busy class >> nativeErrorCode [
+
 	^ SQLITE_BUSY
 ]

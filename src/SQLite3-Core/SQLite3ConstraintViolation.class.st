@@ -11,6 +11,6 @@ Class {
 
 { #category : #'private - accessing' }
 SQLite3ConstraintViolation class >> nativeErrorCode [
-	
+
 	^ SQLITE_CONSTRAINT
 ]

@@ -12,7 +12,7 @@ Class {
 }
 
 { #category : #'instance creation' }
-SQLite3Table class >> properties: aDictionary in: aDatabase [  
+SQLite3Table class >> properties: aDictionary in: aDatabase [
 	^ self new
 		database: aDatabase;
 		properties: aDictionary;
@@ -29,9 +29,8 @@ SQLite3Table >> columnNames [
 SQLite3Table >> columns [
 	^ self database
 		execute: 'pragma table_info(', self name , ');'
-		doing: [:result | 
+		doing: [:result |
 			result rows collect: [ :each |SQLite3Column readFromTableInfoResult: each ]]
-			
 ]
 
 { #category : #accessing }
