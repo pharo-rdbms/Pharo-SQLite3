@@ -623,12 +623,6 @@ SQLite3Library >> macLibraryName [
 	self error: 'Module not found.'
 ]
 
-{ #category : #'private - accessing' }
-SQLite3Library >> macModuleName [
-	"Remove later - this is just to satisfy old Pharo 6"
-	^self macLibraryName 
-]
-
 { #category : #accessing }
 SQLite3Library >> nameFor: aStatement at: aColumn [
 	^ self apiColumnName: aStatement atColumn: aColumn
@@ -759,13 +753,6 @@ SQLite3Library >> unix32LibraryName [
 ]
 
 { #category : #'private - accessing' }
-SQLite3Library >> unix32ModuleName [
-	"Remove later - this is just to satisfy old Pharo 6"
-
-	^self unix32LibraryName
-]
-
-{ #category : #'private - accessing' }
 SQLite3Library >> unix64LibraryName [
 	(#('/usr/lib/x86_64-linux-gnu' '/lib/x86_64-linux-gnu' '/usr/lib'),
 			((OSEnvironment current at: 'LD_LIBRARY_PATH' ifAbsent: [ '' ]) substrings: ':'))
@@ -779,22 +766,8 @@ SQLite3Library >> unix64LibraryName [
 ]
 
 { #category : #'private - accessing' }
-SQLite3Library >> unix64ModuleName [
-	"Remove later - this is just to satisfy old Pharo 6"
-
-	^self unix64LibraryName
-]
-
-{ #category : #'private - accessing' }
 SQLite3Library >> win32LibraryName [
 	^ 'sqlite3'
-]
-
-{ #category : #'private - accessing' }
-SQLite3Library >> win32ModuleName [
-	"Remove later - this is just to satisfy old Pharo 6"
-
-	^self win32LibraryName
 ]
 
 { #category : #operating }
