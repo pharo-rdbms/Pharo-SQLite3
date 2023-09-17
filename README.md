@@ -1,4 +1,4 @@
-# Pharo-SQlite3
+# Pharo-SQLite3
 
 [![Unit Tests](https://github.com/pharo-rdbms/Pharo-SQLite3/workflows/Unit%20Tests/badge.svg?branch=master)](https://github.com/pharo-rdbms/Pharo-SQLite3/actions?query=workflow%3AUnit%20Tests)
 [![GLORP Integration Tests](https://github.com/pharo-rdbms/Pharo-SQLite3/workflows/GLORP%20Integration%20Tests/badge.svg?branch=master)](https://github.com/pharo-rdbms/Pharo-SQLite3/actions?query=workflow%3AGLORP%20Integration%20Tests)
