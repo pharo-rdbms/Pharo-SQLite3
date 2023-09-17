@@ -11,6 +11,6 @@ Class {
 
 { #category : #'private - accessing' }
 SQLite3Error class >> nativeErrorCode [
-	
+
 	^ SQLITE_ERROR
 ]

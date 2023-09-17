@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #'private - accessing' }
-SQLite3IOErrorSharedMemorySize class >> nativeErrorCode [ 
+SQLite3IOErrorSharedMemorySize class >> nativeErrorCode [
 
 	^ SQLITE_IOERR_SHMSIZE
 ]

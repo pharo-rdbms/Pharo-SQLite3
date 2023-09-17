@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #'private - accessing' }
-SQLite3IOErrorSharedMemoryOpen class >> nativeErrorCode [ 
+SQLite3IOErrorSharedMemoryOpen class >> nativeErrorCode [
 
 	^ SQLITE_IOERR_SHMOPEN
 ]

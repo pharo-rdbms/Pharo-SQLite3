@@ -13,13 +13,11 @@ Class {
 
 { #category : #running }
 SQLite3Benchmark >> basicExecute: anSQLText times: aCount [
-	
+
 	db beginTransaction.
 	1 to: aCount do: [ :i |
 		db basicExecute: anSQLText ].
-	db commitTransaction.
-
-
+	db commitTransaction
 ]
 
 { #category : #'connecting-disconnecting' }
@@ -34,41 +32,33 @@ SQLite3Benchmark >> disconnect [
 
 { #category : #running }
 SQLite3Benchmark >> execute: anSQLText times: aCount bindingsBlock: bindingsBlock [
-	
+
 	db beginTransaction.
 	1 to: aCount do: [ :i |
 		db execute: anSQLText with: (bindingsBlock value: i) ].
-	db commitTransaction.
-
-
+	db commitTransaction
 ]
 
 { #category : #running }
 SQLite3Benchmark >> finalizeStatement [
 	stmt ifNotNil: [ stmt finalize ]
-
-
 ]
 
 { #category : #running }
 SQLite3Benchmark >> prepStep: anSQLText times: aCount bindingsBlock: bindingsBlock [
-	
+
 	stmt := db prepare: anSQLText.
 	db beginTransaction.
 	1 to: aCount do: [ :i |
 		bindingsBlock value: stmt value: i.
 		stmt step; clearBindings; reset ].
-	db commitTransaction.
-
-
+	db commitTransaction
 ]
 
 { #category : #running }
 SQLite3Benchmark >> runBlock: aBlock [
-	
+
 	db beginTransaction.
 	aBlock value: db.
-	db commitTransaction.
-
-
+	db commitTransaction
 ]

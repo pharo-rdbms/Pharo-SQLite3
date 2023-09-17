@@ -12,7 +12,7 @@ Class {
 }
 
 { #category : #'private - accessing' }
-SQLite3Misuse class >> nativeErrorCode [ 
-	
+SQLite3Misuse class >> nativeErrorCode [
+
 	^ SQLITE_MISUSE
 ]

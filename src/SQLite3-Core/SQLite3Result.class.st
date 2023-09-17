@@ -20,7 +20,7 @@ SQLite3Result class >> forNativeResultCode: anInteger [
 ]
 
 { #category : #testing }
-SQLite3Result class >> isAbstract [ 
+SQLite3Result class >> isAbstract [
 
 	^self name = #SQLite3Result
 ]
@@ -33,6 +33,6 @@ SQLite3Result class >> nativeResultCode [
 
 { #category : #'private - accessing' }
 SQLite3Result class >> subclassForNativeResultCode: anInteger [
-	^ self subclasses 
-		detect: [ :subclass | subclass nativeResultCode = anInteger ]  
+	^ self subclasses
+		detect: [ :subclass | subclass nativeResultCode = anInteger ]
 ]

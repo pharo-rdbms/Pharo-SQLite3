@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #'private - accessing' }
-SQLite3IOErrorLock class >> nativeErrorCode [ 
+SQLite3IOErrorLock class >> nativeErrorCode [
 
 	^ SQLITE_IOERR_LOCK
 ]

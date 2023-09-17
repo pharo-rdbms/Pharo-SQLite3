@@ -14,7 +14,7 @@ Class {
 
 { #category : #'instance creation' }
 SQLite3Row class >> new: anInteger [
-	^(self new) 
+	^(self new)
 		columnNames:(Array new:anInteger);
 		values: (Array new: anInteger);
 		yourself
@@ -27,7 +27,7 @@ SQLite3Row >> asArray [
 
 { #category : #converting }
 SQLite3Row >> asCombinedDictionary [
-	^self asDictionary addAll: ((self values collectWithIndex:[:v :i | i -> v]) asDictionary); yourself 
+	^self asDictionary addAll: ((self values collectWithIndex:[:v :i | i -> v]) asDictionary); yourself
 ]
 
 { #category : #converting }
@@ -40,20 +40,20 @@ SQLite3Row >> asDictionary [
 ]
 
 { #category : #accessing }
-SQLite3Row >> at: aKey [ 
+SQLite3Row >> at: aKey [
 	^ self at: aKey ifAbsent: [  ]
 ]
 
 { #category : #accessing }
 SQLite3Row >> at: aKey ifAbsent: aBlock [
-	^ aKey isInteger 
-		ifTrue: [ self values at: aKey ifAbsent: aBlock ] 
+	^ aKey isInteger
+		ifTrue: [ self values at: aKey ifAbsent: aBlock ]
 		ifFalse: [ self values at:(self columnNames indexOf: aKey) ifAbsent: aBlock ]
 ]
 
 { #category : #accessing }
 SQLite3Row >> at: aKey put: anObject [
-	^ aKey isInteger 
+	^ aKey isInteger
 		ifTrue: [self atIndex: aKey put: anObject]
 		ifFalse: [ self atName: aKey put: anObject ]
 ]
@@ -69,20 +69,20 @@ SQLite3Row >> atIndex: anIndex put: anObject [
 ]
 
 { #category : #accessing }
-SQLite3Row >> atName: aKey [ 
+SQLite3Row >> atName: aKey [
 	| idx |
 	idx := self columnNames indexOf: aKey.
-	^idx = 0 
+	^idx = 0
 		ifTrue: [ SQLite3Misuse
-				signal: 'Attept to set invalid column name ', aKey, ' in result set'   ] 
+				signal: 'Attept to set invalid column name ', aKey, ' in result set'   ]
 		ifFalse: [ values at: idx ]
 ]
 
 { #category : #accessing }
 SQLite3Row >> atName: aKey put: anObject [
 	| idx |
-	^ (idx := self columnNames indexOf: aKey) isZero 
-		ifTrue: [ 
+	^ (idx := self columnNames indexOf: aKey) isZero
+		ifTrue: [
 			columnNames := self columnNames copyWith: aKey.
 			values := self values copyWith: anObject ]
 		ifFalse: [ values at: idx put: anObject ]
@@ -113,23 +113,21 @@ SQLite3Row >> dataCount [
 { #category : #'reflective operations' }
 SQLite3Row >> doesNotUnderstand: aMessage [
 
-	^ self at: aMessage selector asString 
-			ifAbsent: [ 
+	^ self at: aMessage selector asString
+			ifAbsent: [
 				"20160514: This bit, for Glorp integration, feels a bit iffy."
-				self at: aMessage selector asString asUppercase 
+				self at: aMessage selector asString asUppercase
 					ifAbsent: [ super doesNotUnderstand: aMessage ]]
 ]
 
 { #category : #accessing }
 SQLite3Row >> first [
 	^ self values ifEmpty: [] ifNotEmpty: [:v | v first ]
-
 ]
 
 { #category : #accessing }
 SQLite3Row >> last [
 	^ self values ifEmpty: [ nil ] ifNotEmpty: [:v | v last ]
-
 ]
 
 { #category : #accessing }
