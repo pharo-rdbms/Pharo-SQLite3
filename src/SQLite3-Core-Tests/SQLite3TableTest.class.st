@@ -31,10 +31,10 @@ SQLite3TableTest >> tableCreationScript [
 ]
 
 { #category : #running }
-SQLite3TableTest >> tearDown [ 
+SQLite3TableTest >> tearDown [
 	db connection close.
 	db := nil.
-	super tearDown 
+	super tearDown
 ]
 
 { #category : #tests }
@@ -127,12 +127,12 @@ SQLite3TableTest >> testSampleTableProperties [
 	|props|
 	props := table properties.
 	self assert: props size equals: 5.
-	
+
 	self assert: (props at: #type) equals: 'table'.
 	self assert: (props at: #tbl_name) equals: 'SAMPLE'.
 	self assert: (props at: #rootpage) equals: 2.
 	self assert: (props at: #name) equals: 'SAMPLE'.
-	self assert: (props at: #sql) equals: self tableCreationScript 
+	self assert: (props at: #sql) equals: self tableCreationScript
 ]
 
 { #category : #'tests - sample' }
@@ -142,8 +142,7 @@ SQLite3TableTest >> testSampleTableSchema [
 ]
 
 { #category : #tests }
-SQLite3TableTest >> testUnitializedName [ 
+SQLite3TableTest >> testUnitializedName [
 
 	self assert: SQLite3Table new name equals: ''
-		
 ]
