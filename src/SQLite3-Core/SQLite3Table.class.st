@@ -84,11 +84,9 @@ SQLite3Table >> properties: anObject [
 { #category : #accessing }
 SQLite3Table >> rows [
 
-	^ self database
-		  execute: 'SELECT *
-			FROM ', self name, '
-			LIMIT 1000;'
-		  doing: [ :result | result rows collect: [ :each | each ] ]
+	^ (self database execute: 'SELECT *
+			FROM ' , self name , '
+			LIMIT 1000;') rows
 ]
 
 { #category : #accessing }
