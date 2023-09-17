@@ -75,6 +75,36 @@ SQLite3TableTest >> testPrintString [
 ]
 
 { #category : #'tests - sample' }
+SQLite3TableTest >> testRows [
+
+	self assert: table rows isEmpty
+]
+
+{ #category : #'tests - sample' }
+SQLite3TableTest >> testRowsHasOneRow [
+
+	| rows |
+	db execute: 'INSERT INTO SAMPLE(NAME) VALUES (''first example'');'.
+	rows := table rows.
+	self deny: rows isEmpty.
+	self assert: rows size equals: 1.
+	self assert: (rows first at: 'NAME') equals: 'first example'
+]
+
+{ #category : #'tests - sample' }
+SQLite3TableTest >> testRowsHasTwoRows [
+
+	| rows |
+	db execute:
+		'INSERT INTO SAMPLE(NAME) VALUES (''first example''), (''second example'');'.
+	rows := table rows.
+	self deny: rows isEmpty.
+	self assert: rows size equals: 2.
+	self assert: (rows first at: 'NAME') equals: 'first example'.
+	self assert: (rows second at: 'NAME') equals: 'second example'
+]
+
+{ #category : #'tests - sample' }
 SQLite3TableTest >> testSampleTable [
 
 	self assert: table name equals: 'SAMPLE'
