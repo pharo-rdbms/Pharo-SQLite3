@@ -85,6 +85,42 @@ SQLite3ConnectionTest >> testChanges [
 ]
 
 { #category : #tests }
+SQLite3ConnectionTest >> testDo [
+
+	| arrayResults dictResults |
+	self executeInDB:
+		'create table if not exists x (id integer , tv text);'.
+	self executeInDB: 'delete from x;'.
+
+	res := db beginTransaction.
+	self assert: res equals: 0.
+
+	db basicExecute: 'insert into x values (10, "abc")'.
+	db basicExecute: 'insert into x values (20, "def")'.
+	db basicExecute: 'insert into x values (30, "ghi")'.
+
+	res := db commitTransaction.
+	self assert: res equals: 0.
+	arrayResults := OrderedCollection new.
+	dictResults := OrderedCollection new.
+	rs := db execute: 'select * from x;'.
+	rs do: [ :row |
+		arrayResults add: row asArray.
+		dictResults add: row asDictionary ].
+	rs close.
+	self deny: arrayResults isEmpty.
+	self assert: arrayResults size equals: 3.
+	self assert: arrayResults first equals: #( 10 'abc' ).
+	self assert: arrayResults second equals: #( 20 'def' ).
+	self assert: arrayResults third equals: #( 30 'ghi' ).
+	self deny: dictResults isEmpty.
+	self assert: dictResults size equals: 3.
+	self assert: dictResults first equals: { ('id' -> 10). ('tv' -> 'abc') } asDictionary.
+	self assert: dictResults second equals: { ('id' -> 20). ('tv' -> 'def') } asDictionary.
+	self assert: dictResults third equals: { ('id' -> 30). ('tv' -> 'ghi') } asDictionary
+]
+
+{ #category : #tests }
 SQLite3ConnectionTest >> testExactlyOneRow [
 	| row |
 

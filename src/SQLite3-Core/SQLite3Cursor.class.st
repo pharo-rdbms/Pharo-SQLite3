@@ -46,6 +46,15 @@ SQLite3Cursor >> connection [
 	^statement connection
 ]
 
+{ #category : #enumerating }
+SQLite3Cursor >> do: aBlock [
+	"Evaluate aBlock with each of the receiver's rows as the argument."
+
+	| eachRow |
+	[ (eachRow := self next) isNotNil ] whileTrue: [
+		aBlock value: eachRow ]
+]
+
 { #category : #API }
 SQLite3Cursor >> finalizeStatement [
 	statement finalize
