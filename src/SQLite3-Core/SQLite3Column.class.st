@@ -13,27 +13,17 @@ Class {
 	#category : #'SQLite3-Core-Base'
 }
 
-{ #category : #'instance creation' }
-SQLite3Column class >> readFromTableInfoResult: aSQLite3Row [
+{ #category : #accessing }
+SQLite3Column >> cid: anObject [
+	"The cid column should not be taken to mean more than 'rank within the current result set'."
 
-	^(self new)
-		name: (aSQLite3Row at: 'name');
-		index: (aSQLite3Row at: 'cid');
-		type: (aSQLite3Row at: 'type');
-		hasNotNullConstraint: (aSQLite3Row at: 'notnull') = 1;
-		yourself
+	index := anObject
 ]
 
 { #category : #accessing }
 SQLite3Column >> hasNotNullConstraint [
 
 	^ hasNotNullConstraint
-]
-
-{ #category : #accessing }
-SQLite3Column >> hasNotNullConstraint: anObject [
-
-	hasNotNullConstraint := anObject
 ]
 
 { #category : #accessing }
@@ -65,6 +55,13 @@ SQLite3Column >> name [
 SQLite3Column >> name: anObject [
 
 	name := anObject
+]
+
+{ #category : #accessing }
+SQLite3Column >> notnull: anInteger [
+	"whether or not the column can be NULL"
+
+	hasNotNullConstraint := anInteger = 1
 ]
 
 { #category : #printing }
