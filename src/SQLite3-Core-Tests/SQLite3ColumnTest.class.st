@@ -1,16 +1,18 @@
 Class {
-	#name : #SQLite3ColumnTest,
-	#superclass : #TestCase,
+	#name : 'SQLite3ColumnTest',
+	#superclass : 'TestCase',
 	#instVars : [
 		'db',
 		'table',
 		'firstColumn',
 		'secondColumn'
 	],
-	#category : #'SQLite3-Core-Tests-Base'
+	#category : 'SQLite3-Core-Tests-Base',
+	#package : 'SQLite3-Core-Tests',
+	#tag : 'Base'
 }
 
-{ #category : #running }
+{ #category : 'running' }
 SQLite3ColumnTest >> setUp [
 	super setUp.
 	db := SQLite3Database memory.
@@ -21,7 +23,7 @@ SQLite3ColumnTest >> setUp [
 	secondColumn := table columns second
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SQLite3ColumnTest >> tableCreationScript [
 
 	^'CREATE TABLE "SAMPLE"
@@ -31,7 +33,7 @@ SQLite3ColumnTest >> tableCreationScript [
 )'
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 SQLite3ColumnTest >> tearDown [
 
 	db connection close.
@@ -39,21 +41,21 @@ SQLite3ColumnTest >> tearDown [
 	super tearDown
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SQLite3ColumnTest >> testHasNotNullConstraint [
 
 	self assert: firstColumn hasNotNullConstraint.
 	self deny: secondColumn hasNotNullConstraint
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SQLite3ColumnTest >> testIndex [
 
 	self assert: firstColumn index equals: 0.
 	self assert: secondColumn index equals: 1
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SQLite3ColumnTest >> testInitialization [
 
 	| instance |
@@ -61,21 +63,21 @@ SQLite3ColumnTest >> testInitialization [
 	self deny: instance hasNotNullConstraint
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SQLite3ColumnTest >> testName [
 
 	self assert: firstColumn name equals: 'ID'.
 	self assert: secondColumn name equals: 'NAME'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SQLite3ColumnTest >> testPrintString [
 
 	self assert: firstColumn printString equals: 'a SQLite3Column("ID")'.
 	self assert: secondColumn printString equals: 'a SQLite3Column("NAME")'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SQLite3ColumnTest >> testType [
 
 	self assert: firstColumn type equals: 'INTEGER'.

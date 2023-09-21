@@ -2,16 +2,18 @@
 Unit tests for SQLiteBaseConnection
 "
 Class {
-	#name : #SQLite3BaseConnectionTest,
-	#superclass : #TestCase,
+	#name : 'SQLite3BaseConnectionTest',
+	#superclass : 'TestCase',
 	#instVars : [
 		'db',
 		'res'
 	],
-	#category : #'SQLite3-Core-Tests-Connections'
+	#category : 'SQLite3-Core-Tests-Connections',
+	#package : 'SQLite3-Core-Tests',
+	#tag : 'Connections'
 }
 
-{ #category : #'tests - DEACTIVATED' }
+{ #category : 'tests - DEACTIVATED' }
 SQLite3BaseConnectionTest >> deactivatedTestTracing [
 	| sql callback expected actual  |
 
@@ -50,7 +52,7 @@ SQLite3BaseConnectionTest >> deactivatedTestTracing [
 	self assert: actual contents equals: expected
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 SQLite3BaseConnectionTest >> executeInDB: anSQLText [
 
 	| result |
@@ -59,7 +61,7 @@ SQLite3BaseConnectionTest >> executeInDB: anSQLText [
 	self assert: result equals: 0
 ]
 
-{ #category : #utilities }
+{ #category : 'utilities' }
 SQLite3BaseConnectionTest >> getTempPath [
 
 	| env |
@@ -74,20 +76,20 @@ SQLite3BaseConnectionTest >> getTempPath [
 			(env at: 'TMPDIR' ifAbsent: ['/tmp']), '/' ]
 ]
 
-{ #category : #utilities }
+{ #category : 'utilities' }
 SQLite3BaseConnectionTest >> invalidFileNameOnCurrentOperatingSystem [
 	^Smalltalk os isWindows
 		ifTrue: [ '/&*no' ]
 		ifFalse: [ '/nosuchfile' ]
 ]
 
-{ #category : #utilities }
+{ #category : 'utilities' }
 SQLite3BaseConnectionTest >> newUniqueFileName [
 
 	^ self getTempPath , UUID new asString
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SQLite3BaseConnectionTest >> noTestColumnNamesBobbyGo [
 
 	"In this test, Bobby Tables strikes naive SQL string construction."
@@ -115,7 +117,7 @@ SQLite3BaseConnectionTest >> noTestColumnNamesBobbyGo [
 	self assert: tables first equals: 'x'
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 SQLite3BaseConnectionTest >> setUp [
 
 	super setUp.
@@ -123,14 +125,14 @@ SQLite3BaseConnectionTest >> setUp [
 	db open
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 SQLite3BaseConnectionTest >> tearDown [
 
 	[ db close ] on: SQLite3Misuse do: [ ].
 	super tearDown
 ]
 
-{ #category : #'tests - connections' }
+{ #category : 'tests - connections' }
 SQLite3BaseConnectionTest >> testBadOpen [
 
 	| newConnection |
@@ -140,21 +142,21 @@ SQLite3BaseConnectionTest >> testBadOpen [
 	self deny: newConnection isOpen
 ]
 
-{ #category : #'tests - execution' }
+{ #category : 'tests - execution' }
 SQLite3BaseConnectionTest >> testBasicExecuteOk [
 
 	self executeInDB: 'create table x (xk integer, xv integer);'.
 	self executeInDB: 'drop table x;'
 ]
 
-{ #category : #'tests - execution' }
+{ #category : 'tests - execution' }
 SQLite3BaseConnectionTest >> testBasicExecuteSyntaxError [
 
 	self should: [ db basicExecute: 'create table,;' ]
 		raise: SQLite3AbstractError
 ]
 
-{ #category : #'tests - types' }
+{ #category : 'tests - types' }
 SQLite3BaseConnectionTest >> testBooleanColumnTypeMismatch [
 
 	self executeInDB: 'create table x (xk integer primary key, xv notboolean);'.
@@ -163,7 +165,7 @@ SQLite3BaseConnectionTest >> testBooleanColumnTypeMismatch [
 		statement basicExecute: [ :row | self should: [ row booleanAt: 0 ] raise: SQLite3AbstractError ] ]
 ]
 
-{ #category : #'tests - types' }
+{ #category : 'tests - types' }
 SQLite3BaseConnectionTest >> testBooleanObject [
 
 	self executeInDB: 'create table x (xk integer primary key, xv boolean);'.
@@ -186,7 +188,7 @@ SQLite3BaseConnectionTest >> testBooleanObject [
 		]
 ]
 
-{ #category : #'tests - writing' }
+{ #category : 'tests - writing' }
 SQLite3BaseConnectionTest >> testBooleanWriteIntegerOneThenRead [
 
 	self executeInDB: 'create table x (xk integer primary key, xv boolean);'.
@@ -207,7 +209,7 @@ SQLite3BaseConnectionTest >> testBooleanWriteIntegerOneThenRead [
 		]
 ]
 
-{ #category : #'tests - writing' }
+{ #category : 'tests - writing' }
 SQLite3BaseConnectionTest >> testBooleanWriteIntegerTwoThenRead [
 
 	self executeInDB: 'create table x (xk integer primary key, xv boolean);'.
@@ -222,7 +224,7 @@ SQLite3BaseConnectionTest >> testBooleanWriteIntegerTwoThenRead [
 		statement basicExecute: [ :row | self should: [ row booleanAt: 0 ] raise: SQLite3AbstractError ] ]
 ]
 
-{ #category : #'tests - writing' }
+{ #category : 'tests - writing' }
 SQLite3BaseConnectionTest >> testBooleanWriteIntegerZeroThenRead [
 
 	self executeInDB: 'create table x (xk integer primary key, xv boolean);'.
@@ -243,7 +245,7 @@ SQLite3BaseConnectionTest >> testBooleanWriteIntegerZeroThenRead [
 		]
 ]
 
-{ #category : #'tests - writing' }
+{ #category : 'tests - writing' }
 SQLite3BaseConnectionTest >> testBooleanWriteNilThenRead [
 
 	self executeInDB: 'create table x (xk integer primary key, xv boolean);'.
@@ -265,7 +267,7 @@ SQLite3BaseConnectionTest >> testBooleanWriteNilThenRead [
 		]
 ]
 
-{ #category : #'tests - writing' }
+{ #category : 'tests - writing' }
 SQLite3BaseConnectionTest >> testBooleanWriteSQLNullThenRead [
 
 	self executeInDB: 'create table x (xk integer primary key, xv boolean);'.
@@ -283,7 +285,7 @@ SQLite3BaseConnectionTest >> testBooleanWriteSQLNullThenRead [
 		]
 ]
 
-{ #category : #'tests - writing' }
+{ #category : 'tests - writing' }
 SQLite3BaseConnectionTest >> testBooleanWriteStringFalseThenRead [
 
 	self executeInDB: 'create table x (xk integer primary key, xv boolean);'.
@@ -304,7 +306,7 @@ SQLite3BaseConnectionTest >> testBooleanWriteStringFalseThenRead [
 		]
 ]
 
-{ #category : #'tests - writing' }
+{ #category : 'tests - writing' }
 SQLite3BaseConnectionTest >> testBooleanWriteStringTrueThenRead [
 
 	self executeInDB: 'create table x (xk integer primary key, xv boolean);'.
@@ -325,7 +327,7 @@ SQLite3BaseConnectionTest >> testBooleanWriteStringTrueThenRead [
 		]
 ]
 
-{ #category : #'tests - writing' }
+{ #category : 'tests - writing' }
 SQLite3BaseConnectionTest >> testBooleanWriteStringTwoThenRead [
 
 	self executeInDB: 'create table x (xk integer primary key, xv boolean);'.
@@ -340,7 +342,7 @@ SQLite3BaseConnectionTest >> testBooleanWriteStringTwoThenRead [
 		statement basicExecute: [ :row | self should: [ row booleanAt: 0 ] raise: SQLite3AbstractError ] ]
 ]
 
-{ #category : #'tests - writing' }
+{ #category : 'tests - writing' }
 SQLite3BaseConnectionTest >> testBooleanWriteThenRead [
 
 	self executeInDB: 'create table x (xk integer primary key, xv boolean);'.
@@ -361,7 +363,7 @@ SQLite3BaseConnectionTest >> testBooleanWriteThenRead [
 		]
 ]
 
-{ #category : #'tests - connections' }
+{ #category : 'tests - connections' }
 SQLite3BaseConnectionTest >> testCloseFile [
 
 	| fileName newConnection |
@@ -377,7 +379,7 @@ SQLite3BaseConnectionTest >> testCloseFile [
 		raise: CannotDeleteFileException
 ]
 
-{ #category : #'tests - columns' }
+{ #category : 'tests - columns' }
 SQLite3BaseConnectionTest >> testColumnNames [
 
 	| columns |
@@ -389,7 +391,7 @@ SQLite3BaseConnectionTest >> testColumnNames [
 	self assert: columns second equals: 'xv'
 ]
 
-{ #category : #'tests - columns' }
+{ #category : 'tests - columns' }
 SQLite3BaseConnectionTest >> testColumnNamesBobbyStop [
 
 	"In this test, Bobby Tables strikes again, but fails, because #columnNamesFor: uses parameter binding."
@@ -413,7 +415,7 @@ SQLite3BaseConnectionTest >> testColumnNamesBobbyStop [
 	self assert: tables second equals: 'students'
 ]
 
-{ #category : #'tests - columns' }
+{ #category : 'tests - columns' }
 SQLite3BaseConnectionTest >> testColumnNamesNoSuchTable [
 
 	| columns |
@@ -423,7 +425,7 @@ SQLite3BaseConnectionTest >> testColumnNamesNoSuchTable [
 	self assert: columns isNil
 ]
 
-{ #category : #'tests - connections' }
+{ #category : 'tests - connections' }
 SQLite3BaseConnectionTest >> testConstraintViolation [
 
 	self
@@ -432,7 +434,7 @@ SQLite3BaseConnectionTest >> testConstraintViolation [
 	self should: [ db basicExecute: 'insert into x values(1);' ] raise: SQLite3ConstraintViolation
 ]
 
-{ #category : #'tests - execution' }
+{ #category : 'tests - execution' }
 SQLite3BaseConnectionTest >> testDataValuesAvailable [
 
 	self executeInDB: 'create table x (xk integer primary key, iv integer, tv text);'.
@@ -444,7 +446,7 @@ SQLite3BaseConnectionTest >> testDataValuesAvailable [
 		statement basicExecute: [ :row | self assert: row dataValuesAvailable equals: 3 ] ]
 ]
 
-{ #category : #'tests - types' }
+{ #category : 'tests - types' }
 SQLite3BaseConnectionTest >> testDate [
 
 	| data |
@@ -474,7 +476,7 @@ SQLite3BaseConnectionTest >> testDate [
 		]
 ]
 
-{ #category : #'tests - types' }
+{ #category : 'tests - types' }
 SQLite3BaseConnectionTest >> testDateAndTime [
 
 	| data |
@@ -507,7 +509,7 @@ SQLite3BaseConnectionTest >> testDateAndTime [
 		]
 ]
 
-{ #category : #'tests - columns' }
+{ #category : 'tests - columns' }
 SQLite3BaseConnectionTest >> testDeclaredColumnTypes [
 
 	| columns |
@@ -520,7 +522,7 @@ SQLite3BaseConnectionTest >> testDeclaredColumnTypes [
 	self assert: columns third equals: 'boolean'
 ]
 
-{ #category : #'tests - multilingual' }
+{ #category : 'tests - multilingual' }
 SQLite3BaseConnectionTest >> testDefaultMultilingualStrings [
 
 	self executeInDB:
@@ -537,7 +539,7 @@ SQLite3BaseConnectionTest >> testDefaultMultilingualStrings [
 		]
 ]
 
-{ #category : #'tests - connections' }
+{ #category : 'tests - connections' }
 SQLite3BaseConnectionTest >> testDoubleClose [
 
 	db close.
@@ -545,7 +547,7 @@ SQLite3BaseConnectionTest >> testDoubleClose [
 	"#tearDown will close the db again, and is similarly guarded."
 ]
 
-{ #category : #'tests - types' }
+{ #category : 'tests - types' }
 SQLite3BaseConnectionTest >> testFloat [
 
 	self executeInDB: 'create table x (xk integer primary key, xv real);'.
@@ -559,7 +561,7 @@ SQLite3BaseConnectionTest >> testFloat [
 		]
 ]
 
-{ #category : #'tests - types' }
+{ #category : 'tests - types' }
 SQLite3BaseConnectionTest >> testInteger [
 
 	"The large integer comes from Glorp's testInt8."
@@ -579,19 +581,19 @@ SQLite3BaseConnectionTest >> testInteger [
 		]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SQLite3BaseConnectionTest >> testIsAbstract [
 
 	self assert: SQLite3BaseConnection isAbstract
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SQLite3BaseConnectionTest >> testIsThreadsafe [
 
 	self assert: (SQLite3BaseConnection isThreadsafe isKindOf: Boolean)
 ]
 
-{ #category : #'tests - multilingual' }
+{ #category : 'tests - multilingual' }
 SQLite3BaseConnectionTest >> testMultilingualStrings [
 
 	| data index |
@@ -619,7 +621,7 @@ SQLite3BaseConnectionTest >> testMultilingualStrings [
 		]
 ]
 
-{ #category : #'tests - multilingual' }
+{ #category : 'tests - multilingual' }
 SQLite3BaseConnectionTest >> testMultilingualTableName [
 
 	self executeInDB: 'create table 表一 (xk integer primary key, xm1 text default ''中文'');'.
@@ -633,7 +635,7 @@ SQLite3BaseConnectionTest >> testMultilingualTableName [
 		statement basicExecute: [ :row | self assert: ( row stringAt: 0 ) equals: '中文' ] ]
 ]
 
-{ #category : #'tests - types' }
+{ #category : 'tests - types' }
 SQLite3BaseConnectionTest >> testObjectBlob [
 
 	| data |
@@ -665,7 +667,7 @@ SQLite3BaseConnectionTest >> testObjectBlob [
 		]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SQLite3BaseConnectionTest >> testPrepareStep [
 
 	self executeInDB: 'create table x (xk integer primary key, iv integer, tv text);'.
@@ -694,7 +696,7 @@ SQLite3BaseConnectionTest >> testPrepareStep [
 		]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SQLite3BaseConnectionTest >> testPrepareStepSelective [
 
 	| i count |
@@ -728,7 +730,7 @@ SQLite3BaseConnectionTest >> testPrepareStepSelective [
 	self assert: count equals: 5
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SQLite3BaseConnectionTest >> testResultSetColumnIntrospection [
 
 	self executeInDB: 'create table x (xk integer primary key, iv integer, tv text);'.
@@ -746,7 +748,7 @@ SQLite3BaseConnectionTest >> testResultSetColumnIntrospection [
 		]
 ]
 
-{ #category : #'tests - types' }
+{ #category : 'tests - types' }
 SQLite3BaseConnectionTest >> testScaledDecimal [
 
 	"This test is a simplified version of GlorpNumericTest>>tesNumeric."
@@ -772,7 +774,7 @@ SQLite3BaseConnectionTest >> testScaledDecimal [
 		]
 ]
 
-{ #category : #'tests - tables' }
+{ #category : 'tests - tables' }
 SQLite3BaseConnectionTest >> testTableNames [
 
 	| tables |
@@ -783,7 +785,7 @@ SQLite3BaseConnectionTest >> testTableNames [
 	self assert: tables first equals: 'x'
 ]
 
-{ #category : #'tests - tables' }
+{ #category : 'tests - tables' }
 SQLite3BaseConnectionTest >> testTableNamesOfEmptyDatabase [
 
 	| tables |
@@ -792,7 +794,7 @@ SQLite3BaseConnectionTest >> testTableNamesOfEmptyDatabase [
 	self assert: tables isEmpty
 ]
 
-{ #category : #'tests - types' }
+{ #category : 'tests - types' }
 SQLite3BaseConnectionTest >> testTime [
 
 	| data |
@@ -822,7 +824,7 @@ SQLite3BaseConnectionTest >> testTime [
 		]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 SQLite3BaseConnectionTest >> withPreparedStatement: anSQLText do: aBlock [
 
 	| statement |
