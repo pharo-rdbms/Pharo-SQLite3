@@ -27,10 +27,10 @@ SQLite3Table >> columnNames [
 
 { #category : #accessing }
 SQLite3Table >> columns [
-	^ self database
-		execute: 'pragma table_info(', self name , ');'
-		doing: [:result |
-			result rows collect: [ :each |SQLite3Column readFromTableInfoResult: each ]]
+
+	^ (self database execute: 'pragma table_info(' , self name , ');')
+		  rowClass: SQLite3Column;
+		  rows
 ]
 
 { #category : #accessing }
