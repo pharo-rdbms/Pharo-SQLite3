@@ -72,7 +72,7 @@ Contributors in order of appearance:
 - [Julien Deplangue](https://github.com/juliendelplanque)
 - [Todd Blanchard](https://github.com/tblanchard)
 - [Renaud de Villemeur](https://github.com/rvillemeur)
-- [vonbecmann](https://github.com/vonbecmann)
+- [Bernardo Ezequiel Contreras](https://github.com/vonbecmann)
 - [Gabriel Omar Cotelli](https://github.com/gcotelli)
 - [Konrad Hinsen](https://github.com/khinsen)
 - [GitHub contributors](https://github.com/pharo-rdbms/Pharo-SQLite3/graphs/contributors)
