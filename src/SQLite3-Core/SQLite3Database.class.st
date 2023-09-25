@@ -98,20 +98,11 @@ SQLite3Database >> tables [
 
 	self connection isOpen ifFalse: [ ^ SQLite3NotOpen signal ].
 
-	^connection
-		execute: '
+	^ (connection execute: '
 			SELECT *
 			FROM sqlite_master
 			WHERE
 			    type =''table'' AND
-    			name NOT LIKE ''sqlite_%'';'
-		with: #(  )
-		doing: [ :result |
-			result rows collect: [ :eachRow |
-				| properties |
-				properties := (eachRow columnNames collect: [ :eachCName |
-					               eachCName -> (eachRow atName: eachCName) ])
-					              asDictionary.
-
-				SQLite3Table properties: properties in: self ] ]
+    			name NOT LIKE ''sqlite_%'';') rows collect: [ :eachRow |
+		  SQLite3Table properties: eachRow asDictionary in: self ]
 ]
