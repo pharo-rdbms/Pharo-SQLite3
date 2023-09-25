@@ -693,10 +693,10 @@ SQLite3Library >> sqlite3ResultFor: anInteger ifNoneMatch: aBlock [
 ]
 
 { #category : #stepping }
-SQLite3Library >> statementReadOnly:handle [
+SQLite3Library >> statementReadOnly: handle [
 	"int sqlite3_stmt_readonly(sqlite3_stmt *pStmt)"
 
-	^((self apiStatementReadOnly:handle) = 0) not
+	^ (self apiStatementReadOnly: handle) ~= 0
 ]
 
 { #category : #stepping }
