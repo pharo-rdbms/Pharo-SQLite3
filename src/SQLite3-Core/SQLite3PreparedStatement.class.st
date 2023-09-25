@@ -217,11 +217,10 @@ SQLite3PreparedStatement >> columnCount [
 
 { #category : #'public - accessing' }
 SQLite3PreparedStatement >> columnNames [
-	^columnNames ifNil: [
-		columnNames := Array new: self columnCount.
-		(1 to: columnNames size) do: [ :c | columnNames at: c put: (self nameOfColumn: c - 1) ].
-		columnNames
-	]
+
+	^ columnNames ifNil: [
+		  columnNames := (1 to: self columnCount) collect: [ :c | self nameOfColumn: c - 1 ].
+		  columnNames ]
 ]
 
 { #category : #'private - accessing' }
