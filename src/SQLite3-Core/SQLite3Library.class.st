@@ -725,18 +725,16 @@ SQLite3Library >> trace: handle with: callback with: appdata [
 
 { #category : #'private - utilities' }
 SQLite3Library >> typeFor: aStatement at: aColumn [
-	| selector declared |
 
-	declared := (self apiColumnDeclaredType: aStatement atColumn: aColumn).
-	declared notNil ifTrue: [
-		"Handle column type of boolean as a special case."
-		(self class booleanTypes includes: declared) ifTrue: [ ^ #booleanAt: ]].
+	| selector declared |
+	declared := self apiColumnDeclaredType: aStatement atColumn: aColumn.
+	declared ifNotNil: [ "Handle column type of boolean as a special case."
+		(self class booleanTypes includes: declared) ifTrue: [ ^ #booleanAt: ] ].
 
 	selector := DataTypeMap at: (self apiColumnType: aStatement atColumn: aColumn).
-	(selector = #stringAt:) ifTrue: [
-		declared notNil ifTrue: [
-			"Handle column type of date/time as a special case."
-			^DateTimeTypeMap at: declared asLowercase ifAbsent: [ selector ]]].
+	selector = #stringAt: ifTrue: [
+		declared ifNotNil: [ "Handle column type of date/time as a special case."
+			^ DateTimeTypeMap at: declared asLowercase ifAbsent: [ selector ] ] ].
 	^ selector
 ]
 
