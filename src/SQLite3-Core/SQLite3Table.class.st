@@ -84,7 +84,7 @@ SQLite3Table >> properties: anObject [
 SQLite3Table >> rows [
 
 	^ (self database execute: 'SELECT *
-			FROM ' , self name , '
+			FROM [' , self name , ']
 			LIMIT 1000;') rows
 ]
 
