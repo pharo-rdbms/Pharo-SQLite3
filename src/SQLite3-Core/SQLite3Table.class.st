@@ -28,7 +28,7 @@ SQLite3Table >> columnNames [
 { #category : #accessing }
 SQLite3Table >> columns [
 
-	^ (self database execute: 'pragma table_info(' , self name , ');')
+	^ (self database execute: 'pragma table_info([' , self name , ']);')
 		  rowClass: SQLite3Column;
 		  rows
 ]
@@ -54,7 +54,7 @@ SQLite3Table >> name [
 { #category : #accessing }
 SQLite3Table >> numberOfRows [
 
-	^ (self database execute: 'SELECT COUNT(*) FROM ' , self name , ';')
+	^ (self database execute: 'SELECT COUNT(*) FROM [' , self name , '];')
 		  onlyValue
 ]
 

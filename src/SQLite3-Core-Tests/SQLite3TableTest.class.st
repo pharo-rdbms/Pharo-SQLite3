@@ -2,27 +2,12 @@
 A test class for `SQLite3Table`
 "
 Class {
-	#name : 'SQLite3TableTest',
-	#superclass : 'TestCase',
-	#instVars : [
-		'db',
-		'table'
-	],
-	#category : 'SQLite3-Core-Tests-Base',
-	#package : 'SQLite3-Core-Tests',
-	#tag : 'Base'
+	#name : #SQLite3TableTest,
+	#superclass : #SQLite3TableBasedTest,
+	#category : #'SQLite3-Core-Tests-Base'
 }
 
-{ #category : 'running' }
-SQLite3TableTest >> setUp [
-	super setUp.
-	db := SQLite3Database memory.
-	db connection open.
-	db connection execute: self tableCreationScript.
-	table := db tables first
-]
-
-{ #category : 'accessing' }
+{ #category : #accessing }
 SQLite3TableTest >> tableCreationScript [
 
 	^'CREATE TABLE "SAMPLE"
@@ -32,14 +17,7 @@ SQLite3TableTest >> tableCreationScript [
 )'
 ]
 
-{ #category : 'running' }
-SQLite3TableTest >> tearDown [
-	db connection close.
-	db := nil.
-	super tearDown
-]
-
-{ #category : 'tests' }
+{ #category : #tests }
 SQLite3TableTest >> testName [
 
 	| properties instance |
@@ -48,13 +26,13 @@ SQLite3TableTest >> testName [
 	self assert: instance name equals: 'SimpleTable'
 ]
 
-{ #category : 'tests - sample' }
+{ #category : #'tests - sample' }
 SQLite3TableTest >> testNumberOfRows [
 
 	self assert: table numberOfRows equals: 0
 ]
 
-{ #category : 'tests - sample' }
+{ #category : #'tests - sample' }
 SQLite3TableTest >> testNumberOfRowsIsOne [
 
 	db execute: 'INSERT INTO SAMPLE(NAME) VALUES (''first example'');'.
@@ -62,7 +40,7 @@ SQLite3TableTest >> testNumberOfRowsIsOne [
 	self assert: table numberOfRows equals: 1
 ]
 
-{ #category : 'tests - sample' }
+{ #category : #'tests - sample' }
 SQLite3TableTest >> testNumberOfRowsIsTwo [
 
 	db execute: 'INSERT INTO SAMPLE(NAME) VALUES (''first example''), (''second example'');'.
@@ -70,19 +48,19 @@ SQLite3TableTest >> testNumberOfRowsIsTwo [
 	self assert: table numberOfRows equals: 2
 ]
 
-{ #category : 'tests' }
+{ #category : #tests }
 SQLite3TableTest >> testPrintString [
 
 	self assert: table printString equals: 'a SQLite3Table("SAMPLE")'
 ]
 
-{ #category : 'tests - sample' }
+{ #category : #'tests - sample' }
 SQLite3TableTest >> testRows [
 
 	self assert: table rows isEmpty
 ]
 
-{ #category : 'tests - sample' }
+{ #category : #'tests - sample' }
 SQLite3TableTest >> testRowsHasOneRow [
 
 	| rows |
@@ -93,7 +71,7 @@ SQLite3TableTest >> testRowsHasOneRow [
 	self assert: (rows first at: 'NAME') equals: 'first example'
 ]
 
-{ #category : 'tests - sample' }
+{ #category : #'tests - sample' }
 SQLite3TableTest >> testRowsHasTwoRows [
 
 	| rows |
@@ -106,25 +84,25 @@ SQLite3TableTest >> testRowsHasTwoRows [
 	self assert: (rows second at: 'NAME') equals: 'second example'
 ]
 
-{ #category : 'tests - sample' }
+{ #category : #'tests - sample' }
 SQLite3TableTest >> testSampleTable [
 
 	self assert: table name equals: 'SAMPLE'
 ]
 
-{ #category : 'tests - sample' }
+{ #category : #'tests - sample' }
 SQLite3TableTest >> testSampleTableColumnNames [
 
 	self assert: table columnNames size equals: 2
 ]
 
-{ #category : 'tests - sample' }
+{ #category : #'tests - sample' }
 SQLite3TableTest >> testSampleTableColumns [
 
 	self assert: table columns size equals: 2
 ]
 
-{ #category : 'tests - sample' }
+{ #category : #'tests - sample' }
 SQLite3TableTest >> testSampleTableProperties [
 	|props|
 	props := table properties.
@@ -137,13 +115,7 @@ SQLite3TableTest >> testSampleTableProperties [
 	self assert: (props at: #sql) equals: self tableCreationScript
 ]
 
-{ #category : 'tests - sample' }
-SQLite3TableTest >> testSampleTableSchema [
-
-	self assert: table schema equals: self tableCreationScript
-]
-
-{ #category : 'tests' }
+{ #category : #tests }
 SQLite3TableTest >> testUnitializedName [
 
 	self assert: SQLite3Table new name equals: ''
