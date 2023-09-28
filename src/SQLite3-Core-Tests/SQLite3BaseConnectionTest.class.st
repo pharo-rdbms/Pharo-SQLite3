@@ -414,6 +414,28 @@ SQLite3BaseConnectionTest >> testColumnNamesBobbyStop [
 ]
 
 { #category : #'tests - columns' }
+SQLite3BaseConnectionTest >> testColumnNamesForNoSuchTableWithSpaces [
+
+	| columns |
+
+	self executeInDB: 'create table x (xk integer, xv integer);'.
+	columns := db columnNamesFor: 'no such table with spaces'.
+	self assert: columns isNil
+]
+
+{ #category : #'tests - columns' }
+SQLite3BaseConnectionTest >> testColumnNamesForTableWithSpaces [
+
+	| columns |
+
+	self executeInDB: 'create table [table name with spaces] (xk integer, xv integer);'.
+	columns := db columnNamesFor: 'table name with spaces'.
+	self assert: columns size equals: 2.
+	self assert: columns first equals: 'xk'.
+	self assert: columns second equals: 'xv'
+]
+
+{ #category : #'tests - columns' }
 SQLite3BaseConnectionTest >> testColumnNamesNoSuchTable [
 
 	| columns |
@@ -527,6 +549,28 @@ SQLite3BaseConnectionTest >> testDeclaredColumnTypesForNoSuchTable [
 	self executeInDB: 'create table x (xk integer, xv integer);'.
 	columns := db declaredColumnTypesFor: 'y'.
 	self assert: columns isNil
+]
+
+{ #category : #'tests - columns' }
+SQLite3BaseConnectionTest >> testDeclaredColumnTypesForNoSuchTableWithSpaces [
+
+	| columns |
+	self executeInDB: 'create table x (xk integer, xv integer);'.
+	columns := db declaredColumnTypesFor: 'no such table with spaces'.
+	self assert: columns isNil
+]
+
+{ #category : #'tests - columns' }
+SQLite3BaseConnectionTest >> testDeclaredColumnTypesForTableWithSpaces [
+
+	| columns |
+
+	self executeInDB: 'create table [table name with spaces] (xk INTEGER, xv BLOB, xb BOOLEAN);'.
+	columns := db declaredColumnTypesFor: 'table name with spaces'.
+	self assert: columns size equals: 3.
+	self assert: columns first equals: 'INTEGER'.
+	self assert: columns second equals: 'BLOB'.
+	self assert: columns third equals: 'BOOLEAN'
 ]
 
 { #category : #'tests - multilingual' }

@@ -130,7 +130,7 @@ SQLite3BaseConnection >> columnNamesFor: aTableName [
 				  ifTrue: [
 					  | columns s |
 					  columns := OrderedCollection new.
-					  s := self prepare: 'pragma table_info(' , aTableName , ')'.
+					  s := self prepare: 'pragma table_info([' , aTableName , '])'.
 					  s basicExecute: [ :row | columns add: (row stringAt: 1) ].
 					  s finalize.
 					  columns ]
@@ -152,7 +152,7 @@ SQLite3BaseConnection >> declaredColumnTypesFor: aTableName [
 				  ifTrue: [
 					  | columns s |
 					  columns := OrderedCollection new.
-					  s := self prepare: 'pragma table_info(' , aTableName , ')'.
+					  s := self prepare: 'pragma table_info([' , aTableName , '])'.
 					  s basicExecute: [ :row | columns add: (row stringAt: 2) ].
 					  s finalize.
 					  columns ]
