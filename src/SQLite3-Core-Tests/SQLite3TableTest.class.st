@@ -3,22 +3,9 @@ A test class for `SQLite3Table`
 "
 Class {
 	#name : #SQLite3TableTest,
-	#superclass : #TestCase,
-	#instVars : [
-		'db',
-		'table'
-	],
-	#category : 'SQLite3-Core-Tests-Base'
+	#superclass : #SQLite3TableBasedTest,
+	#category : #'SQLite3-Core-Tests-Base'
 }
-
-{ #category : #running }
-SQLite3TableTest >> setUp [
-	super setUp.
-	db := SQLite3Database memory.
-	db connection open.
-	db connection execute: self tableCreationScript.
-	table := db tables first
-]
 
 { #category : #accessing }
 SQLite3TableTest >> tableCreationScript [
@@ -28,13 +15,6 @@ SQLite3TableTest >> tableCreationScript [
     [ID] INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     [NAME] NVARCHAR(120)
 )'
-]
-
-{ #category : #running }
-SQLite3TableTest >> tearDown [
-	db connection close.
-	db := nil.
-	super tearDown
 ]
 
 { #category : #tests }
@@ -133,12 +113,6 @@ SQLite3TableTest >> testSampleTableProperties [
 	self assert: (props at: #rootpage) equals: 2.
 	self assert: (props at: #name) equals: 'SAMPLE'.
 	self assert: (props at: #sql) equals: self tableCreationScript
-]
-
-{ #category : #'tests - sample' }
-SQLite3TableTest >> testSampleTableSchema [
-
-	self assert: table schema equals: self tableCreationScript
 ]
 
 { #category : #tests }
