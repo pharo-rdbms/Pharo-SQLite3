@@ -194,7 +194,7 @@ SQLite3BaseConnection >> finalize: aStatementHandle [
 { #category : #'public API - open/close' }
 SQLite3BaseConnection >> forceClose [
 	"Forces the release of dbHandle, enabling to delete the database file without closing Pharo"
-	
+
 	dbHandle ifNotNil: [ library close: dbHandle ].
 	self close
 ]
@@ -296,5 +296,4 @@ SQLite3BaseConnection >> totalChanges [
 { #category : #'public API - tracing' }
 SQLite3BaseConnection >> traceUsing: callback with: appdata [
 	library trace: dbHandle with: callback with: appdata
-	
 ]
