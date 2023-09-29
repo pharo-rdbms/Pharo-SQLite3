@@ -24,7 +24,7 @@ SQLite3Cursor class >> on: aStatement [
 ]
 
 { #category : #accessing }
-SQLite3Cursor >> changes [ 
+SQLite3Cursor >> changes [
 	^statement changes
 ]
 
