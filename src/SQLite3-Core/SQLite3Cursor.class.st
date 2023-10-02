@@ -130,7 +130,7 @@ SQLite3Cursor >> onlyRow: ifNoneBlock [
 
 { #category : #API }
 SQLite3Cursor >> onlyValue [
-	^(self onlyRow: SQLite3Row) ifNotNil: [ :r | r first ]
+	^(self onlyRow: []) ifNotNil: [ :r | r first ]
 ]
 
 { #category : #accessing }
