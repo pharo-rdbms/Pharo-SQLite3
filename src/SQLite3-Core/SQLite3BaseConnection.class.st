@@ -126,19 +126,15 @@ SQLite3BaseConnection >> columnNamesFor: aTableName [
 	self isOpen
 		ifFalse: [ SQLite3NotOpen signal ]
 		ifTrue: [
-			| s tableExists |
-			s := self prepare: 'select count(*) from sqlite_master where type = "table" and tbl_name = ?'.
-			s at: 1 putString: aTableName.
-	  		s basicExecute: [ :row | tableExists := ((row integerAt: 0) = 1) ].
-	  		s finalize.
-			tableExists ifTrue: [
-				| columns |
-				columns := OrderedCollection new.
-				s := self prepare: 'pragma table_info(', aTableName, ')'.
-				s basicExecute: [ :row | columns add: (row stringAt: 1) ].
-				s finalize.
-				^ columns ].
-			^ nil ]
+			^ (self existTableNamed: aTableName)
+				  ifTrue: [
+					  | columns s |
+					  columns := OrderedCollection new.
+					  s := self prepare: 'pragma table_info([' , aTableName , '])'.
+					  s basicExecute: [ :row | columns add: (row stringAt: 1) ].
+					  s finalize.
+					  columns ]
+				  ifFalse: [ nil ] ]
 ]
 
 { #category : #'public API - transactional' }
@@ -152,19 +148,15 @@ SQLite3BaseConnection >> declaredColumnTypesFor: aTableName [
 	self isOpen
 		ifFalse: [ SQLite3NotOpen signal ]
 		ifTrue: [
-			| s tableExists |
-			s := self prepare: 'select count(*) from sqlite_master where type = "table" and tbl_name = ?'.
-			s at: 1 putString: aTableName.
-	  		s basicExecute: [ :row | tableExists := ((row integerAt: 0) = 1) ].
-	  		s finalize.
-			tableExists ifTrue: [
-				| columns |
-				columns := OrderedCollection new.
-				s := self prepare: 'pragma table_info(', aTableName, ')'.
-				s basicExecute: [ :row | columns add: (row stringAt: 2) ].
-				s finalize.
-				^ columns ].
-			^ nil ]
+			^ (self existTableNamed: aTableName)
+				  ifTrue: [
+					  | columns s |
+					  columns := OrderedCollection new.
+					  s := self prepare: 'pragma table_info([' , aTableName , '])'.
+					  s basicExecute: [ :row | columns add: (row stringAt: 2) ].
+					  s finalize.
+					  columns ]
+				  ifFalse: [ nil ] ]
 ]
 
 { #category : #'public API - extensions' }
@@ -175,6 +167,18 @@ SQLite3BaseConnection >> disableExtensions [
 { #category : #'public API - extensions' }
 SQLite3BaseConnection >> enableExtensions [
 	^ library enableLoadExtension: dbHandle
+]
+
+{ #category : #private }
+SQLite3BaseConnection >> existTableNamed: aTableName [
+
+	| tableExists s |
+	tableExists := false.
+	s := self prepare: 'select count(*) from sqlite_master where type = "table" and tbl_name = ?'.
+	s at: 1 putString: aTableName.
+	s basicExecute: [ :row | tableExists := (row integerAt: 0) = 1 ].
+	s finalize.
+	^ tableExists
 ]
 
 { #category : #accessing }
@@ -190,7 +194,7 @@ SQLite3BaseConnection >> finalize: aStatementHandle [
 { #category : #'public API - open/close' }
 SQLite3BaseConnection >> forceClose [
 	"Forces the release of dbHandle, enabling to delete the database file without closing Pharo"
-	
+
 	dbHandle ifNotNil: [ library close: dbHandle ].
 	self close
 ]
@@ -292,5 +296,4 @@ SQLite3BaseConnection >> totalChanges [
 { #category : #'public API - tracing' }
 SQLite3BaseConnection >> traceUsing: callback with: appdata [
 	library trace: dbHandle with: callback with: appdata
-	
 ]
