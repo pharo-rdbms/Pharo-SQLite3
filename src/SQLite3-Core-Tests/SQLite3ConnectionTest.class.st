@@ -437,6 +437,48 @@ SQLite3ConnectionTest >> testExecuteWithAllInsertManyValues [
 ]
 
 { #category : #tests }
+SQLite3ConnectionTest >> testExecuteWithAllUpdateManyValues [
+
+	| results |
+	self executeInDB:
+		'create table if not exists x (iv integer, tv text);'.
+	self executeInDB: 'delete from x;'.
+	self executeInDB: 'insert into x values (1, ''two'')'.
+	self executeInDB: 'insert into x values (2, ''three'')'.
+	self executeInDB: 'insert into x values (3, ''four'')'.
+
+	results := OrderedCollection new.
+	rs := db execute: 'select * from x'.
+	rs do: [ :each | results add: each asArray ].
+	rs close.
+	self deny: results isEmpty.
+	self assert: results size equals: 3.
+	self assert: results first equals: #( 1 'two' ).
+	self assert: results second equals: #( 2 'three' ).
+	self assert: results third equals: #( 3 'four' ).
+
+	res := db beginTransaction.
+	self assert: res equals: 0.
+
+	db
+		execute: 'update x set tv = ?2 where iv = ?1'
+		withAll: #( #( 1 'five' ) #( 2 'six' ) #( 3 'seven' ) ).
+
+	res := db commitTransaction.
+	self assert: res equals: 0.
+
+	results := OrderedCollection new.
+	rs := db execute: 'select * from x'.
+	rs do: [ :each | results add: each asArray ].
+	rs close.
+	self deny: results isEmpty.
+	self assert: results size equals: 3.
+	self assert: results first equals: #( 1 'five' ).
+	self assert: results second equals: #( 2 'six' ).
+	self assert: results third equals: #( 3 'seven' )
+]
+
+{ #category : #tests }
 SQLite3ConnectionTest >> testExecuteWithInsertArray [
 
 	| rd |
