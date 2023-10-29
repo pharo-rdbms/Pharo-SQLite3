@@ -47,3 +47,13 @@ SQLite3Connection >> execute: anSQLText with: aCollection doing: aBlock [
 	^ [aBlock value: cursor]
 			ensure: [ cursor finalizeStatement ]
 ]
+
+{ #category : #'public API - operating' }
+SQLite3Connection >> execute: anSQLText withAll: parameterCollection [
+	"execute a sql statement with many parameters"
+
+	| stmt |
+	stmt := self prepare: anSQLText.
+	parameterCollection do: [ :parameters | stmt execute: parameters ].
+	stmt finalize
+]
