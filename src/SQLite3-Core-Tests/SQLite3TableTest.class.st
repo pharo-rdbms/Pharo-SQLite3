@@ -17,15 +17,6 @@ SQLite3TableTest >> tableCreationScript [
 )'
 ]
 
-{ #category : #tests }
-SQLite3TableTest >> testName [
-
-	| properties instance |
-	properties := Dictionary newFromPairs: #( #name 'SimpleTable' ).
-	instance := SQLite3Table properties: properties in: nil.
-	self assert: instance name equals: 'SimpleTable'
-]
-
 { #category : #'tests - sample' }
 SQLite3TableTest >> testNumberOfRows [
 
@@ -104,19 +95,16 @@ SQLite3TableTest >> testSampleTableColumns [
 
 { #category : #'tests - sample' }
 SQLite3TableTest >> testSampleTableProperties [
-	|props|
-	props := table properties.
-	self assert: props size equals: 5.
 
-	self assert: (props at: #type) equals: 'table'.
-	self assert: (props at: #tbl_name) equals: 'SAMPLE'.
-	self assert: (props at: #rootpage) equals: 2.
-	self assert: (props at: #name) equals: 'SAMPLE'.
-	self assert: (props at: #sql) equals: self tableCreationScript
+	self assert: table type equals: 'table'.
+	self assert: table tblName equals: 'SAMPLE'.
+	self assert: table rootpage equals: 2.
+	self assert: table name equals: 'SAMPLE'.
+	self assert: table sql equals: self tableCreationScript
 ]
 
 { #category : #tests }
 SQLite3TableTest >> testUnitializedName [
 
-	self assert: SQLite3Table new name equals: ''
+	self assert: SQLite3Table new name equals: nil
 ]

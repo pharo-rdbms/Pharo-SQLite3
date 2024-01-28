@@ -1,23 +1,25 @@
 "
-A table within a SQLite3 database
+A table within a SQLite3 database.
+
+- _type_ will be one of the following text strings: 'table', 'index', 'view', or 'trigger' according to the type of object defined. 
+- _name_ will hold the name of the object. 
+- _tblName_ holds the name of a table or view that the object is associated with.
+- _rootpage_ stores the page number of the root b-tree page for tables and indexes.
+- _sql_ stores SQL text that describes the object.
 "
 Class {
 	#name : #SQLite3Table,
 	#superclass : #Object,
 	#instVars : [
 		'database',
-		'properties'
+		'type',
+		'name',
+		'tblName',
+		'rootpage',
+		'sql'
 	],
 	#category : #'SQLite3-Core-Base'
 }
-
-{ #category : #'instance creation' }
-SQLite3Table class >> properties: aDictionary in: aDatabase [
-	^ self new
-		database: aDatabase;
-		properties: aDictionary;
-		yourself
-]
 
 { #category : #accessing }
 SQLite3Table >> columnNames [
@@ -48,7 +50,13 @@ SQLite3Table >> database: anObject [
 { #category : #accessing }
 SQLite3Table >> name [
 
-	^ self properties at: #name ifAbsent: [ '' ]
+	^ name
+]
+
+{ #category : #accessing }
+SQLite3Table >> name: anObject [
+
+	name := anObject
 ]
 
 { #category : #accessing }
@@ -69,15 +77,15 @@ SQLite3Table >> printOn: aStream [
 ]
 
 { #category : #accessing }
-SQLite3Table >> properties [
+SQLite3Table >> rootpage [
 
-	^ properties ifNil: [ properties := Dictionary new ]
+	^ rootpage
 ]
 
-{ #category : #'private - accessing' }
-SQLite3Table >> properties: anObject [
+{ #category : #accessing }
+SQLite3Table >> rootpage: anObject [
 
-	properties := anObject
+	rootpage := anObject
 ]
 
 { #category : #accessing }
@@ -89,7 +97,37 @@ SQLite3Table >> rows [
 ]
 
 { #category : #accessing }
-SQLite3Table >> schema [
+SQLite3Table >> sql [
 
-	^ self properties at: #sql ifAbsent: ''
+	^ sql
+]
+
+{ #category : #accessing }
+SQLite3Table >> sql: anObject [
+
+	sql := anObject
+]
+
+{ #category : #accessing }
+SQLite3Table >> tblName [
+
+	^ tblName
+]
+
+{ #category : #accessing }
+SQLite3Table >> tblName: anObject [
+
+	tblName := anObject
+]
+
+{ #category : #accessing }
+SQLite3Table >> type [
+
+	^ type
+]
+
+{ #category : #accessing }
+SQLite3Table >> type: anObject [
+
+	type := anObject
 ]

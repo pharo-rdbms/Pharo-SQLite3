@@ -37,7 +37,7 @@ SQLite3TableBasedTest >> tearDown [
 ]
 
 { #category : #'tests - sample' }
-SQLite3TableBasedTest >> testSampleTableSchema [
+SQLite3TableBasedTest >> testSampleTableSql [
 
-	self assert: table schema equals: self tableCreationScript
+	self assert: table sql equals: self tableCreationScript
 ]

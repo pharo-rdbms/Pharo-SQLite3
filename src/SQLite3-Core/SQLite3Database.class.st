@@ -98,11 +98,12 @@ SQLite3Database >> tables [
 
 	self connection isOpen ifFalse: [ ^ SQLite3NotOpen signal ].
 
-	^ (connection execute: '
+	^ ((connection execute: '
 			SELECT *
 			FROM sqlite_master
 			WHERE
 			    type =''table'' AND
-    			name NOT LIKE ''sqlite_%'';') rows collect: [ :eachRow |
-		  SQLite3Table properties: eachRow asDictionary in: self ]
+    			name NOT LIKE ''sqlite_%'';')
+		   rowClass: SQLite3Table;
+		   rows) collect: [ :eachTable | eachTable database: self ]
 ]
