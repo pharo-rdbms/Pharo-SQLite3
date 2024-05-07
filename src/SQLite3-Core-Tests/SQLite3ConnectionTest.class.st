@@ -2,18 +2,20 @@
 Unit tests for SQLiteConnection
 "
 Class {
-	#name : #SQLite3ConnectionTest,
-	#superclass : #TestCase,
+	#name : 'SQLite3ConnectionTest',
+	#superclass : 'TestCase',
 	#instVars : [
 		'db',
 		'res',
 		'rs',
 		'target'
 	],
-	#category : #'SQLite3-Core-Tests-Connections'
+	#category : 'SQLite3-Core-Tests-Connections',
+	#package : 'SQLite3-Core-Tests',
+	#tag : 'Connections'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 SQLite3ConnectionTest >> executeInDB: anSQLText [
 
 	| result |
@@ -22,7 +24,7 @@ SQLite3ConnectionTest >> executeInDB: anSQLText [
 	self assert: result equals: 0
 ]
 
-{ #category : #utilities }
+{ #category : 'utilities' }
 SQLite3ConnectionTest >> populateRowsInto: tableName of: database [
 	| rand rows schema insert rn rt |
 	 rand := Random new.
@@ -42,7 +44,7 @@ SQLite3ConnectionTest >> populateRowsInto: tableName of: database [
 	^ rows
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 SQLite3ConnectionTest >> setUp [
 
 	super setUp.
@@ -50,7 +52,7 @@ SQLite3ConnectionTest >> setUp [
 	db open
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 SQLite3ConnectionTest >> tearDown [
 
 	[ db close ] on: SQLite3Misuse do: [ ].
@@ -58,7 +60,7 @@ SQLite3ConnectionTest >> tearDown [
 	super tearDown
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SQLite3ConnectionTest >> testBackup [
 	| row backup |
 
@@ -75,7 +77,7 @@ SQLite3ConnectionTest >> testBackup [
 	self assert: (row at: 3) equals: '1-ZZZ'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SQLite3ConnectionTest >> testChanges [
 	| count |
 	count := self populateRowsInto: 'stuff' of: db.
@@ -84,7 +86,7 @@ SQLite3ConnectionTest >> testChanges [
 	self assert: db changes equals: count
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SQLite3ConnectionTest >> testDo [
 
 	| arrayResults dictResults |
@@ -120,7 +122,7 @@ SQLite3ConnectionTest >> testDo [
 	self assert: dictResults third equals: { ('id' -> 30). ('tv' -> 'ghi') } asDictionary
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SQLite3ConnectionTest >> testExactlyOneRow [
 	| row |
 
@@ -133,7 +135,7 @@ SQLite3ConnectionTest >> testExactlyOneRow [
 	self assert: (row at: 3) equals: '1-ZZZ'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SQLite3ConnectionTest >> testExactlyOneRowGotNone [
 	| row |
 
@@ -142,7 +144,7 @@ SQLite3ConnectionTest >> testExactlyOneRowGotNone [
 	self assert: row isNil
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SQLite3ConnectionTest >> testExecuteDelete [
 
 	self executeInDB: 'create table if not exists x (xk integer primary key, iv integer, tv text);'.
@@ -152,7 +154,7 @@ SQLite3ConnectionTest >> testExecuteDelete [
 	rs close
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SQLite3ConnectionTest >> testExecuteDrop [
 
 	self executeInDB: 'create table if not exists x (xk integer primary key, iv integer, tv text);'.
@@ -161,7 +163,7 @@ SQLite3ConnectionTest >> testExecuteDrop [
 	rs close
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SQLite3ConnectionTest >> testExecuteNoResult [
 
 	rs := db execute: 'create table if not exists x (xk integer primary key, iv integer, tv text);'.
@@ -177,7 +179,7 @@ SQLite3ConnectionTest >> testExecuteNoResult [
 	rs close
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SQLite3ConnectionTest >> testExecuteValueInsertArray [
 
 	| rd |
@@ -206,7 +208,7 @@ SQLite3ConnectionTest >> testExecuteValueInsertArray [
 	self assert: rd last equals: 'two'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SQLite3ConnectionTest >> testExecuteValueInsertBooleanNilThenSelect [
 
 	| row |
@@ -236,7 +238,7 @@ SQLite3ConnectionTest >> testExecuteValueInsertBooleanNilThenSelect [
 	rs close
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SQLite3ConnectionTest >> testExecuteValueInsertBooleanThenSelect [
 
 	| row |
@@ -266,7 +268,7 @@ SQLite3ConnectionTest >> testExecuteValueInsertBooleanThenSelect [
 	rs close
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SQLite3ConnectionTest >> testExecuteValueInsertChanges [
 
 	self executeInDB: 'create table if not exists x (xk integer primary key, iv integer, tv text);'.
@@ -295,7 +297,7 @@ SQLite3ConnectionTest >> testExecuteValueInsertChanges [
 	self assert: db totalChanges equals: 2
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SQLite3ConnectionTest >> testExecuteValueInsertThenSelect [
 
 	| row |
@@ -327,7 +329,7 @@ SQLite3ConnectionTest >> testExecuteValueInsertThenSelect [
 	rs close
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SQLite3ConnectionTest >> testExecuteValueInsertThenSelect2 [
 
 	| row |
@@ -372,7 +374,7 @@ SQLite3ConnectionTest >> testExecuteValueInsertThenSelect2 [
 	rs close
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SQLite3ConnectionTest >> testExecuteValueInsertThenSelectDateTime [
 
 	| row data |
@@ -406,7 +408,7 @@ SQLite3ConnectionTest >> testExecuteValueInsertThenSelectDateTime [
 	rs close
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SQLite3ConnectionTest >> testExecuteWithAllInsertManyValues [
 
 	| results |
@@ -436,7 +438,7 @@ SQLite3ConnectionTest >> testExecuteWithAllInsertManyValues [
 	self assert: results third equals: #( 3 'four' )
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SQLite3ConnectionTest >> testExecuteWithAllUpdateManyValues [
 
 	| results |
@@ -478,7 +480,7 @@ SQLite3ConnectionTest >> testExecuteWithAllUpdateManyValues [
 	self assert: results third equals: #( 3 'seven' )
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SQLite3ConnectionTest >> testExecuteWithInsertArray [
 
 	| rd |
@@ -507,7 +509,7 @@ SQLite3ConnectionTest >> testExecuteWithInsertArray [
 	self assert: rd last equals: 'two'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SQLite3ConnectionTest >> testExecuteWithInsertBooleanNilThenSelect [
 
 	| row |
@@ -537,7 +539,7 @@ SQLite3ConnectionTest >> testExecuteWithInsertBooleanNilThenSelect [
 	rs close
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SQLite3ConnectionTest >> testExecuteWithInsertBooleanSQLNullThenSelect [
 
 	| row |
@@ -567,7 +569,7 @@ SQLite3ConnectionTest >> testExecuteWithInsertBooleanSQLNullThenSelect [
 	rs close
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SQLite3ConnectionTest >> testExecuteWithInsertBooleanThenSelect [
 
 	| row |
@@ -597,7 +599,7 @@ SQLite3ConnectionTest >> testExecuteWithInsertBooleanThenSelect [
 	rs close
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SQLite3ConnectionTest >> testExecuteWithInsertChanges [
 
 	self executeInDB: 'create table if not exists x (xk integer primary key, iv integer, tv text);'.
@@ -627,7 +629,7 @@ SQLite3ConnectionTest >> testExecuteWithInsertChanges [
 	self assert: db totalChanges equals: 2
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SQLite3ConnectionTest >> testExecuteWithInsertDictionary [
 
 	| rd |
@@ -658,7 +660,7 @@ SQLite3ConnectionTest >> testExecuteWithInsertDictionary [
 	self assert: rd last equals: '2'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SQLite3ConnectionTest >> testExecuteWithInsertMultilingualStringsThenSelect [
 
 	| data s row idx |
@@ -688,7 +690,7 @@ SQLite3ConnectionTest >> testExecuteWithInsertMultilingualStringsThenSelect [
 	self assert: idx equals: 4
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SQLite3ConnectionTest >> testExecuteWithInsertNoDataThenSelect [
 
 	| row |
@@ -715,7 +717,7 @@ SQLite3ConnectionTest >> testExecuteWithInsertNoDataThenSelect [
 	rs close
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SQLite3ConnectionTest >> testExecuteWithInsertThenSelect [
 
 	| row |
@@ -747,7 +749,7 @@ SQLite3ConnectionTest >> testExecuteWithInsertThenSelect [
 	rs close
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SQLite3ConnectionTest >> testExecuteWithInsertThenSelect2 [
 
 	| row |
@@ -792,7 +794,7 @@ SQLite3ConnectionTest >> testExecuteWithInsertThenSelect2 [
 	rs close
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SQLite3ConnectionTest >> testExecuteWithInsertThenSelect3 [
 
 	| s row idx |
@@ -828,7 +830,7 @@ SQLite3ConnectionTest >> testExecuteWithInsertThenSelect3 [
 	self assert: idx equals: 6
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SQLite3ConnectionTest >> testExecuteWithInsertThenSelectChineseTableName [
 
 	| data s row idx |
@@ -858,7 +860,7 @@ SQLite3ConnectionTest >> testExecuteWithInsertThenSelectChineseTableName [
 	self assert: idx equals: 4
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SQLite3ConnectionTest >> testExecuteWithInsertThenSelectDateTime [
 
 	| row data |
@@ -892,7 +894,7 @@ SQLite3ConnectionTest >> testExecuteWithInsertThenSelectDateTime [
 	rs close
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SQLite3ConnectionTest >> testExecuteWithInsertThenSelectJapaneseTableName [
 
 	| data s row idx |
@@ -922,7 +924,7 @@ SQLite3ConnectionTest >> testExecuteWithInsertThenSelectJapaneseTableName [
 	self assert: idx equals: 4
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SQLite3ConnectionTest >> testExecuteWithToFail [
 
 	self executeInDB: 'create table if not exists x (xk integer primary key, iv integer, tv text);'.
@@ -939,7 +941,7 @@ SQLite3ConnectionTest >> testExecuteWithToFail [
 	self assert: res equals: 0
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SQLite3ConnectionTest >> testExecuteWithToFail2 [
 
 	self executeInDB: 'create table if not exists x (xk integer primary key, iv integer, tv text);'.
@@ -956,7 +958,7 @@ SQLite3ConnectionTest >> testExecuteWithToFail2 [
 	self assert: res equals: 0
 ]
 
-{ #category : #'tests - open / close' }
+{ #category : 'tests - open / close' }
 SQLite3ConnectionTest >> testForcedClose [
 
 	| fileRef conn |
@@ -982,7 +984,7 @@ SQLite3ConnectionTest >> testForcedClose [
 	self assert: fileRef exists not
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SQLite3ConnectionTest >> testGetAutocommit [
 
 	self assert: db getAutoCommit equals: true.
@@ -992,7 +994,7 @@ SQLite3ConnectionTest >> testGetAutocommit [
 	self assert: db getAutoCommit equals: true
 ]
 
-{ #category : #'tests - glorp compatibility' }
+{ #category : 'tests - glorp compatibility' }
 SQLite3ConnectionTest >> testGlorpAutoID [
 	| schema rows |
 
@@ -1015,7 +1017,7 @@ SQLite3ConnectionTest >> testGlorpAutoID [
 	self assert: (rows first at: 'STUFF') equals: 'The Bad Beginning'
 ]
 
-{ #category : #'tests - glorp compatibility' }
+{ #category : 'tests - glorp compatibility' }
 SQLite3ConnectionTest >> testGlorpCompositeKey [
 	| schema rows |
 
@@ -1036,7 +1038,7 @@ SQLite3ConnectionTest >> testGlorpCompositeKey [
 	self assert: (rows first at: 'NAME') equals: 'User One'
 ]
 
-{ #category : #'tests - glorp compatibility' }
+{ #category : 'tests - glorp compatibility' }
 SQLite3ConnectionTest >> testGlorpDoubleInsertPrimaryKey [
 	| schema rows |
 
@@ -1058,7 +1060,7 @@ SQLite3ConnectionTest >> testGlorpDoubleInsertPrimaryKey [
 	self assert: (rows first at: 'NAME') equals: 'Fred'
 ]
 
-{ #category : #'tests - glorp compatibility' }
+{ #category : 'tests - glorp compatibility' }
 SQLite3ConnectionTest >> testGlorpUpdate [
 	| schema rows |
 
@@ -1081,7 +1083,7 @@ SQLite3ConnectionTest >> testGlorpUpdate [
 	self assert: (rows first at: 'COPIES_IN_STOCK') equals: 6
 ]
 
-{ #category : #'tests - glorp compatibility' }
+{ #category : 'tests - glorp compatibility' }
 SQLite3ConnectionTest >> testGlorpUpdateTwice [
 	| schema rows |
 
@@ -1105,7 +1107,7 @@ SQLite3ConnectionTest >> testGlorpUpdateTwice [
 	self assert: (rows first at: 'COPIES_IN_STOCK') equals: 6
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SQLite3ConnectionTest >> testInsertThenSelectInTransaction [
 
 	"From GlorpDatabaseBasicTest>>testNameBinding."
@@ -1127,7 +1129,7 @@ SQLite3ConnectionTest >> testInsertThenSelectInTransaction [
 	self assert: res equals: 0
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SQLite3ConnectionTest >> testRows [
 
 	"SQLite uses 1-based column indexing for database rows."
@@ -1159,7 +1161,7 @@ SQLite3ConnectionTest >> testRows [
 	self assert: ( rows last at: 3 ) equals: rowCount asString , '-ZZZ'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SQLite3ConnectionTest >> testStatementReadOnly [
 
 	| stmt |
@@ -1171,7 +1173,7 @@ SQLite3ConnectionTest >> testStatementReadOnly [
 	self assert: stmt isReadOnly equals: false
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SQLite3ConnectionTest >> testValueInsertThenSelectInTransaction [
 
 	"From GlorpDatabaseBasicTest>>testNameBinding."
@@ -1193,7 +1195,7 @@ SQLite3ConnectionTest >> testValueInsertThenSelectInTransaction [
 	self assert: res equals: 0
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SQLite3ConnectionTest >> untestStatementInProgress [
 	"XXX Doesn't work yet."
 	| s1 s2 |

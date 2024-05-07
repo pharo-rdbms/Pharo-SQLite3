@@ -1,1 +1,1 @@
-Package { #name : #'SQLite3-Core-Tests' }
+Package { #name : 'SQLite3-Core-Tests' }

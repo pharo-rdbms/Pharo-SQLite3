@@ -3,16 +3,18 @@ I represent a row of results returned by the database.
 
 "
 Class {
-	#name : #SQLite3Row,
-	#superclass : #Object,
+	#name : 'SQLite3Row',
+	#superclass : 'Object',
 	#instVars : [
 		'values',
 		'columnNames'
 	],
-	#category : #'SQLite3-Core-Base'
+	#category : 'SQLite3-Core-Base',
+	#package : 'SQLite3-Core',
+	#tag : 'Base'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 SQLite3Row class >> new: anInteger [
 	^(self new)
 		columnNames:(Array new:anInteger);
@@ -20,17 +22,17 @@ SQLite3Row class >> new: anInteger [
 		yourself
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 SQLite3Row >> asArray [
 	^ self values asArray
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 SQLite3Row >> asCombinedDictionary [
 	^self asDictionary addAll: ((self values collectWithIndex:[:v :i | i -> v]) asDictionary); yourself
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 SQLite3Row >> asDictionary [
 	"Borrowed from the future - Pharo 8"
 	| dict |
@@ -39,36 +41,36 @@ SQLite3Row >> asDictionary [
 	^ dict
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SQLite3Row >> at: aKey [
 	^ self at: aKey ifAbsent: [  ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SQLite3Row >> at: aKey ifAbsent: aBlock [
 	^ aKey isInteger
 		ifTrue: [ self values at: aKey ifAbsent: aBlock ]
 		ifFalse: [ self values at:(self columnNames indexOf: aKey) ifAbsent: aBlock ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SQLite3Row >> at: aKey put: anObject [
 	^ aKey isInteger
 		ifTrue: [self atIndex: aKey put: anObject]
 		ifFalse: [ self atName: aKey put: anObject ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SQLite3Row >> atIndex: anIndex [
 	^ values at: anIndex ifAbsent: [  ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SQLite3Row >> atIndex: anIndex put: anObject [
 	^ self values at: anIndex put: anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SQLite3Row >> atName: aKey [
 	| idx |
 	idx := self columnNames indexOf: aKey.
@@ -78,7 +80,7 @@ SQLite3Row >> atName: aKey [
 		ifFalse: [ values at: idx ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SQLite3Row >> atName: aKey put: anObject [
 	| idx |
 	^ (idx := self columnNames indexOf: aKey) isZero
@@ -88,29 +90,29 @@ SQLite3Row >> atName: aKey put: anObject [
 		ifFalse: [ values at: idx put: anObject ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SQLite3Row >> columnNames [
 	^ columnNames ifNil: [ #() ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SQLite3Row >> columnNames: anArray [
 	columnNames := anArray.
 	values := Array new: anArray size
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SQLite3Row >> data [
 	"compatibility"
 	 ^self asCombinedDictionary
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SQLite3Row >> dataCount [
 	^ self columnNames size
 ]
 
-{ #category : #'reflective operations' }
+{ #category : 'reflective operations' }
 SQLite3Row >> doesNotUnderstand: aMessage [
 
 	^ self at: aMessage selector asString
@@ -120,27 +122,27 @@ SQLite3Row >> doesNotUnderstand: aMessage [
 					ifAbsent: [ super doesNotUnderstand: aMessage ]]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SQLite3Row >> first [
 	^ self values ifEmpty: [] ifNotEmpty: [:v | v first ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SQLite3Row >> last [
 	^ self values ifEmpty: [ nil ] ifNotEmpty: [:v | v last ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SQLite3Row >> size [
 	^ self columnNames size
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SQLite3Row >> values [
 	 ^values ifNil: [ #() ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SQLite3Row >> values: anArray [
 	 values := anArray
 ]
