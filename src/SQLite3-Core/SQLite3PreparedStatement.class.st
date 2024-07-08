@@ -9,7 +9,8 @@ Class {
 		'handle',
 		'changes',
 		'columnNames',
-		'bindings'
+		'bindings',
+		'columnDeclaredTypes'
 	],
 	#pools : [
 		'SQLite3Constants'
@@ -62,12 +63,8 @@ SQLite3PreparedStatement >> at: aColumn putDateTime: aDateTime [
 
 { #category : 'bindings' }
 SQLite3PreparedStatement >> at: aColumn putFloat: aFloat [
-	| f |
 
-	f := (aFloat isKindOf: Fraction)
-		ifTrue: [ aFloat asFloat ]
-		ifFalse: [ aFloat ].
-	^ self library with: handle at: aColumn putFloat: f
+	^ self library with: handle at: aColumn putFloat: aFloat
 ]
 
 { #category : 'bindings' }
@@ -92,6 +89,12 @@ SQLite3PreparedStatement >> at: aColumn putObject: anObject [
 		  with: handle
 		  at: aColumn
 		  putBlob: blob
+]
+
+{ #category : 'bindings' }
+SQLite3PreparedStatement >> at: aColumn putScaledDecimal: aScaledDecimal [
+
+	self at: aColumn putString: aScaledDecimal displayString
 ]
 
 { #category : 'bindings' }
@@ -138,8 +141,7 @@ SQLite3PreparedStatement >> bindParameterIndex: aName [
 ]
 
 { #category : 'bindings' }
-SQLite3PreparedStatement >> bindParameters: parameters [
-
+SQLite3PreparedStatement >> bindParameters: bindings [
 	"A 'variable' or 'parameter' token specifies a placeholder in the expression for a value that is filled in at runtime using the sqlite3_bind() family of C/C++ interfaces. Parameters can take several forms:
 
 ?NNN		A question mark followed by a number NNN holds a spot for the NNN-th parameter. NNN must be between 1 and SQLITE_MAX_VARIABLE_NUMBER.
@@ -149,22 +151,26 @@ SQLite3PreparedStatement >> bindParameters: parameters [
 $AAAA		A dollar-sign followed by an identifier name also holds a spot for a named parameter with the name $AAAA. The identifier name in this case can include one or more occurrences of '::' and a suffix enclosed in '(...)' containing any text at all. This syntax is the form of a variable name in the Tcl programming language. The presence of this syntax results from the fact that SQLite is really a Tcl extension that has escaped into the wild.
 Parameters that are not assigned values using sqlite3_bind() are treated as NULL. The sqlite3_bind_parameter_index() interface can be used to translate a symbolic parameter name into its equivalent numeric index."
 
-	(parameters isCollection and: [ parameters isString not ]) ifFalse: [
-		SQLite3AbstractError signal:
-			'Unable to execute SQL on instance of ' , parameters class asString ].
-
-	parameters keysAndValuesDo: [ :k :v |
-		| idx |
-		k isInteger
-			ifTrue: [ idx := k ]
-			ifFalse: [
-				idx := self bindParameterIndex: k.
-				idx = 0 ifTrue: [ idx := self bindParameterIndex: '@' , k ].
-				idx = 0 ifTrue: [ idx := self bindParameterIndex: ':' , k ].
-				idx = 0 ifTrue: [ idx := self bindParameterIndex: '$' , k ].
-				(idx = 0 and: [ k isAllDigits ]) ifTrue: [ idx := k asInteger ] ].
-		idx > 0 ifTrue: [
-			self perform: (self dataTypeForObject: v) with: idx with: v ] ]
+	((bindings isKindOf: Collection) and: [ bindings isString not ])
+		ifFalse: [ SQLite3AbstractError
+				signal: 'Unable to execute SQL on instance of ' , bindings class displayString ].
+			
+	bindings
+		keysAndValuesDo: [ :k :v | 
+			| idx |
+			k isInteger
+				ifTrue: [ idx := k ]
+				ifFalse: [ idx := self bindParameterIndex: k.
+					idx = 0
+						ifTrue: [ idx := self bindParameterIndex: '@' , k ].
+					idx = 0
+						ifTrue: [ idx := self bindParameterIndex: ':' , k ].
+					idx = 0
+						ifTrue: [ idx := self bindParameterIndex: '$' , k ].
+					(idx = 0 and: [ k allSatisfy: [ :char | char isDigit] ])
+						ifTrue: [ idx := k asInteger ] ].
+			idx > 0
+				ifTrue: [ v sqliteBindTo: self at: idx ] ]
 ]
 
 { #category : 'bindings' }
@@ -218,6 +224,11 @@ SQLite3PreparedStatement >> columnCount [
 ]
 
 { #category : 'public - accessing' }
+SQLite3PreparedStatement >> columnDeclaredTypes [
+	^columnDeclaredTypes ifNil: [columnDeclaredTypes := Array new: self columnCount]
+]
+
+{ #category : 'public - accessing' }
 SQLite3PreparedStatement >> columnNames [
 
 	^ columnNames ifNil: [
@@ -228,38 +239,6 @@ SQLite3PreparedStatement >> columnNames [
 { #category : 'private - accessing' }
 SQLite3PreparedStatement >> connection: anObject [
 	connection := anObject
-]
-
-{ #category : 'bindings' }
-SQLite3PreparedStatement >> dataTypeForObject: anObject [
-
-	anObject ifNil: [ ^ #at:putNil: ].
-
-	( anObject isKindOf: Boolean )
-		ifTrue: [ ^ #at:putBoolean: ].
-
-	( anObject isKindOf: Integer )
-		ifTrue: [ ^ #at:putInteger: ].
-
-	( self isFloatLike: anObject )
-		ifTrue: [ ^ #at:putFloat: ].
-
-	( anObject isKindOf: String )
-		ifTrue: [ ^ #at:putString: ].
-
-	( anObject isKindOf: ByteArray )
-		ifTrue: [ ^ #at:putByteArray: ].
-
-	( anObject isKindOf: DateAndTime )
-		ifTrue: [ ^ #at:putDateTime: ].
-
-	( anObject isKindOf: Time )
-		ifTrue: [ ^ #at:putTime: ].
-
-	( anObject isKindOf: Date )
-		ifTrue: [ ^ #at:putDate: ].
-
-	^ #at:putObject:
 ]
 
 { #category : 'public - accessing' }
@@ -283,6 +262,14 @@ SQLite3PreparedStatement >> dateTimeAt: aColumn [
 { #category : 'private - accessing' }
 SQLite3PreparedStatement >> dbHandle [
 	^(self library dbHandle: handle)
+]
+
+{ #category : 'fetching' }
+SQLite3PreparedStatement >> declaredTypeOfColumn: aColumn [
+
+	"aColumn is a zero-based index"
+
+	^(self columnDeclaredTypes at: aColumn + 1) ifNil: [columnDeclaredTypes at: aColumn + 1 put: ((self library apiColumnDeclaredType: handle atColumn: aColumn) ifNil: [#undefined] ifNotNil: [ :type | type isEmpty ifTrue: [#undefined] ifFalse: [type]])]
 ]
 
 { #category : 'operating' }
@@ -335,6 +322,11 @@ SQLite3PreparedStatement >> initialize [
 { #category : 'fetching' }
 SQLite3PreparedStatement >> integerAt: aColumn [
 	^self library integerFrom: handle at: aColumn
+]
+
+{ #category : 'fetching' }
+SQLite3PreparedStatement >> integerBooleanAt: aColumn [ 
+	^self library integerBooleanFrom: handle at: aColumn
 ]
 
 { #category : 'private - testing' }
@@ -417,6 +409,11 @@ SQLite3PreparedStatement >> stringAt: aColumn [
 ]
 
 { #category : 'fetching' }
+SQLite3PreparedStatement >> stringBooleanAt: aColumn [ 
+	^self library stringBooleanFrom: handle at: aColumn
+]
+
+{ #category : 'fetching' }
 SQLite3PreparedStatement >> timeAt: aColumn [
 
 	^ Time fromString: ( self stringAt: aColumn )
@@ -430,7 +427,10 @@ SQLite3PreparedStatement >> timestampAt: aColumn [
 
 { #category : 'fetching' }
 SQLite3PreparedStatement >> typeOfColumn: aColumn [
-	^ self library typeFor: handle at: aColumn
+
+	"aColumn is a zero-based index"
+
+	^self library typeFor: self at: aColumn
 ]
 
 { #category : 'fetching' }

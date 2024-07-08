@@ -20,8 +20,11 @@ SQLite3StatementExternalObject class >> doFinalizeResourceData: aHandle [
 { #category : 'finalization' }
 SQLite3StatementExternalObject class >> finalizeResourceData: aHandle [
 
-	self doFinalizeResourceData: aHandle.
-	aHandle beNull
+	aHandle isNull ifFalse: 
+		[| copy |
+		copy := aHandle copy.
+		aHandle beNull.
+		self doFinalizeResourceData: copy]
 ]
 
 { #category : 'initialization' }

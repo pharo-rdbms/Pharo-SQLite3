@@ -458,32 +458,18 @@ SQLite3Library >> blobFrom: aStatement at: aColumn [
 
 { #category : 'accessing' }
 SQLite3Library >> booleanFrom: aStatement at: aColumn [
-	| declared selector value |
+
+	| declared type |
 
 	declared := self apiColumnDeclaredType: aStatement atColumn: aColumn.
-	(self class booleanTypes includes: declared asLowercase) ifFalse: [
-		SQLite3AbstractError signal: 'Column is not declared as a boolean.' ].
+	(self class booleanTypes includes: declared asLowercase) ifFalse: [^SQLite3AbstractError signal: 'Column value cannot be read as a boolean.'].
 
-	selector := DataTypeMap at: (self apiColumnType: aStatement atColumn: aColumn).
-	(selector = #nilAt:) ifTrue: [ ^ nil ].
-	(selector = #stringAt:)
-		ifTrue: [
-			value := self apiColumnText: aStatement atColumn: aColumn.
-			(self class booleanSQLTrueWords includes: value asLowercase)
-				ifTrue: [ ^ true ]
-				ifFalse: [
-					(self class booleanSQLFalseWords includes: value asLowercase)
-						ifTrue: [ ^ false ]
-						ifFalse: [ SQLite3AbstractError signal: 'Column value cannot be read as a boolean.' ]]].
-	(selector = #integerAt:)
-		ifTrue: [
-			value := self apiColumnInt: aStatement atColumn: aColumn.
-			(value = 1)
-				ifTrue: [ ^ true ]
-				ifFalse: [
-					(value = 0)
-						ifTrue: [ ^ false ]
-						ifFalse: [ SQLite3AbstractError signal: 'Column value cannot be read as a boolean.' ]]]
+	type := self apiColumnType: aStatement atColumn: aColumn.
+	type = SQLITE_NULL ifTrue: [^nil].	
+
+	^type= SQLITE_INTEGER
+		ifTrue: [self integerBooleanFrom: aStatement at: aColumn]
+		ifFalse: [self stringBooleanFrom: aStatement at: aColumn]
 ]
 
 { #category : 'introspection' }
@@ -573,6 +559,16 @@ SQLite3Library >> floatFrom: aStatement at: aColumn [
 SQLite3Library >> getAutoCommit: aHandle [
 
 	^ (self apiGetAutocommit: aHandle) ~= 0
+]
+
+{ #category : 'accessing' }
+SQLite3Library >> integerBooleanFrom: aStatement at: aColumn [
+	
+	| value |
+
+	^(value := self apiColumnInt: aStatement atColumn: aColumn) = 1
+		ifTrue: [true]
+		ifFalse: [value = 0 ifTrue: [false] ifFalse: [ SQLite3AbstractError signal: 'Column value cannot be read as a boolean.' ]]
 ]
 
 { #category : 'operating' }
@@ -706,6 +702,18 @@ SQLite3Library >> step: aStatementHandle [
 	^ self apiStep: aStatementHandle
 ]
 
+{ #category : 'accessing' }
+SQLite3Library >> stringBooleanFrom: aStatement at: aColumn [
+
+	(self apiColumnText: aStatement atColumn: aColumn) ifNotNil: 
+		[ :value |
+		(self class booleanSQLTrueWords includes: value) 
+			ifTrue: [ ^true ]
+			ifFalse: [ (self class booleanSQLFalseWords includes: value) ifTrue: [ ^false ]]].
+
+	SQLite3AbstractError signal: 'Column value cannot be read as a boolean.'
+]
+
 { #category : 'testing' }
 SQLite3Library >> threadsafe [
 	"This method is deprecated so consider to migrate."
@@ -725,19 +733,35 @@ SQLite3Library >> trace: handle with: callback with: appdata [
 	^ self apiTrace: handle with: callback with: appdata
 ]
 
-{ #category : 'private - utilities' }
+{ #category : 'accessing' }
 SQLite3Library >> typeFor: aStatement at: aColumn [
+	| type declared |
+	
+	type := self apiColumnType: aStatement handle atColumn: aColumn.
 
-	| selector declared |
-	declared := self apiColumnDeclaredType: aStatement atColumn: aColumn.
-	declared ifNotNil: [ "Handle column type of boolean as a special case."
-		(self class booleanTypes includes: declared) ifTrue: [ ^ #booleanAt: ] ].
+	"Handle unambiguous types first"
+	type = SQLITE_NULL ifTrue: [^#nilAt:].
+	type = SQLITE_FLOAT ifTrue: [^#floatAt:].
+	type = SQLITE_BLOB ifTrue: [^#byteArrayAt:].
+	
+	"For Integer and String also need to consider the declared type"
+	declared := aStatement declaredTypeOfColumn: aColumn.
+	declared = #undeclared ifTrue: 
+		[^type = SQLITE_INTEGER
+			ifTrue: [#integerAt:]
+			ifFalse: [#stringAt:]].
 
-	selector := DataTypeMap at: (self apiColumnType: aStatement atColumn: aColumn).
-	selector = #stringAt: ifTrue: [
-		declared ifNotNil: [ "Handle column type of date/time as a special case."
-			^ DateTimeTypeMap at: declared asLowercase ifAbsent: [ selector ] ] ].
-	^ selector
+	type = SQLITE_INTEGER ifTrue: 
+		[^(self class booleanTypes includes: declared) 
+			ifTrue: [#integerBooleanAt: ]
+			ifFalse: [#integerAt:]].
+
+	"Must be String"
+	type = SQLITE_TEXT ifFalse: [self error: 'unknown type'].
+	"Test for the common case first"
+	('bdtDBT' includes: (declared at: 1)) ifFalse: [^#stringAt:].
+	(self class booleanTypes includes: declared) ifTrue: [ ^ #stringBooleanAt: ].
+	^DateTimeTypeMap at: declared asLowercase ifAbsent: [ #stringAt: ]
 ]
 
 { #category : 'private - accessing' }
