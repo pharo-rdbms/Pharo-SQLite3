@@ -2,7 +2,7 @@
 [![Pharo](https://img.shields.io/static/v1?style=for-the-badge&message=Pharo&color=3297d4&logo=Harbor&logoColor=FFFFFF&label=)](https://www.pharo.org) 
 [![SQLite3](https://img.shields.io/static/v1?style=for-the-badge&message=SQLite3&color=044a64&logo=SQLite&logoColor=FFFFFF&label=)](https://www.sqlite.org)
 
-[![Unit Tests](https://github.com/pharo-rdbms/Pharo-SQLite3/workflows/Unit%20Tests/badge.svg?branch=master)](https://github.com/pharo-rdbms/Pharo-SQLite3/actions?query=workflow%3AUnit%20Tests)
+[![Unit Tests](https://github.com/pharo-rdbms/Pharo-SQLite3/actions/workflows/unit-tests.yml/badge.svg)](https://github.com/pharo-rdbms/Pharo-SQLite3/actions/workflows/unit-tests.yml)
 [![GLORP Integration Tests](https://github.com/pharo-rdbms/Pharo-SQLite3/workflows/GLORP%20Integration%20Tests/badge.svg?branch=master)](https://github.com/pharo-rdbms/Pharo-SQLite3/actions?query=workflow%3AGLORP%20Integration%20Tests)
 [![Coverage Status](https://codecov.io/github/pharo-rdbms/Pharo-SQLite3/coverage.svg?branch=master)](https://codecov.io/gh/pharo-rdbms/Pharo-SQLite3/branch/master)
 
