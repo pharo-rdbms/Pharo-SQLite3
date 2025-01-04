@@ -1,1 +1,1 @@
-Package { #name : #BaselineOfSQLite3 }
+Package { #name : 'BaselineOfSQLite3' }

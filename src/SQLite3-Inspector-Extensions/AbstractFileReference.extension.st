@@ -1,6 +1,6 @@
-Extension { #name : #AbstractFileReference }
+Extension { #name : 'AbstractFileReference' }
 
-{ #category : #'*SQLite3-Inspector-Extensions' }
+{ #category : '*SQLite3-Inspector-Extensions' }
 AbstractFileReference >> databaseSize [
 	|s|
 	s := self size.
@@ -8,7 +8,7 @@ AbstractFileReference >> databaseSize [
 	^ ((s / 1024) roundDownTo: 0.01) asString, ' KB'
 ]
 
-{ #category : #'*SQLite3-Inspector-Extensions' }
+{ #category : '*SQLite3-Inspector-Extensions' }
 AbstractFileReference >> inspectionSQLite3Info [
 	<inspectorPresentationOrder: -2 title: 'SQLite3 - Info'>
 
@@ -27,13 +27,13 @@ AbstractFileReference >> inspectionSQLite3Info [
 		  yourself
 ]
 
-{ #category : #'*SQLite3-Inspector-Extensions' }
+{ #category : '*SQLite3-Inspector-Extensions' }
 AbstractFileReference >> inspectionSQLite3InfoContext: aContext [
 
 	^ aContext active: self isSQlite3Database
 ]
 
-{ #category : #'*SQLite3-Inspector-Extensions' }
+{ #category : '*SQLite3-Inspector-Extensions' }
 AbstractFileReference >> inspectionSQLite3Tables [
 	<inspectorPresentationOrder: -1 title: 'SQLite3 - Tables'>
 
@@ -44,13 +44,13 @@ AbstractFileReference >> inspectionSQLite3Tables [
 			yourself
 ]
 
-{ #category : #'*SQLite3-Inspector-Extensions' }
+{ #category : '*SQLite3-Inspector-Extensions' }
 AbstractFileReference >> inspectionSQLite3TablesContext: aContext [
 
 	^ aContext active: self isSQlite3Database
 ]
 
-{ #category : #'*SQLite3-Inspector-Extensions' }
+{ #category : '*SQLite3-Inspector-Extensions' }
 AbstractFileReference >> isSQlite3Database [
 	"Return true if the reference is an SQLite3 database file"
 
