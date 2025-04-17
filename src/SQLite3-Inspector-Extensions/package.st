@@ -1,1 +1,1 @@
-Package { #name : #'SQLite3-Inspector-Extensions' }
+Package { #name : 'SQLite3-Inspector-Extensions' }

@@ -1,6 +1,6 @@
-Extension { #name : #SQLite3Row }
+Extension { #name : 'SQLite3Row' }
 
-{ #category : #'*SQLite3-Inspector-Extensions' }
+{ #category : '*SQLite3-Inspector-Extensions' }
 SQLite3Row >> inspectionSQLite3Row [
 	<inspectorPresentationOrder: 10 title: 'SQlite3 - Contents'>
 
