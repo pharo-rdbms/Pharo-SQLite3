@@ -753,7 +753,7 @@ SQLite3Library >> unix32LibraryName [
 
 { #category : #'private - accessing' }
 SQLite3Library >> unix64LibraryName [
-	(#('/usr/lib/x86_64-linux-gnu' '/lib/x86_64-linux-gnu' '/usr/lib'),
+	(#('/usr/lib/x86_64-linux-gnu' '/lib/x86_64-linux-gnu' '/usr/lib64' '/usr/lib'),
 			((OSEnvironment current at: 'LD_LIBRARY_PATH' ifAbsent: [ '' ]) substrings: ':'))
 		do: [ :path |
 			#('libsqlite3.so.0' 'libsqlite3.so') do: [ :libraryName |
@@ -766,7 +766,7 @@ SQLite3Library >> unix64LibraryName [
 
 { #category : #'private - accessing' }
 SQLite3Library >> win32LibraryName [
-	^ 'sqlite3'
+	^ FFIWindowsLibraryFinder findLibrary: 'sqlite3.dll'
 ]
 
 { #category : #operating }

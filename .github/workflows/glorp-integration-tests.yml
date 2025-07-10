@@ -1,6 +1,8 @@
 name: GLORP Integration Tests
-
-on: [push,pull_request,workflow_dispatch]
+on:
+  - push
+  - pull_request
+  - workflow_dispatch
 
 jobs:
    build:
@@ -8,10 +10,15 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        smalltalk: [ Pharo64-9.0, Pharo64-10, Pharo64-11, Pharo64-12 ]
+        smalltalk:
+          - Pharo64-9.0
+          - Pharo64-10
+          - Pharo64-11
+          - Pharo64-12
+          - Pharo64-13
     name: ${{ matrix.smalltalk }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Install SQLite3
         run: ./scripts/install-SQLite3.sh
       - name: Set up Smalltalk CI
@@ -24,7 +31,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v5
         with:
           name: GLORP-Integration-Tests-${{matrix.smalltalk}}
           token: ${{ secrets.CODECOV_TOKEN }}

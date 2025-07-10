@@ -50,21 +50,20 @@ BaselineOfSQLite3 >> projectClass [
 BaselineOfSQLite3 >> setUpDependencies: spec [
 
 	spec
-		baseline: 'Glorp' with: [ spec repository: 'github://pharo-rdbms/glorp:v9.0.6/' ];
+		baseline: 'Glorp' with: [ spec repository: 'github://pharo-rdbms/glorp/' ];
 		project: 'Glorp-Core' copyFrom: 'Glorp' with: [ spec loads: 'Core' ];
 		project: 'Glorp-Tests' copyFrom: 'Glorp' with: [ spec loads: 'Glorp-Integration-Tests' ]
 ]
 
 { #category : 'baselines' }
 BaselineOfSQLite3 >> versionSpecificBaseline: spec [
+  "Add version specific packages to the spec"
 
-	"Add version specific packages to the spec"
-
-	spec for: #( #'pharo7.x' #'pharo8.x' ) do: [ 
-		spec
-			package: 'SQLite3-Pharo8';
-			group: 'Core' with: 'SQLite3-Pharo8'
-		].
+  spec for: #( #'pharo7.x' #'pharo8.x' ) do: [
+      spec
+        package: 'SQLite3-Pharo8';
+        group: 'Core' with: 'SQLite3-Pharo8'
+    ].
 
 	spec for: #( #'pharo9.x' #'pharo10.x' #'pharo11.x' #'pharo12.x' #'pharo13.x' ) do: [ 
 		spec
