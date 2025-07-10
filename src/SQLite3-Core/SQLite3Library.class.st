@@ -766,7 +766,7 @@ SQLite3Library >> unix64LibraryName [
 
 { #category : #'private - accessing' }
 SQLite3Library >> win32LibraryName [
-	^ 'sqlite3'
+	^ FFIWindowsLibraryFinder findLibrary: 'sqlite3.dll'
 ]
 
 { #category : #operating }
