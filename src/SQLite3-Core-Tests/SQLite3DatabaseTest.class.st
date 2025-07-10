@@ -4,7 +4,7 @@ A test class for `SQLite3Database`
 Class {
 	#name : #SQLite3DatabaseTest,
 	#superclass : #TestCase,
-	#category : #'SQLite3-Core-Tests-Base'
+	#category : 'SQLite3-Core-Tests-Base'
 }
 
 { #category : #tests }

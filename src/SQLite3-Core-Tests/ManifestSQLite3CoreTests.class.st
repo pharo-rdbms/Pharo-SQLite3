@@ -4,7 +4,7 @@ Please describe the package using the class comment of the included manifest cla
 Class {
 	#name : #ManifestSQLite3CoreTests,
 	#superclass : #PackageManifest,
-	#category : #'SQLite3-Core-Tests-Manifest'
+	#category : 'SQLite3-Core-Tests-Manifest'
 }
 
 { #category : #'code coverage' }

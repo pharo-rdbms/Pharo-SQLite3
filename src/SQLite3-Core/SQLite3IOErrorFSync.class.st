@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #'private - accessing' }
-SQLite3IOErrorFSync class >> nativeErrorCode [ 
+SQLite3IOErrorFSync class >> nativeErrorCode [
 
 	^ SQLITE_IOERR_FSYNC
 ]

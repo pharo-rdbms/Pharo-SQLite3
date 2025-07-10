@@ -26,12 +26,10 @@ SQLite3NativeError class >> forNativeErrorCode: anInteger messageText: aString [
 	^(self subclassForNativeErrorCode: anInteger) new
 			messageText: aString;
 			yourself
-
-	
 ]
 
 { #category : #testing }
-SQLite3NativeError class >> isAbstract [ 
+SQLite3NativeError class >> isAbstract [
 
 	^self name = #SQLite3NativeError
 ]
@@ -39,12 +37,12 @@ SQLite3NativeError class >> isAbstract [
 { #category : #'private - accessing' }
 SQLite3NativeError class >> nativeErrorCode [
 	"Returns the native error code as defined by SQLite C library."
-	
+
 	^ self subclassResponsibility
 ]
 
 { #category : #'private - accessing' }
 SQLite3NativeError class >> subclassForNativeErrorCode: anInteger [
-	^ self subclasses 
+	^ self subclasses
 		detect: [ :subclass | subclass nativeErrorCode = anInteger ]
 ]

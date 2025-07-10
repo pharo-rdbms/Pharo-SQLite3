@@ -16,7 +16,7 @@ Class {
 }
 
 { #category : #'private - accessing' }
-SQLite3Abort class >> nativeErrorCode [	 
-	
+SQLite3Abort class >> nativeErrorCode [
+
 	^ SQLITE_ABORT
 ]

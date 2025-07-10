@@ -1,14 +1,17 @@
-# Pharo-SQlite3
+# Pharo-SQLite3
+[![Pharo](https://img.shields.io/static/v1?style=for-the-badge&message=Pharo&color=3297d4&logo=Harbor&logoColor=FFFFFF&label=)](https://www.pharo.org) 
+[![SQLite3](https://img.shields.io/static/v1?style=for-the-badge&message=SQLite3&color=044a64&logo=SQLite&logoColor=FFFFFF&label=)](https://www.sqlite.org)
 
-[![Unit Tests](https://github.com/pharo-rdbms/Pharo-SQLite3/workflows/Unit%20Tests/badge.svg?branch=master)](https://github.com/pharo-rdbms/Pharo-SQLite3/actions?query=workflow%3AUnit%20Tests)
-[![GLORP Integration Tests](https://github.com/pharo-rdbms/Pharo-SQLite3/workflows/GLORP%20Integration%20Tests/badge.svg?branch=master)](https://github.com/pharo-rdbms/Pharo-SQLite3/actions?query=workflow%3AGLORP%20Integration%20Tests)
+[![Unit Tests](https://github.com/pharo-rdbms/Pharo-SQLite3/actions/workflows/unit-tests.yml/badge.svg)](https://github.com/pharo-rdbms/Pharo-SQLite3/actions/workflows/unit-tests.yml)
+[![GLORP Integration Tests](https://github.com/pharo-rdbms/Pharo-SQLite3/actions/workflows/glorp-integration-tests.yml/badge.svg)](https://github.com/pharo-rdbms/Pharo-SQLite3/actions/workflows/glorp-integration-tests.yml)
 [![Coverage Status](https://codecov.io/github/pharo-rdbms/Pharo-SQLite3/coverage.svg?branch=master)](https://codecov.io/gh/pharo-rdbms/Pharo-SQLite3/branch/master)
 
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Pharo 9](https://img.shields.io/badge/Pharo-9.0-%23aac9ff.svg)](https://pharo.org/download)
 [![Pharo 10](https://img.shields.io/badge/Pharo-10-%23aac9ff.svg)](https://pharo.org/download)
 [![Pharo 11](https://img.shields.io/badge/Pharo-11-%23aac9ff.svg)](https://pharo.org/download)
 [![Pharo 12](https://img.shields.io/badge/Pharo-12-%23aac9ff.svg)](https://pharo.org/download)
+
 
 Standalone [SQLite3](https://www.sqlite.org) database binding for
 [Pharo](http://www.pharo.org) - community owned
@@ -39,6 +42,8 @@ a binary of SQlite for Windows is included in the **bin** folder
 ### Getting started
 
 See the [getting started](doc/getting_started.md) document.
+
+If you want to use [glorp](https://github.com/pharo-rdbms/glorp) see the [starting glorp](doc/starting_glorp.md) document. 
 
 ## Project Infos
 
@@ -72,7 +77,7 @@ Contributors in order of appearance:
 - [Julien Deplangue](https://github.com/juliendelplanque)
 - [Todd Blanchard](https://github.com/tblanchard)
 - [Renaud de Villemeur](https://github.com/rvillemeur)
-- [vonbecmann](https://github.com/vonbecmann)
+- [Bernardo Ezequiel Contreras](https://github.com/vonbecmann)
 - [Gabriel Omar Cotelli](https://github.com/gcotelli)
 - [Konrad Hinsen](https://github.com/khinsen)
 - [GitHub contributors](https://github.com/pharo-rdbms/Pharo-SQLite3/graphs/contributors)

@@ -11,6 +11,6 @@ Class {
 
 { #category : #'private - accessing' }
 SQLite3AuthorizationDenied class >> nativeErrorCode [
-	
+
 	^ SQLITE_AUTH
 ]

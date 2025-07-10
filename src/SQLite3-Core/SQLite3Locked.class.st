@@ -12,7 +12,7 @@ Class {
 }
 
 { #category : #'private - accessing' }
-SQLite3Locked class >> nativeErrorCode [ 
-	
+SQLite3Locked class >> nativeErrorCode [
+
 	^ SQLITE_LOCKED
 ]

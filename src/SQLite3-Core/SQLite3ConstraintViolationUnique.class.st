@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #'private - accessing' }
-SQLite3ConstraintViolationUnique class >> nativeErrorCode [ 
+SQLite3ConstraintViolationUnique class >> nativeErrorCode [
 
 	^ SQLITE_CONSTRAINT_UNIQUE
 ]

@@ -11,7 +11,7 @@ Class {
 }
 
 { #category : #testing }
-SQLite3AbstractError class >> isAbstract [ 
+SQLite3AbstractError class >> isAbstract [
 
 	^self name = #SQLite3AbstractError
 ]

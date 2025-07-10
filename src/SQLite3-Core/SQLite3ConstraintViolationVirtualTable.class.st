@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #'private - accessing' }
-SQLite3ConstraintViolationVirtualTable class >> nativeErrorCode [ 
+SQLite3ConstraintViolationVirtualTable class >> nativeErrorCode [
 
 	^ SQLITE_CONSTRAINT_VTAB
 ]

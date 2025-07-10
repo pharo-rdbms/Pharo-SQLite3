@@ -7,7 +7,7 @@ Class {
 		'firstColumn',
 		'secondColumn'
 	],
-	#category : #'SQLite3-Core-Tests-Base'
+	#category : 'SQLite3-Core-Tests-Base'
 }
 
 { #category : #running }
@@ -32,10 +32,25 @@ SQLite3ColumnTest >> tableCreationScript [
 ]
 
 { #category : #running }
-SQLite3ColumnTest >> tearDown [ 
+SQLite3ColumnTest >> tearDown [
+
 	db connection close.
 	db := nil.
-	super tearDown 
+	super tearDown
+]
+
+{ #category : #tests }
+SQLite3ColumnTest >> testHasNotNullConstraint [
+
+	self assert: firstColumn hasNotNullConstraint.
+	self deny: secondColumn hasNotNullConstraint
+]
+
+{ #category : #tests }
+SQLite3ColumnTest >> testIndex [
+
+	self assert: firstColumn index equals: 0.
+	self assert: secondColumn index equals: 1
 ]
 
 { #category : #tests }
@@ -43,26 +58,26 @@ SQLite3ColumnTest >> testInitialization [
 
 	| instance |
 	instance := SQLite3Column new.
-	self deny: instance hasNotNullConstraint 
+	self deny: instance hasNotNullConstraint
 ]
 
 { #category : #tests }
-SQLite3ColumnTest >> testNotNullConstraint [
-	
-	self assert: firstColumn hasNotNullConstraint.
-	self deny: secondColumn hasNotNullConstraint 
+SQLite3ColumnTest >> testName [
+
+	self assert: firstColumn name equals: 'ID'.
+	self assert: secondColumn name equals: 'NAME'
 ]
 
 { #category : #tests }
 SQLite3ColumnTest >> testPrintString [
-	
+
 	self assert: firstColumn printString equals: 'a SQLite3Column("ID")'.
-	self assert: secondColumn printString equals: 'a SQLite3Column("NAME")'	
+	self assert: secondColumn printString equals: 'a SQLite3Column("NAME")'
 ]
 
 { #category : #tests }
 SQLite3ColumnTest >> testType [
-	
+
 	self assert: firstColumn type equals: 'INTEGER'.
-	self assert: secondColumn type equals: 'NVARCHAR(120)' 
+	self assert: secondColumn type equals: 'NVARCHAR(120)'
 ]

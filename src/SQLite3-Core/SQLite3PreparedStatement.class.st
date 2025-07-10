@@ -20,11 +20,11 @@ Class {
 { #category : #bindings }
 SQLite3PreparedStatement >> at: aColumn putBoolean: aBoolean [
 
-	^ self library 
-		with: handle 
-		at: aColumn 
+	^ self library
+		with: handle
+		at: aColumn
 		putInteger: (aBoolean ifTrue: [ 1 ] ifFalse: [ 0 ])
-		
+
 "See http://www.sqlite.org/datatype3.html."
 ]
 
@@ -41,8 +41,8 @@ SQLite3PreparedStatement >> at: aColumn putDate: aDate [
 
 	| string |
 
-	string := self bindingAt: aDate ifAbsentPut: [ 
-		          String streamContents: [ :stream | 
+	string := self bindingAt: aDate ifAbsentPut: [
+		          String streamContents: [ :stream |
 			          BasicDatePrinter new printDate: aDate format: #(  ) on: stream ] ].
 	^ self library with: handle at: aColumn putText: string
 ]
@@ -61,7 +61,7 @@ SQLite3PreparedStatement >> at: aColumn putDateTime: aDateTime [
 { #category : #bindings }
 SQLite3PreparedStatement >> at: aColumn putFloat: aFloat [
 	| f |
-	
+
 	f := (aFloat isKindOf: Fraction)
 		ifTrue: [ aFloat asFloat ]
 		ifFalse: [ aFloat ].
@@ -115,8 +115,8 @@ SQLite3PreparedStatement >> at: aColumn putTime: aTime [
 { #category : #public }
 SQLite3PreparedStatement >> basicExecute: aBlock [
 	| ret |
-	
-	ret := self step. 
+
+	ret := self step.
 	(ret = SQLITE_DONE) " == SQLITE_DONE, meaning step should not be sent again."
 		ifTrue: [ aBlock value: self ]
 		ifFalse: [
@@ -147,21 +147,21 @@ SQLite3PreparedStatement >> bindParameters: parameters [
 $AAAA		A dollar-sign followed by an identifier name also holds a spot for a named parameter with the name $AAAA. The identifier name in this case can include one or more occurrences of '::' and a suffix enclosed in '(...)' containing any text at all. This syntax is the form of a variable name in the Tcl programming language. The presence of this syntax results from the fact that SQLite is really a Tcl extension that has escaped into the wild.
 Parameters that are not assigned values using sqlite3_bind() are treated as NULL. The sqlite3_bind_parameter_index() interface can be used to translate a symbolic parameter name into its equivalent numeric index."
 
-	(parameters isCollection and: [ parameters isString not ]) ifFalse: [ 
+	(parameters isCollection and: [ parameters isString not ]) ifFalse: [
 		SQLite3AbstractError signal:
 			'Unable to execute SQL on instance of ' , parameters class asString ].
 
-	parameters keysAndValuesDo: [ :k :v | 
+	parameters keysAndValuesDo: [ :k :v |
 		| idx |
 		k isInteger
 			ifTrue: [ idx := k ]
-			ifFalse: [ 
+			ifFalse: [
 				idx := self bindParameterIndex: k.
 				idx = 0 ifTrue: [ idx := self bindParameterIndex: '@' , k ].
 				idx = 0 ifTrue: [ idx := self bindParameterIndex: ':' , k ].
 				idx = 0 ifTrue: [ idx := self bindParameterIndex: '$' , k ].
 				(idx = 0 and: [ k isAllDigits ]) ifTrue: [ idx := k asInteger ] ].
-		idx > 0 ifTrue: [ 
+		idx > 0 ifTrue: [
 			self perform: (self dataTypeForObject: v) with: idx with: v ] ]
 ]
 
@@ -171,36 +171,34 @@ SQLite3PreparedStatement >> bindingAt: anObject ifAbsentPut: aBlock [
 ]
 
 { #category : #fetching }
-SQLite3PreparedStatement >> booleanAt: aColumn [ 
+SQLite3PreparedStatement >> booleanAt: aColumn [
 	^self library booleanFrom: handle at: aColumn
 ]
 
 { #category : #fetching }
 SQLite3PreparedStatement >> byteArrayAt: aColumn [
 	^ self library blobFrom: handle at: aColumn
-
 ]
 
 { #category : #'public - accessing' }
-SQLite3PreparedStatement >> changes [ 
+SQLite3PreparedStatement >> changes [
 	^changes ifNil: [ changes := 0 ]
 ]
 
 { #category : #private }
 SQLite3PreparedStatement >> checkOk: aValue [
 
-	"These are normal conditions."	
+	"These are normal conditions."
 	aValue = SQLITE_OK ifTrue: [ ^aValue ].
-	
+
 	"These are error conditions."
 	(aValue = SQLITE_BUSY)
 		ifTrue: [ connection signal: SQLite3Busy with: aValue ].
 	(aValue = SQLITE_MISUSE)
-		ifTrue: [ connection signal: SQLite3Misuse with: aValue ].				
+		ifTrue: [ connection signal: SQLite3Misuse with: aValue ].
 
 	"Catch any error not specifically handled above."
 	connection signal: SQLite3AbstractError with: aValue
-
 ]
 
 { #category : #bindings }
@@ -218,12 +216,11 @@ SQLite3PreparedStatement >> columnCount [
 ]
 
 { #category : #'public - accessing' }
-SQLite3PreparedStatement >> columnNames [ 
-	^columnNames ifNil: [ 
-		columnNames := Array new: self columnCount.
-		(1 to: columnNames size) do: [ :c | columnNames at: c put: (self nameOfColumn: c - 1) ].
-		columnNames
-	].
+SQLite3PreparedStatement >> columnNames [
+
+	^ columnNames ifNil: [
+		  columnNames := (1 to: self columnCount) collect: [ :c | self nameOfColumn: c - 1 ].
+		  columnNames ]
 ]
 
 { #category : #'private - accessing' }
@@ -282,7 +279,7 @@ SQLite3PreparedStatement >> dateTimeAt: aColumn [
 
 { #category : #'private - accessing' }
 SQLite3PreparedStatement >> dbHandle [
-	^(self library dbHandle: handle) 
+	^(self library dbHandle: handle)
 ]
 
 { #category : #operating }
@@ -300,7 +297,7 @@ SQLite3PreparedStatement >> execute: parameters [
 { #category : #initialization }
 SQLite3PreparedStatement >> finalize [
 	"Finalize the statement as required by the SQLite3 API. As per the API, the user is expected to finalize a statement after use.
-	
+
 	Since executing a new statement without having finalized the previous one might cause SQLITE_BUSY errors, we can't rely on the garbage collector to execute the finalization, or we'll be exposed to non-deterministic behaviour."
 
 	handle
@@ -333,24 +330,22 @@ SQLite3PreparedStatement >> initialize [
 ]
 
 { #category : #fetching }
-SQLite3PreparedStatement >> integerAt: aColumn [ 
+SQLite3PreparedStatement >> integerAt: aColumn [
 	^self library integerFrom: handle at: aColumn
 ]
 
 { #category : #'private - testing' }
 SQLite3PreparedStatement >> isFloatLike: anObject [
 	^ (anObject isKindOf: Float) or: [ anObject isKindOf: Fraction ]
-		
-
 ]
 
 { #category : #'public - accessing' }
-SQLite3PreparedStatement >> isReadOnly [ 
+SQLite3PreparedStatement >> isReadOnly [
 	^self library statementReadOnly: handle
 ]
 
 { #category : #'private - accessing' }
-SQLite3PreparedStatement >> library [ 
+SQLite3PreparedStatement >> library [
 	^SQLite3Library current
 ]
 
@@ -361,17 +356,17 @@ SQLite3PreparedStatement >> nameOfColumn: aColumn [
 
 { #category : #fetching }
 SQLite3PreparedStatement >> nilAt: aColumn [
-	^ nil  
+	^ nil
 ]
 
 { #category : #fetching }
 SQLite3PreparedStatement >> objectAt: aColumn [
-	^ FLMaterializer materializeFromByteArray: (self library blobFrom: handle at: aColumn)  
+	^ FLMaterializer materializeFromByteArray: (self library blobFrom: handle at: aColumn)
 ]
 
 { #category : #public }
 SQLite3PreparedStatement >> prepare: anSQLText [
-	self library prepare: handle on: connection handle with: anSQLText.
+	self library prepare: handle on: connection handle with: anSQLText
 ]
 
 { #category : #public }
@@ -380,7 +375,7 @@ SQLite3PreparedStatement >> reset [
 ]
 
 { #category : #operating }
-SQLite3PreparedStatement >> sqlText [ 
+SQLite3PreparedStatement >> sqlText [
 	^ self library sqlText: handle
 ]
 
@@ -392,22 +387,21 @@ SQLite3PreparedStatement >> step [
 { #category : #private }
 SQLite3PreparedStatement >> stepOk: aValue [
 
-	"These are normal conditions."	
+	"These are normal conditions."
 	(aValue = SQLITE_ROW or: [aValue = SQLITE_DONE]) ifTrue: [
 		changes := connection changes.
 		^aValue  ].
-	
+
 	"These are error conditions."
 	(aValue = SQLITE_BUSY)
 		ifTrue: [ connection signal: SQLite3Busy with: aValue ].
 	(aValue = SQLITE_MISUSE)
 		ifTrue: [ connection signal: SQLite3Misuse with: aValue ].
 	(aValue = SQLITE_CONSTRAINT)
-		ifTrue:  [ connection signal: SQLite3ConstraintViolation with: aValue].				
+		ifTrue:  [ connection signal: SQLite3ConstraintViolation with: aValue].
 
 	"Catch any error not specifically handled above."
 	connection signal: SQLite3AbstractError with: aValue
-
 ]
 
 { #category : #fetching }
@@ -439,5 +433,4 @@ SQLite3PreparedStatement >> typeOfColumn: aColumn [
 { #category : #fetching }
 SQLite3PreparedStatement >> valueOfColumn: aColumn [
 	^ self perform: (self typeOfColumn: aColumn) with: aColumn
-
 ]

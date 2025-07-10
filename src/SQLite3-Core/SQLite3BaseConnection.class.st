@@ -25,14 +25,14 @@ SQLite3BaseConnection class >> isAbstract [
 { #category : #testing }
 SQLite3BaseConnection class >> isThreadsafe [
 	"Native Library Version http://sqlite.org/c3ref/libversion.html sqlite3_libversion"
-	
-	^ SQLite3Library current isThreadsafe ~= 0 
+
+	^ SQLite3Library current isThreadsafe ~= 0
 ]
 
 { #category : #accessing }
 SQLite3BaseConnection class >> libraryVersion [
 	"Native Library Version http://sqlite.org/c3ref/libversion.html sqlite3_libversion"
-	
+
 	^ SQLite3Library current libraryVersion
 ]
 
@@ -45,29 +45,27 @@ SQLite3BaseConnection class >> memory [
 { #category : #'instance creation' }
 SQLite3BaseConnection class >> on: aFilename [
 
-	^(self new) 
+	^(self new)
 		on: aFilename;
 		yourself
-
 ]
 
 { #category : #'instance creation' }
 SQLite3BaseConnection class >> openOn: aFilename [
 
-	^(self new) 
-		on: aFilename; 
-		open; 
+	^(self new)
+		on: aFilename;
+		open;
 		yourself
-
 ]
 
 { #category : #testing }
-SQLite3BaseConnection class >> threadsafe [		
+SQLite3BaseConnection class >> threadsafe [
 	"This method is deprecated so consider to migrate."
-	self deprecated:  'Please use #isThreadsafe instead' transformWith:  '`@receiver threadsafe' 
+	self deprecated:  'Please use #isThreadsafe instead' transformWith:  '`@receiver threadsafe'
 						-> '`@receiver isThreadsafe'.
-						
-	^ self isThreadsafe 
+
+	^ self isThreadsafe
 ]
 
 { #category : #'public API - backups' }
@@ -90,16 +88,15 @@ SQLite3BaseConnection >> backupTo: aConnection named: aName [
 ]
 
 { #category : #'public API - operating' }
-SQLite3BaseConnection >> basicExecute: anSQLText [ 
+SQLite3BaseConnection >> basicExecute: anSQLText [
 	^ (self prepare: anSQLText) step; finalize
 
 "20190302, pierce: This used to invoke sqlite3_exec() which is an SQLite-internal convenience wrapper around prepare/step/finalize. It is now rewritten as seen to handle UTF8-encoded input properly. Rewriting this method breaks the Bobby Tables test which relies on naive SQL string construction to work."
-	
 ]
 
 { #category : #'public API - transactional' }
 SQLite3BaseConnection >> beginTransaction [
-	^ self basicExecute: 'begin'	
+	^ self basicExecute: 'begin'
 ]
 
 { #category : #'public API - introspection' }
@@ -110,87 +107,96 @@ SQLite3BaseConnection >> changes [
 { #category : #'public API - operating' }
 SQLite3BaseConnection >> clearBindings: aStatement [
 	library clearBindings: aStatement handle on: dbHandle
-	
 ]
 
 { #category : #'public API - open/close' }
 SQLite3BaseConnection >> close [
+	"Do the minimal work to close the connection. 	Let FFIExternalResourceManager take care of calling sqlite_close_v2()."
 
-	"Let FFIExternalResourceManager take care."
-	"dbHandle ifNotNil: [ library close: dbHandle ]."
 	dbHandle ifNil: [ ^ self ].
-	dbHandle beNull.
+	"Set dbHandle to nil to allow its garbage collection.
+	The underlying handle should not be switched to NULL here, SQLite3DatabaseExternalObject class>>doFinalizeResourceData: will take care of that"
 	dbHandle := nil.
-	isOpen := false.
+	isOpen := false
 ]
 
 { #category : #'public API - introspection' }
 SQLite3BaseConnection >> columnNamesFor: aTableName [
-	
+
 	self isOpen
 		ifFalse: [ SQLite3NotOpen signal ]
-		ifTrue: [ 
-			| s tableExists |
-			s := self prepare: 'select count(*) from sqlite_master where type = "table" and tbl_name = ?'.
-			s at: 1 putString: aTableName.
-	  		s basicExecute: [ :row | tableExists := ((row integerAt: 0) = 1) ].
-	  		s finalize.
-			tableExists ifTrue: [ 
-				| columns |
-				columns := OrderedCollection new.
-				s := self prepare: 'pragma table_info(', aTableName, ')'.
-				s basicExecute: [ :row | columns add: (row stringAt: 1) ].
-				s finalize.
-				^ columns ].
-			^ nil ]
-		
+		ifTrue: [
+			^ (self existTableNamed: aTableName)
+				  ifTrue: [
+					  | columns s |
+					  columns := OrderedCollection new.
+					  s := self prepare: 'pragma table_info([' , aTableName , '])'.
+					  s basicExecute: [ :row | columns add: (row stringAt: 1) ].
+					  s finalize.
+					  columns ]
+				  ifFalse: [ nil ] ]
 ]
 
 { #category : #'public API - transactional' }
 SQLite3BaseConnection >> commitTransaction [
-	^ self basicExecute: 'commit'	
+	^ self basicExecute: 'commit'
 ]
 
 { #category : #'public API - introspection' }
 SQLite3BaseConnection >> declaredColumnTypesFor: aTableName [
-	
+
 	self isOpen
 		ifFalse: [ SQLite3NotOpen signal ]
-		ifTrue: [ 
-			| s tableExists |
-			s := self prepare: 'select count(*) from sqlite_master where type = "table" and tbl_name = ?'.
-			s at: 1 putString: aTableName.
-	  		s basicExecute: [ :row | tableExists := ((row integerAt: 0) = 1) ].
-	  		s finalize.
-			tableExists ifTrue: [ 
-				| columns |
-				columns := OrderedCollection new.
-				s := self prepare: 'pragma table_info(', aTableName, ')'.
-				s basicExecute: [ :row | columns add: (row stringAt: 2) ].
-				s finalize.
-				^ columns ].
-			^ nil ]
-		
+		ifTrue: [
+			^ (self existTableNamed: aTableName)
+				  ifTrue: [
+					  | columns s |
+					  columns := OrderedCollection new.
+					  s := self prepare: 'pragma table_info([' , aTableName , '])'.
+					  s basicExecute: [ :row | columns add: (row stringAt: 2) ].
+					  s finalize.
+					  columns ]
+				  ifFalse: [ nil ] ]
 ]
 
 { #category : #'public API - extensions' }
 SQLite3BaseConnection >> disableExtensions [
-	^ library disableLoadExtension: dbHandle 
+	^ library disableLoadExtension: dbHandle
 ]
 
 { #category : #'public API - extensions' }
 SQLite3BaseConnection >> enableExtensions [
-	^ library enableLoadExtension: dbHandle 
+	^ library enableLoadExtension: dbHandle
+]
+
+{ #category : #private }
+SQLite3BaseConnection >> existTableNamed: aTableName [
+
+	| tableExists s |
+	tableExists := false.
+	s := self prepare: 'select count(*) from sqlite_master where type = "table" and tbl_name = ?'.
+	s at: 1 putString: aTableName.
+	s basicExecute: [ :row | tableExists := (row integerAt: 0) = 1 ].
+	s finalize.
+	^ tableExists
 ]
 
 { #category : #accessing }
 SQLite3BaseConnection >> filename [
-	^ dbFilename 
+	^ dbFilename
 ]
 
 { #category : #'public API - operating' }
 SQLite3BaseConnection >> finalize: aStatementHandle [
 	library finalize: aStatementHandle on: dbHandle
+]
+
+{ #category : #'public API - open/close' }
+SQLite3BaseConnection >> forceClose [
+	"Forces the release of dbHandle, enabling to delete the database file without closing Pharo"
+
+	dbHandle ifNotNil: [ library close: dbHandle ].
+	self close
 ]
 
 { #category : #'public API - introspection' }
@@ -211,9 +217,7 @@ SQLite3BaseConnection >> initialize [
 	library := SQLite3Library current.
 	dbHandle := SQLite3DatabaseExternalObject new.
 	dbHandle autoRelease.
-	statementClass := SQLite3PreparedStatement.
-
-	
+	statementClass := SQLite3PreparedStatement
 ]
 
 { #category : #testing }
@@ -223,7 +227,7 @@ SQLite3BaseConnection >> isOpen [
 
 { #category : #'public API - extensions' }
 SQLite3BaseConnection >> loadExtension: aFilename [
-	^ library loadExtension: dbHandle with: aFilename 
+	^ library loadExtension: dbHandle with: aFilename
 ]
 
 { #category : #private }
@@ -240,25 +244,23 @@ SQLite3BaseConnection >> open [
 ]
 
 { #category : #'public API - operating' }
-SQLite3BaseConnection >> prepare: anSQLText [ 
+SQLite3BaseConnection >> prepare: anSQLText [
 	| s |
-	
+
 	s := self statementClass new.
 	s connection: self.
 	s prepare: anSQLText.
 	^ s
-	
 ]
 
 { #category : #'public API - cleaning' }
-SQLite3BaseConnection >> reset: aStatement [ 
+SQLite3BaseConnection >> reset: aStatement [
 	^library reset: aStatement handle
-	
 ]
 
 { #category : #'public API - transactional' }
 SQLite3BaseConnection >> rollbackTransaction [
-	^ self basicExecute: 'rollback'	
+	^ self basicExecute: 'rollback'
 ]
 
 { #category : #private }
@@ -274,10 +276,10 @@ SQLite3BaseConnection >> statementClass [
 { #category : #'public API - introspection' }
 SQLite3BaseConnection >> tableNames [
 	| tables s |
-	
+
 	self isOpen
 		ifFalse: [ SQLite3NotOpen signal ]
-		ifTrue: [ 
+		ifTrue: [
 			tables := OrderedCollection new.
 			s := self prepare: 'select tbl_name from sqlite_master where type = "table"'.
 	  		s basicExecute: [ :row |
@@ -294,5 +296,4 @@ SQLite3BaseConnection >> totalChanges [
 { #category : #'public API - tracing' }
 SQLite3BaseConnection >> traceUsing: callback with: appdata [
 	library trace: dbHandle with: callback with: appdata
-	
 ]

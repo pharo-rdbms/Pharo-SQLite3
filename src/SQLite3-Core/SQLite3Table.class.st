@@ -12,7 +12,7 @@ Class {
 }
 
 { #category : #'instance creation' }
-SQLite3Table class >> properties: aDictionary in: aDatabase [  
+SQLite3Table class >> properties: aDictionary in: aDatabase [
 	^ self new
 		database: aDatabase;
 		properties: aDictionary;
@@ -27,11 +27,10 @@ SQLite3Table >> columnNames [
 
 { #category : #accessing }
 SQLite3Table >> columns [
-	^ self database
-		execute: 'pragma table_info(', self name , ');'
-		doing: [:result | 
-			result rows collect: [ :each |SQLite3Column readFromTableInfoResult: each ]]
-			
+
+	^ (self database execute: 'pragma table_info([' , self name , ']);')
+		  rowClass: SQLite3Column;
+		  rows
 ]
 
 { #category : #accessing }
@@ -55,9 +54,8 @@ SQLite3Table >> name [
 { #category : #accessing }
 SQLite3Table >> numberOfRows [
 
-	^ self database
-		execute: 'SELECT COUNT(*) FROM ', self name , ';'
-		doing: [:result | result next at: 1 ]
+	^ (self database execute: 'SELECT COUNT(*) FROM [' , self name , '];')
+		  onlyValue
 ]
 
 { #category : #printing }
@@ -85,11 +83,9 @@ SQLite3Table >> properties: anObject [
 { #category : #accessing }
 SQLite3Table >> rows [
 
-	^ self database
-		  execute: 'SELECT *
-			FROM ', self name, '
-			LIMIT 1000;'
-		  doing: [ :result | result rows collect: [ :each | each ] ]
+	^ (self database execute: 'SELECT *
+			FROM [' , self name , ']
+			LIMIT 1000;') rows
 ]
 
 { #category : #accessing }

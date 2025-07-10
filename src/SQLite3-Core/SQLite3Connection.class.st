@@ -9,40 +9,35 @@ Class {
 }
 
 { #category : #'public API - operating' }
-SQLite3Connection >> execute: anSQLText [	
+SQLite3Connection >> execute: anSQLText [
 	^ self execute: anSQLText with: #()
 ]
 
 { #category : #'public API - operating' }
 SQLite3Connection >> execute: anSQLText value: anObject [
 	^ (self prepare: anSQLText)	execute: (Array with: anObject)
-
 ]
 
 { #category : #'public API - operating' }
 SQLite3Connection >> execute: anSQLText value: object1 value: object2 [
 	^ self execute: anSQLText with: (Array with: object1 with: object2)
-
 ]
 
 { #category : #'public API - operating' }
 SQLite3Connection >> execute: anSQLText value: object1 value: object2 value: object3 [
-	^ self execute: anSQLText 
-		with: (Array with: object1 with: object2 with: object3) 
-
+	^ self execute: anSQLText
+		with: (Array with: object1 with: object2 with: object3)
 ]
 
 { #category : #'public API - operating' }
 SQLite3Connection >> execute: anSQLText value: object1 value: object2 value: object3 value: object4 [
-	^ self execute: anSQLText 
-		with: (Array with: object1 with: object2 with: object3 with: object4) 
-
+	^ self execute: anSQLText
+		with: (Array with: object1 with: object2 with: object3 with: object4)
 ]
 
 { #category : #'public API - operating' }
 SQLite3Connection >> execute: anSQLText with: aCollection [
 	^(self prepare: anSQLText) execute: aCollection
-
 ]
 
 { #category : #'public API - operating' }
@@ -51,4 +46,14 @@ SQLite3Connection >> execute: anSQLText with: aCollection doing: aBlock [
 	cursor := self execute: anSQLText with: aCollection.
 	^ [aBlock value: cursor]
 			ensure: [ cursor finalizeStatement ]
+]
+
+{ #category : #'public API - operating' }
+SQLite3Connection >> execute: anSQLText withAll: parameterCollection [
+	"execute a sql statement with many parameters"
+
+	| stmt |
+	stmt := self prepare: anSQLText.
+	parameterCollection do: [ :parameters | stmt execute: parameters ].
+	stmt finalize
 ]

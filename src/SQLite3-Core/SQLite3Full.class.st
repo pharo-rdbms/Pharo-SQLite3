@@ -13,6 +13,6 @@ Class {
 
 { #category : #'private - accessing' }
 SQLite3Full class >> nativeErrorCode [
-	
+
 	^ SQLITE_FULL
 ]

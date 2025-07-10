@@ -9,6 +9,6 @@ Class {
 
 { #category : #'private - accessing' }
 SQLite3IOErrorConvertPath class >> nativeErrorCode [
-	
+
 	^ SQLITE_IOERR_CONVPATH
 ]
