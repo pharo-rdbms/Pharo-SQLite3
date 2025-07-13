@@ -40,12 +40,12 @@ SQLite3Table >> inspectionSQLite3Data [
 ]
 
 { #category : '*SQLite3-Inspector-Extensions' }
-SQLite3Table >> inspectionSQLite3Schema [
-	<inspectorPresentationOrder: 10 title: 'SQLite3 - Schema'>
+SQLite3Table >> inspectionSQLite3Schema: aBuilder [
 
-	^ SpTextPresenter new
-		text: self schema;
-		yourself
+	<inspectorPresentationOrder: 10 title: 'SQLite3 - Schema'>
+	^ aBuilder newText
+		  text: self schema;
+		  yourself
 ]
 
 { #category : '*SQLite3-Inspector-Extensions' }
