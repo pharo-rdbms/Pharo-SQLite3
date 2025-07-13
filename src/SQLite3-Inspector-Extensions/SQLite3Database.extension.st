@@ -1,10 +1,10 @@
 Extension { #name : 'SQLite3Database' }
 
 { #category : '*SQLite3-Inspector-Extensions' }
-SQLite3Database >> inspectionSQLite3Tables [
+SQLite3Database >> inspectionSQLite3Tables: aBuilder [
 	<inspectorPresentationOrder: 10 title: 'Sqlite3 - Tables'>
 
-	^ SpTablePresenter new
+	^ aBuilder newTable
 		items: self tables;
 		beResizable;
 		addColumn: (SpStringTableColumn title: 'Name' evaluated: [ :assoc | assoc name ]);
