@@ -4,12 +4,14 @@ The SQLITE_LOCKED_SHAREDCACHE error code is an extended error code for SQLITE_LO
 The SQLITE_LOCKED_SHARECACHE error code works very much like the SQLITE_BUSY error code except that SQLITE_LOCKED_SHARECACHE is for separate database connections that share a cache whereas SQLITE_BUSY is for the much more common case of separate database connections that do not share the same cache. Also, the sqlite3_busy_handler() and sqlite3_busy_timeout() interfaces do not help in resolving SQLITE_LOCKED_SHAREDCACHE conflicts.
 "
 Class {
-	#name : #SQLite3LockedSharedCache,
-	#superclass : #SQLite3Locked,
-	#category : #'SQLite3-Core-Errors-Extended'
+	#name : 'SQLite3LockedSharedCache',
+	#superclass : 'SQLite3Locked',
+	#category : 'SQLite3-Core-Errors-Extended',
+	#package : 'SQLite3-Core',
+	#tag : 'Errors-Extended'
 }
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 SQLite3LockedSharedCache class >> nativeErrorCode [
 
 	^ SQLITE_LOCKED_SHAREDCACHE

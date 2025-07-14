@@ -2,26 +2,28 @@
 I represent an SQLite non-ok condition.
 "
 Class {
-	#name : #SQLite3AbstractError,
-	#superclass : #Error,
+	#name : 'SQLite3AbstractError',
+	#superclass : 'Error',
 	#instVars : [
 		'resultCode'
 	],
-	#category : #'SQLite3-Core-Errors'
+	#category : 'SQLite3-Core-Errors',
+	#package : 'SQLite3-Core',
+	#tag : 'Errors'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 SQLite3AbstractError class >> isAbstract [
 
 	^self name = #SQLite3AbstractError
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SQLite3AbstractError >> resultCode [
 	^ resultCode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SQLite3AbstractError >> resultCode: anObject [
 	resultCode := anObject
 ]

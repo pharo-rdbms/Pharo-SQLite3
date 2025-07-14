@@ -8,12 +8,14 @@ The following scenario illustrates how an SQLITE_BUSY_SNAPSHOT error might arise
 3. Process A now tries to write to the database. But process A's view of the database content is now obsolete because process B has modified the database file after process A read from it. Hence process A gets an SQLITE_BUSY_SNAPSHOT error.
 "
 Class {
-	#name : #SQLite3BusySnapshot,
-	#superclass : #SQLite3Busy,
-	#category : #'SQLite3-Core-Errors-Extended'
+	#name : 'SQLite3BusySnapshot',
+	#superclass : 'SQLite3Busy',
+	#category : 'SQLite3-Core-Errors-Extended',
+	#package : 'SQLite3-Core',
+	#tag : 'Errors-Extended'
 }
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 SQLite3BusySnapshot class >> nativeErrorCode [
 
 	^ SQLITE_BUSY_SNAPSHOT
