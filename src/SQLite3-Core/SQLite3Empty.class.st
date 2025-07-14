@@ -4,12 +4,14 @@ This class comment was automatically generated from https://www.sqlite.org/resco
 The SQLITE_EMPTY result code is not currently used.
 "
 Class {
-	#name : #SQLite3Empty,
-	#superclass : #SQLite3NativeError,
-	#category : #'SQLite3-Core-Errors'
+	#name : 'SQLite3Empty',
+	#superclass : 'SQLite3NativeError',
+	#category : 'SQLite3-Core-Errors',
+	#package : 'SQLite3-Core',
+	#tag : 'Errors'
 }
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 SQLite3Empty class >> nativeErrorCode [
 
 	^ SQLITE_EMPTY

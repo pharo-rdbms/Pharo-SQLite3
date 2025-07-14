@@ -2,26 +2,28 @@
 I represent the SQLite API 'sqlite3' C-level type.
 "
 Class {
-	#name : #SQLite3DatabaseExternalObject,
-	#superclass : #FFIOpaqueObject,
-	#category : #'SQLite3-Core-UFFI-Support'
+	#name : 'SQLite3DatabaseExternalObject',
+	#superclass : 'FFIOpaqueObject',
+	#category : 'SQLite3-Core-UFFI-Support',
+	#package : 'SQLite3-Core',
+	#tag : 'UFFI-Support'
 }
 
-{ #category : #'instance finalization' }
+{ #category : 'instance finalization' }
 SQLite3DatabaseExternalObject class >> doFinalizeResourceData: resourceData [
 
 	SQLite3Library current ffiCall:
 		#( int sqlite3_close_v2 #( void * resourceData ) )
 ]
 
-{ #category : #finalization }
+{ #category : 'finalization' }
 SQLite3DatabaseExternalObject class >> finalizeResourceData: aHandle [
 
 	self doFinalizeResourceData: aHandle.
 	aHandle beNull
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 SQLite3DatabaseExternalObject >> beNull [
 
 	^ handle beNull

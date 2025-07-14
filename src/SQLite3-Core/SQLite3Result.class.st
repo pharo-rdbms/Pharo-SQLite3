@@ -6,32 +6,34 @@ Subclasses should not be instantiated directly. Instead use #forNativeResultCode
    SQLite3Result forNativeResultCode: SQLITE_OK
 "
 Class {
-	#name : #SQLite3Result,
-	#superclass : #Object,
+	#name : 'SQLite3Result',
+	#superclass : 'Object',
 	#pools : [
 		'SQLite3Constants'
 	],
-	#category : #'SQLite3-Core-Results'
+	#category : 'SQLite3-Core-Results',
+	#package : 'SQLite3-Core',
+	#tag : 'Results'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SQLite3Result class >> forNativeResultCode: anInteger [
 	^ (self subclassForNativeResultCode: anInteger) new
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 SQLite3Result class >> isAbstract [
 
 	^self name = #SQLite3Result
 ]
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 SQLite3Result class >> nativeResultCode [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 SQLite3Result class >> subclassForNativeResultCode: anInteger [
 	^ self subclasses
 		detect: [ :subclass | subclass nativeResultCode = anInteger ]

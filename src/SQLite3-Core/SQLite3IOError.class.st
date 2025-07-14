@@ -6,12 +6,14 @@ A full disk drive will normally give an SQLITE_FULL error rather than an SQLITE_
 There are many different extended result codes for I/O errors that identify the specific I/O operation that failed.
 "
 Class {
-	#name : #SQLite3IOError,
-	#superclass : #SQLite3NativeError,
-	#category : #'SQLite3-Core-Errors'
+	#name : 'SQLite3IOError',
+	#superclass : 'SQLite3NativeError',
+	#category : 'SQLite3-Core-Errors',
+	#package : 'SQLite3-Core',
+	#tag : 'Errors'
 }
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 SQLite3IOError class >> nativeErrorCode [
 
 	^ SQLITE_IOERR

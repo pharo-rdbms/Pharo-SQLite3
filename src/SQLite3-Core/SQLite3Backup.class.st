@@ -4,8 +4,8 @@ I represent a SQLite backup operation.
 This is detailed at https://sqlite.org/c3ref/backup_finish.html#sqlite3backupinit
 "
 Class {
-	#name : #SQLite3Backup,
-	#superclass : #Object,
+	#name : 'SQLite3Backup',
+	#superclass : 'Object',
 	#instVars : [
 		'library',
 		'srcConnection',
@@ -15,10 +15,12 @@ Class {
 		'isOpen',
 		'handle'
 	],
-	#category : #'SQLite3-Core-Utilities'
+	#category : 'SQLite3-Core-Utilities',
+	#package : 'SQLite3-Core',
+	#tag : 'Utilities'
 }
 
-{ #category : #creating }
+{ #category : 'creating' }
 SQLite3Backup class >> to: dConnection named: dName from: sConnection named: sName [
 	^(self new)
 		dstConnection: dConnection;
@@ -27,32 +29,32 @@ SQLite3Backup class >> to: dConnection named: dName from: sConnection named: sNa
 		srcName: sName
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SQLite3Backup >> dstConnection [
 	^ dstConnection
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SQLite3Backup >> dstConnection: anObject [
 	dstConnection := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SQLite3Backup >> dstName [
 	^ dstName
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SQLite3Backup >> dstName: anObject [
 	dstName := anObject
 ]
 
-{ #category : #finalization }
+{ #category : 'finalization' }
 SQLite3Backup >> finalize [
 	self finish
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 SQLite3Backup >> finish [
 	handle
 		ifNotNil: [
@@ -61,17 +63,17 @@ SQLite3Backup >> finish [
 			handle := nil]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SQLite3Backup >> handle [
 	^ handle
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SQLite3Backup >> handle: anObject [
 	handle := anObject
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 SQLite3Backup >> initialize [
 	super initialize.
 	isOpen := false.
@@ -80,44 +82,44 @@ SQLite3Backup >> initialize [
 	handle autoRelease
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SQLite3Backup >> isOpen [
 	^ isOpen
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SQLite3Backup >> open [
 	handle := (library backupTo: dstConnection named: dstName from: srcConnection named: srcName).
 	isOpen := true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SQLite3Backup >> srcConnection [
 	^ srcConnection
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SQLite3Backup >> srcConnection: anObject [
 	srcConnection := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SQLite3Backup >> srcName [
 	^ srcName
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SQLite3Backup >> srcName: anObject [
 	srcName := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SQLite3Backup >> step [
 	"Passing negative number means run to completion"
 	self step: -1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SQLite3Backup >> step: nPages [
 
 	library backup: handle step: nPages

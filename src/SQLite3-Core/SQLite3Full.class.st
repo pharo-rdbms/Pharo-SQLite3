@@ -6,12 +6,14 @@ The SQLITE_FULL result code indicates that a write could not complete because th
 Sometimes applications encounter this error even though there is an abundance of primary disk space because the error occurs when writing into temporary disk files on a system where temporary files are stored on a separate partition with much less space that the primary disk.
 "
 Class {
-	#name : #SQLite3Full,
-	#superclass : #SQLite3NativeError,
-	#category : #'SQLite3-Core-Errors'
+	#name : 'SQLite3Full',
+	#superclass : 'SQLite3NativeError',
+	#category : 'SQLite3-Core-Errors',
+	#package : 'SQLite3-Core',
+	#tag : 'Errors'
 }
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 SQLite3Full class >> nativeErrorCode [
 
 	^ SQLITE_FULL

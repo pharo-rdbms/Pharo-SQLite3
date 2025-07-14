@@ -4,12 +4,14 @@ The SQLITE_NOTFOUND result code is used in two contexts. SQLITE_NOTFOUND can be 
 The SQLITE_NOTFOUND result code is also used internally by the SQLite implementation, but those internal uses are not exposed to the application.
 "
 Class {
-	#name : #SQLite3NotFound,
-	#superclass : #SQLite3NativeError,
-	#category : #'SQLite3-Core-Errors'
+	#name : 'SQLite3NotFound',
+	#superclass : 'SQLite3NativeError',
+	#category : 'SQLite3-Core-Errors',
+	#package : 'SQLite3-Core',
+	#tag : 'Errors'
 }
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 SQLite3NotFound class >> nativeErrorCode [
 
 	^ SQLITE_NOTFOUND

@@ -4,12 +4,14 @@ The SQLITE_INTERNAL result code indicates an internal malfunction. In a working 
 SQLite does not currently generate this result code. However, application-defined SQL functions or virtual tables, or VFSes, or other extensions might cause this result code to be returned.
 "
 Class {
-	#name : #SQLite3Internal,
-	#superclass : #SQLite3NativeError,
-	#category : #'SQLite3-Core-Errors'
+	#name : 'SQLite3Internal',
+	#superclass : 'SQLite3NativeError',
+	#category : 'SQLite3-Core-Errors',
+	#package : 'SQLite3-Core',
+	#tag : 'Errors'
 }
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 SQLite3Internal class >> nativeErrorCode [
 
 	^ SQLITE_INTERNAL
