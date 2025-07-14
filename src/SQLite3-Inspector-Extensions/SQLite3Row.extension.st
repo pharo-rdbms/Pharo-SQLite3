@@ -4,13 +4,15 @@ Extension { #name : 'SQLite3Row' }
 SQLite3Row >> inspectionSQLite3Row: aBuilder [
 
 	<inspectorPresentationOrder: 10 title: 'SQlite3 - Contents'>
-	| presenter |
-	presenter := aBuilder newTable.
-	presenter
-		items: (Array with: self);
-		addColumns: (self columnNames collect: [ :columnName |
-						 SpStringTableColumn
-							 title: columnName
-							 evaluated: [ :row | row atName: columnName ] ]).
-	^ presenter
+	^ aBuilder newTable
+		  items: (self columnNames with: self values collect: [ :k :v | k -> v ]);
+		  beResizable;
+		  alternateRowsColor;
+		  addColumn: (SpStringTableColumn
+				   title: 'Column Name'
+				   evaluated: [ :assoc | assoc key ]);
+		  addColumn: (SpStringTableColumn
+				   title: 'Value'
+				   evaluated: [ :assoc | assoc value ]);
+		  yourself
 ]
