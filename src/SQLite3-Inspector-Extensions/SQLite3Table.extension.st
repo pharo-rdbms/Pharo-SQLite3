@@ -57,12 +57,13 @@ SQLite3Table >> inspectionSQLite3Schema: aBuilder [
 ]
 
 { #category : '*SQLite3-Inspector-Extensions' }
-SQLite3Table >> inspectionSQLite3TableProperties [
+SQLite3Table >> inspectionSQLite3TableProperties: aBuilder [
 
 	<inspectorPresentationOrder: 40 title: 'SQLite3 - Table Properties'>
-	^ SpTablePresenter new
+	^ aBuilder newTable
 		  items: self properties associations;
 		  beResizable;
+		  alternateRowsColor;
 		  addColumn: (SpStringTableColumn
 				   title: 'Property'
 				   evaluated: [ :assoc | assoc key ]);
