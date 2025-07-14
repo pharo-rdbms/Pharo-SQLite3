@@ -2,8 +2,8 @@
 I provide SQLIte's constants.
 "
 Class {
-	#name : #SQLite3Constants,
-	#superclass : #SharedPool,
+	#name : 'SQLite3Constants',
+	#superclass : 'SharedPool',
 	#classVars : [
 		'SQLITE3_TEXT',
 		'SQLITE_ABORT',
@@ -134,10 +134,12 @@ Class {
 		'SQLITE_WARNING',
 		'SQLITE_WARNING_AUTOINDEX'
 	],
-	#category : #'SQLite3-Core-UFFI-Support'
+	#category : 'SQLite3-Core-UFFI-Support',
+	#package : 'SQLite3-Core',
+	#tag : 'UFFI-Support'
 }
 
-{ #category : #'private - initialization' }
+{ #category : 'private - initialization' }
 SQLite3Constants class >> initCheckpointModes [
 
     SQLITE_CHECKPOINT_PASSIVE := 0.
@@ -146,7 +148,7 @@ SQLite3Constants class >> initCheckpointModes [
     SQLITE_CHECKPOINT_TRUNCATE := 3
 ]
 
-{ #category : #'private - initialization' }
+{ #category : 'private - initialization' }
 SQLite3Constants class >> initConstants [
 
 	self
@@ -156,7 +158,7 @@ SQLite3Constants class >> initConstants [
 		initFileOpenFlags
 ]
 
-{ #category : #'private - initialization' }
+{ #category : 'private - initialization' }
 SQLite3Constants class >> initDataTypes [
 	"Fundamental Datatypes"
 
@@ -168,7 +170,7 @@ SQLite3Constants class >> initDataTypes [
 	SQLITE_NULL := 5
 ]
 
-{ #category : #'private - initialization constants' }
+{ #category : 'private - initialization constants' }
 SQLite3Constants class >> initErrorCodes [
 	"In its default configuration, SQLite API routines return one of 26 integer
 	[SQLITE_OK | result codes]."
@@ -203,7 +205,7 @@ SQLite3Constants class >> initErrorCodes [
 	SQLITE_WARNING := 28.			"Warnings from sqlite3_log()"
 ]
 
-{ #category : #'private - initialization constants' }
+{ #category : 'private - initialization constants' }
 SQLite3Constants class >> initExtendedErrorCodes [
 	"Newer versions of SQLite (version 3.3.8 and later) include support for additional result codes that provide more detailed information about errors. The extended result codes are enabled or disabled on a per database connection basis using the [sqlite3_extended_result_codes()] API."
 
@@ -276,7 +278,7 @@ SQLite3Constants class >> initExtendedErrorCodes [
     SQLITE_OK_LOAD_PERMANENTLY      := (SQLITE_OK | (1<<8))
 ]
 
-{ #category : #'private - initialization constants' }
+{ #category : 'private - initialization constants' }
 SQLite3Constants class >> initFileOpenFlags [
 
 	SQLITE_OPEN_READONLY      	  := Integer readFrom: '00000001' base: 16.  " Ok for sqlite3_open_v2() "
@@ -301,7 +303,7 @@ SQLite3Constants class >> initFileOpenFlags [
 	SQLITE_OPEN_WAL               := Integer readFrom: '00080000' base: 16.  " VFS only "
 ]
 
-{ #category : #'private - initialization constants' }
+{ #category : 'private - initialization constants' }
 SQLite3Constants class >> initResultCodes [
 
 	SQLITE_OK := 0.		 			"Successful result"
@@ -309,7 +311,7 @@ SQLite3Constants class >> initResultCodes [
 	SQLITE_DONE := 101 			"sqlite3_step() has finished executing"
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 SQLite3Constants class >> initialize [
 	self
 		initConstants;

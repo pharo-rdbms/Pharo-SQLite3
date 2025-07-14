@@ -12,12 +12,14 @@ See also: SQLITE_BUSY_RECOVERY and SQLITE_BUSY_SNAPSHOT.
 The SQLITE_BUSY result code differs from SQLITE_LOCKED in that SQLITE_BUSY indicates a conflict with a separate database connection, probably in a separate process, whereas SQLITE_LOCKED indicates a conflict within the same database connection (or sometimes a database connection with a shared cache).
 "
 Class {
-	#name : #SQLite3Busy,
-	#superclass : #SQLite3NativeError,
-	#category : #'SQLite3-Core-Errors'
+	#name : 'SQLite3Busy',
+	#superclass : 'SQLite3NativeError',
+	#category : 'SQLite3-Core-Errors',
+	#package : 'SQLite3-Core',
+	#tag : 'Errors'
 }
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 SQLite3Busy class >> nativeErrorCode [
 
 	^ SQLITE_BUSY

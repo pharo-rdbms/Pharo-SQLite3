@@ -3,8 +3,8 @@ I represent a set of results returned by the database. I produce UDBCSQLite3Row 
 
 "
 Class {
-	#name : #SQLite3Cursor,
-	#superclass : #Object,
+	#name : 'SQLite3Cursor',
+	#superclass : 'Object',
 	#instVars : [
 		'statement',
 		'moreRows',
@@ -15,20 +15,22 @@ Class {
 	#pools : [
 		'SQLite3Constants'
 	],
-	#category : #'SQLite3-Core-Database'
+	#category : 'SQLite3-Core-Database',
+	#package : 'SQLite3-Core',
+	#tag : 'Database'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 SQLite3Cursor class >> on: aStatement [
 	^(self new) statement: aStatement; yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SQLite3Cursor >> changes [
 	^statement changes
 ]
 
-{ #category : #API }
+{ #category : 'API' }
 SQLite3Cursor >> close [
 	" closing a cursor is not the same as closing the statement - we may reuse a prepared statement"
 	statement ifNotNil: [ statement reset ].
@@ -36,17 +38,17 @@ SQLite3Cursor >> close [
 	mutators := nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SQLite3Cursor >> columnNames [
 	^ statement ifNotNil: [ statement columnNames ] ifNil: [ #() ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SQLite3Cursor >> connection [
 	^statement connection
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 SQLite3Cursor >> do: aBlock [
 	"Evaluate aBlock with each of the receiver's rows as the argument."
 
@@ -55,12 +57,12 @@ SQLite3Cursor >> do: aBlock [
 		aBlock value: eachRow ]
 ]
 
-{ #category : #API }
+{ #category : 'API' }
 SQLite3Cursor >> finalizeStatement [
 	statement finalize
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 SQLite3Cursor >> initialize [
 	"Initializes the receiver"
 
@@ -69,7 +71,7 @@ SQLite3Cursor >> initialize [
 	rowClass := SQLite3Row
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SQLite3Cursor >> mutators [
 	^ mutators
 		ifNil: [ mutators := self columnNames
@@ -78,12 +80,12 @@ SQLite3Cursor >> mutators [
 						joinUsing: '') uncapitalized asSymbol asMutator ] ]
 ]
 
-{ #category : #API }
+{ #category : 'API' }
 SQLite3Cursor >> next [
 	^ self nextOfClass: self rowClass
 ]
 
-{ #category : #API }
+{ #category : 'API' }
 SQLite3Cursor >> nextOfClass: aRowClass [
 	| rr |
 	moreRows ifFalse: [ ^nil ].
@@ -112,14 +114,14 @@ SQLite3Cursor >> nextOfClass: aRowClass [
 	^ nil
 ]
 
-{ #category : #API }
+{ #category : 'API' }
 SQLite3Cursor >> onlyRow [
 	^ self onlyRow: [ ]
 
 "For the common case where there is exactly one row expected. Returns nil if there is no row."
 ]
 
-{ #category : #API }
+{ #category : 'API' }
 SQLite3Cursor >> onlyRow: ifNoneBlock [
 	^self rows
 		ifEmpty: [ ifNoneBlock value ]
@@ -128,27 +130,27 @@ SQLite3Cursor >> onlyRow: ifNoneBlock [
 "For the common case where there is exactly one row expected. Returns the evaluation of ifNoneBlock if there is no row."
 ]
 
-{ #category : #API }
+{ #category : 'API' }
 SQLite3Cursor >> onlyValue [
 	^(self onlyRow: []) ifNotNil: [ :r | r first ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SQLite3Cursor >> rowClass [
 	^ rowClass
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SQLite3Cursor >> rowClass: anObject [
 	rowClass := anObject
 ]
 
-{ #category : #API }
+{ #category : 'API' }
 SQLite3Cursor >> rows [
 	^ self rowsOfClass: self rowClass
 ]
 
-{ #category : #API }
+{ #category : 'API' }
 SQLite3Cursor >> rowsOfClass: aRowClass [
 
 	rows ifNil: [ rows := OrderedCollection new ].
@@ -157,12 +159,12 @@ SQLite3Cursor >> rowsOfClass: aRowClass [
 	^ rows
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SQLite3Cursor >> statement [
 	^ statement
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SQLite3Cursor >> statement: anObject [
 	statement := anObject.
 	moreRows := (statement ifNil:[false ] ifNotNil: [ statement dataValuesAvailable > 0 ])

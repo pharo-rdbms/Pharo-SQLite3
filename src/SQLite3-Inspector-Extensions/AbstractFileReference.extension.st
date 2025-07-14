@@ -34,14 +34,11 @@ AbstractFileReference >> inspectionSQLite3InfoContext: aContext [
 ]
 
 { #category : '*SQLite3-Inspector-Extensions' }
-AbstractFileReference >> inspectionSQLite3Tables [
-	<inspectorPresentationOrder: -1 title: 'SQLite3 - Tables'>
+AbstractFileReference >> inspectionSQLite3Tables: aBuilder [
 
-	^ SpTablePresenter new
-			items: (SQLite3Database tableInfoFor: self fullName);
-			addColumn: (SpStringTableColumn title: 'Table Name' evaluated: [ :assoc | assoc name ]);
-			addColumn: (SpStringTableColumn title: 'Number of Rows' evaluated: [ :assoc | assoc numberOfRows ]);
-			yourself
+	<inspectorPresentationOrder: -1 title: 'SQLite3 - Tables'>
+	^ (SQLite3Database openOn: self fullName) inspectionSQLite3Tables:
+		  aBuilder
 ]
 
 { #category : '*SQLite3-Inspector-Extensions' }

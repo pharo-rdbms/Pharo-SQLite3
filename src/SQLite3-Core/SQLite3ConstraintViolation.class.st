@@ -4,12 +4,14 @@ The SQLITE_CONSTRAINT error code means that an SQL constraint violation occurred
 The SQLITE_CONSTRAINT code can also be used as the return value from the xBestIndex() method of a virtual table implementation. When xBestIndex() returns SQLITE_CONSTRAINT, that indicates that the particular combination of inputs submitted to xBestIndex() cannot result in a usable query plan and should not be given further consideration.
 "
 Class {
-	#name : #SQLite3ConstraintViolation,
-	#superclass : #SQLite3NativeError,
-	#category : #'SQLite3-Core-Errors'
+	#name : 'SQLite3ConstraintViolation',
+	#superclass : 'SQLite3NativeError',
+	#category : 'SQLite3-Core-Errors',
+	#package : 'SQLite3-Core',
+	#tag : 'Errors'
 }
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 SQLite3ConstraintViolation class >> nativeErrorCode [
 
 	^ SQLITE_CONSTRAINT
