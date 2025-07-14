@@ -39,6 +39,10 @@ SQLite3Table >> inspectionSQLite3Data: aBuilder [
 		             items: self rows;
 		             beResizable;
 		             alternateRowsColor;
+		             addColumn: (SpIndexTableColumn new
+				              title: '#';
+				              beNotExpandable;
+				              yourself);
 		             yourself.
 	presenter addColumns: (self columnNames collect: [ :name |
 			 SpStringTableColumn
