@@ -24,18 +24,19 @@ SQLite3Table >> inspectionSQLite3Columns [
 ]
 
 { #category : '*SQLite3-Inspector-Extensions' }
-SQLite3Table >> inspectionSQLite3Data [
+SQLite3Table >> inspectionSQLite3Data: aBuilder [
 
 	<inspectorPresentationOrder: 11 title: 'SQLite3 - Data'>
 	| presenter |
-	presenter := SpTablePresenter new
+	presenter := aBuilder newTable
 		             items: self rows;
 		             beResizable;
+		             alternateRowsColor;
 		             yourself.
-
-	self columnNames do: [ :col |
-		presenter addColumn:
-			(SpStringTableColumn title: col evaluated: [ :each | each at: col ]) ].
+	presenter addColumns: (self columnNames collect: [ :name |
+			 SpStringTableColumn
+				 title: name
+				 evaluated: [ :row | row atName: name ] ]).
 	^ presenter
 ]
 
