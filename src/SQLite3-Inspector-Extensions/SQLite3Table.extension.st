@@ -1,25 +1,32 @@
 Extension { #name : 'SQLite3Table' }
 
 { #category : '*SQLite3-Inspector-Extensions' }
-SQLite3Table >> inspectionSQLite3Columns [
+SQLite3Table >> inspectionSQLite3Columns: aBuilder [
 
 	<inspectorPresentationOrder: 13 title: 'SQLite3 - Columns'>
-	^ SpTablePresenter new
+	^ aBuilder newTable
 		  items: self columns;
 		  beResizable;
-		  addColumn: (SpStringTableColumn
-				   title: 'Column Name'
+		  alternateRowsColor;
+		  addColumn:
+			  (SpStringTableColumn
+				   title: 'Index'
+				   evaluated: [ :each | each index ]);
+		  addColumn:
+			  (SpStringTableColumn
+				   title: 'Name'
 				   evaluated: [ :each | each name ]);
-		  addColumn: (SpStringTableColumn
-				   title: 'Column Type'
+		  addColumn:
+			  (SpStringTableColumn
+				   title: 'Type'
 				   evaluated: [ :each | each type ]);
 		  addColumn:
 			  (SpStringTableColumn
 				   title: 'Non-empty values'
 				   evaluated: [ :each |
-					   each hasNotNullConstraint
-						   ifTrue: [ 'NOT NULL' ]
-						   ifFalse: [ '' ] ]);
+						   each hasNotNullConstraint
+							   ifTrue: [ 'NOT NULL' ]
+							   ifFalse: [ '' ] ]);
 		  yourself
 ]
 
