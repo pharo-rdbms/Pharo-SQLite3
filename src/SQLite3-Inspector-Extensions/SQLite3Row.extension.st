@@ -5,8 +5,7 @@ SQLite3Row >> inspectionSQLite3Row: aBuilder [
 
 	<inspectorPresentationOrder: 10 title: 'SQlite3 - Contents'>
 	^ aBuilder newTable
-		  items:
-			  (self columnNames with: self values collect: [ :k :v | k -> v ]);
+		  items: self associations;
 		  beResizable;
 		  alternateRowsColor;
 		  addColumn: (SpIndexTableColumn new

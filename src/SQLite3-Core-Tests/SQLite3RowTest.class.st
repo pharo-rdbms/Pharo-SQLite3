@@ -2,16 +2,18 @@
 Unit tests for SQLite3Row
 "
 Class {
-	#name : #SQLite3RowTest,
-	#superclass : #TestCase,
+	#name : 'SQLite3RowTest',
+	#superclass : 'TestCase',
 	#instVars : [
 		'filledRow',
 		'emptyRow'
 	],
-	#category : 'SQLite3-Core-Tests-Database'
+	#category : 'SQLite3-Core-Tests-Database',
+	#package : 'SQLite3-Core-Tests',
+	#tag : 'Database'
 }
 
-{ #category : #running }
+{ #category : 'running' }
 SQLite3RowTest >> setUp [
 	super setUp.
 	emptyRow := SQLite3Row new.
@@ -22,14 +24,14 @@ SQLite3RowTest >> setUp [
 		at: 'pi' put: '3.14'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SQLite3RowTest >> testAsArray [
 
 	self assert: emptyRow asArray equals: #().
 	self assert: filledRow asArray equals: #(1 true '3.14')
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SQLite3RowTest >> testAsCombinedDictionary [
 	| dict  |
 	dict := Dictionary new.
@@ -43,7 +45,7 @@ SQLite3RowTest >> testAsCombinedDictionary [
 	self assert: filledRow asCombinedDictionary equals: dict
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SQLite3RowTest >> testAsDictionary [
 	| dict  |
 	dict := Dictionary new.
@@ -55,7 +57,18 @@ SQLite3RowTest >> testAsDictionary [
 	self assert: filledRow asDictionary equals: dict
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
+SQLite3RowTest >> testAssociations [
+
+	self assert: emptyRow associations isEmpty.
+	self assert: emptyRow associations equals: #(  ).
+	self assert: filledRow associations equals: {
+			('foo' -> 1).
+			('bar' -> true).
+			('pi' -> '3.14') }
+]
+
+{ #category : 'tests' }
 SQLite3RowTest >> testColumnAccessingIfAbsent [
 	|blockExecutedFlag|
 	blockExecutedFlag := false.
@@ -69,13 +82,13 @@ SQLite3RowTest >> testColumnAccessingIfAbsent [
 	self assert: blockExecutedFlag
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SQLite3RowTest >> testColumnAccessingOnEmptyRow [
 
 	self assert: (emptyRow at: 'foo') equals: nil
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SQLite3RowTest >> testColumnAccessingOnFilledRow [
 
 	self assert: (filledRow at: 'foo') equals: 1.
@@ -85,19 +98,19 @@ SQLite3RowTest >> testColumnAccessingOnFilledRow [
 	self assert: (filledRow at: 'nope') equals: nil
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SQLite3RowTest >> testColumnNamesOnEmptyRow [
 
 	self assert: emptyRow columnNames equals: #()
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SQLite3RowTest >> testColumnNamesOnFilledRow [
 
 	self assert: filledRow columnNames equals: #('foo' 'bar' 'pi')
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SQLite3RowTest >> testColumnPuttingOnEmptyRow [
 
 	self assert: (emptyRow at: 'foo') equals: nil.
@@ -107,7 +120,7 @@ SQLite3RowTest >> testColumnPuttingOnEmptyRow [
 	self assert: (emptyRow at: 'foo') equals: 42
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 SQLite3RowTest >> testColumnPuttingOnFilledRow [
 
 	self assert: (filledRow at: 'foo') equals: 1.

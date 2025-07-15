@@ -41,6 +41,13 @@ SQLite3Row >> asDictionary [
 	^ dict
 ]
 
+{ #category : 'converting' }
+SQLite3Row >> associations [
+
+	^ Array new: self size streamContents: [ :stream |
+			  self columnNames with: self values do: [ :columnName :columnValue | stream nextPut: columnName -> columnValue ] ]
+]
+
 { #category : 'accessing' }
 SQLite3Row >> at: aKey [
 	^ self at: aKey ifAbsent: [  ]
