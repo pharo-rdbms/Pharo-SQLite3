@@ -6,12 +6,14 @@ SQLite is normally very forgiving about mismatches between the type of a value a
 The rowid of a table must be an integer. Attempt to set the rowid to anything other than an integer (or a NULL which will be automatically converted into the next available integer rowid) results in an SQLITE_MISMATCH error.
 "
 Class {
-	#name : #SQLite3Mismatch,
-	#superclass : #SQLite3NativeError,
-	#category : #'SQLite3-Core-Errors'
+	#name : 'SQLite3Mismatch',
+	#superclass : 'SQLite3NativeError',
+	#category : 'SQLite3-Core-Errors',
+	#package : 'SQLite3-Core',
+	#tag : 'Errors'
 }
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 SQLite3Mismatch class >> nativeErrorCode [
 
 	^ SQLITE_MISMATCH

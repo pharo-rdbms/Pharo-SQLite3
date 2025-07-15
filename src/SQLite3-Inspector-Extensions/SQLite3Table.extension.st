@@ -1,60 +1,73 @@
 Extension { #name : 'SQLite3Table' }
 
 { #category : '*SQLite3-Inspector-Extensions' }
-SQLite3Table >> inspectionSQLite3Columns [
+SQLite3Table >> inspectionSQLite3Columns: aBuilder [
 
 	<inspectorPresentationOrder: 13 title: 'SQLite3 - Columns'>
-	^ SpTablePresenter new
+	^ aBuilder newTable
 		  items: self columns;
 		  beResizable;
-		  addColumn: (SpStringTableColumn
-				   title: 'Column Name'
+		  alternateRowsColor;
+		  addColumn:
+			  (SpStringTableColumn
+				   title: 'Index'
+				   evaluated: [ :each | each index ]);
+		  addColumn:
+			  (SpStringTableColumn
+				   title: 'Name'
 				   evaluated: [ :each | each name ]);
-		  addColumn: (SpStringTableColumn
-				   title: 'Column Type'
+		  addColumn:
+			  (SpStringTableColumn
+				   title: 'Type'
 				   evaluated: [ :each | each type ]);
 		  addColumn:
 			  (SpStringTableColumn
 				   title: 'Non-empty values'
 				   evaluated: [ :each |
-					   each hasNotNullConstraint
-						   ifTrue: [ 'NOT NULL' ]
-						   ifFalse: [ '' ] ]);
+						   each hasNotNullConstraint
+							   ifTrue: [ 'NOT NULL' ]
+							   ifFalse: [ '' ] ]);
 		  yourself
 ]
 
 { #category : '*SQLite3-Inspector-Extensions' }
-SQLite3Table >> inspectionSQLite3Data [
+SQLite3Table >> inspectionSQLite3Data: aBuilder [
 
 	<inspectorPresentationOrder: 11 title: 'SQLite3 - Data'>
 	| presenter |
-	presenter := SpTablePresenter new
+	presenter := aBuilder newTable
 		             items: self rows;
 		             beResizable;
+		             alternateRowsColor;
+		             addColumn: (SpIndexTableColumn new
+				              title: '#';
+				              beNotExpandable;
+				              yourself);
 		             yourself.
-
-	self columnNames do: [ :col |
-		presenter addColumn:
-			(SpStringTableColumn title: col evaluated: [ :each | each at: col ]) ].
+	presenter addColumns: (self columnNames collect: [ :name |
+			 SpStringTableColumn
+				 title: name
+				 evaluated: [ :row | row atName: name ] ]).
 	^ presenter
 ]
 
 { #category : '*SQLite3-Inspector-Extensions' }
-SQLite3Table >> inspectionSQLite3Schema [
-	<inspectorPresentationOrder: 10 title: 'SQLite3 - Schema'>
+SQLite3Table >> inspectionSQLite3Schema: aBuilder [
 
-	^ SpTextPresenter new
-		text: self schema;
-		yourself
+	<inspectorPresentationOrder: 10 title: 'SQLite3 - Schema'>
+	^ aBuilder newText
+		  text: self schema;
+		  yourself
 ]
 
 { #category : '*SQLite3-Inspector-Extensions' }
-SQLite3Table >> inspectionSQLite3TableProperties [
+SQLite3Table >> inspectionSQLite3TableProperties: aBuilder [
 
 	<inspectorPresentationOrder: 40 title: 'SQLite3 - Table Properties'>
-	^ SpTablePresenter new
+	^ aBuilder newTable
 		  items: self properties associations;
 		  beResizable;
+		  alternateRowsColor;
 		  addColumn: (SpStringTableColumn
 				   title: 'Property'
 				   evaluated: [ :assoc | assoc key ]);

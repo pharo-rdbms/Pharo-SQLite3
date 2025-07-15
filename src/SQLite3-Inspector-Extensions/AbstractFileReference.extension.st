@@ -9,20 +9,26 @@ AbstractFileReference >> databaseSize [
 ]
 
 { #category : '*SQLite3-Inspector-Extensions' }
-AbstractFileReference >> inspectionSQLite3Info [
-	<inspectorPresentationOrder: -2 title: 'SQLite3 - Info'>
+AbstractFileReference >> inspectionSQLite3Info: aBuilder [
 
-	| label1 label2 |
-	label1 := SpLabeledPresenter
-		          label: 'Database file:'
-		          input: (SpTextInputFieldPresenter new text: self fullName).
-	label2 := SpLabeledPresenter
-		          label: 'Database size:'
-		          input: (SpTextInputFieldPresenter new text: self databaseSize).
-	^ SpPresenter new
-		  layout: (SpBoxLayout newTopToBottom
-				   add: label1;
-					add: label2;
+	<inspectorPresentationOrder: -2 title: 'SQLite3 - Info'>
+	| fileLabel sizeLabel |
+	fileLabel := (aBuilder instantiate: SpLabeledPresenter)
+		             label: 'Database file:';
+		             input: (aBuilder newTextInput
+				              text: self fullName;
+				              yourself);
+		             yourself.
+	sizeLabel := (aBuilder instantiate: SpLabeledPresenter)
+		             label: 'Database size:';
+		             input: (aBuilder newTextInput
+				              text: self databaseSize;
+				              yourself);
+		             yourself.
+	^ aBuilder newPresenter
+		  layout: (aBuilder newBoxLayoutTopToBottom
+				   add: fileLabel;
+				   add: sizeLabel;
 				   yourself);
 		  yourself
 ]
@@ -34,14 +40,11 @@ AbstractFileReference >> inspectionSQLite3InfoContext: aContext [
 ]
 
 { #category : '*SQLite3-Inspector-Extensions' }
-AbstractFileReference >> inspectionSQLite3Tables [
-	<inspectorPresentationOrder: -1 title: 'SQLite3 - Tables'>
+AbstractFileReference >> inspectionSQLite3Tables: aBuilder [
 
-	^ SpTablePresenter new
-			items: (SQLite3Database tableInfoFor: self fullName);
-			addColumn: (SpStringTableColumn title: 'Table Name' evaluated: [ :assoc | assoc name ]);
-			addColumn: (SpStringTableColumn title: 'Number of Rows' evaluated: [ :assoc | assoc numberOfRows ]);
-			yourself
+	<inspectorPresentationOrder: -1 title: 'SQLite3 - Tables'>
+	^ (SQLite3Database openOn: self fullName) inspectionSQLite3Tables:
+		  aBuilder
 ]
 
 { #category : '*SQLite3-Inspector-Extensions' }

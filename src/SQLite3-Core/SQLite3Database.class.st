@@ -2,15 +2,17 @@
 An SQLite3 database
 "
 Class {
-	#name : #SQLite3Database,
-	#superclass : #Object,
+	#name : 'SQLite3Database',
+	#superclass : 'Object',
 	#instVars : [
 		'connection'
 	],
-	#category : #'SQLite3-Core-Base'
+	#category : 'SQLite3-Core-Base',
+	#package : 'SQLite3-Core',
+	#tag : 'Base'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 SQLite3Database class >> forConnection: aConnection [
 
 	^ self new
@@ -18,19 +20,19 @@ SQLite3Database class >> forConnection: aConnection [
 		yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 SQLite3Database class >> memory [
 
 	^ self forConnection: SQLite3Connection memory
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 SQLite3Database class >> on: aFilename [
 
 	^ self forConnection: (SQLite3Connection on: aFilename)
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 SQLite3Database class >> openOn: aFilename [
 
 	^ (self on: aFilename)
@@ -38,52 +40,43 @@ SQLite3Database class >> openOn: aFilename [
 			yourself
 ]
 
-{ #category : #accessing }
-SQLite3Database class >> tableInfoFor: aFileName [
-
-	| db |
-	db := self on: aFileName.
-	db connection open.
-	^ db tables
-]
-
-{ #category : #'open/close' }
+{ #category : 'open/close' }
 SQLite3Database >> close [
 
 	^ self connection close
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SQLite3Database >> connection [
 
 	^ connection
 ]
 
-{ #category : #executing }
+{ #category : 'executing' }
 SQLite3Database >> execute: anSQLStatement [
 
 	^ self connection execute: anSQLStatement
 ]
 
-{ #category : #executing }
+{ #category : 'executing' }
 SQLite3Database >> execute: anSQLStatement doing: aBlock [
 
 	^ self connection execute: anSQLStatement with: #(  ) doing: aBlock
 ]
 
-{ #category : #'private - initialization' }
+{ #category : 'private - initialization' }
 SQLite3Database >> initConnection: aConnection [
 
 	connection := aConnection
 ]
 
-{ #category : #'open/close' }
+{ #category : 'open/close' }
 SQLite3Database >> open [
 
 	^ self connection open
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 SQLite3Database >> printOn: aStream [
 
 	super printOn: aStream.
@@ -93,7 +86,7 @@ SQLite3Database >> printOn: aStream [
 		<< '")'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 SQLite3Database >> tables [
 
 	self connection isOpen ifFalse: [ ^ SQLite3NotOpen signal ].

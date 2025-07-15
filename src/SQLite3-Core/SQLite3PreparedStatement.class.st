@@ -2,8 +2,8 @@
 I represent an SQLite prepared statement.
 "
 Class {
-	#name : #SQLite3PreparedStatement,
-	#superclass : #Object,
+	#name : 'SQLite3PreparedStatement',
+	#superclass : 'Object',
 	#instVars : [
 		'connection',
 		'handle',
@@ -14,10 +14,12 @@ Class {
 	#pools : [
 		'SQLite3Constants'
 	],
-	#category : #'SQLite3-Core-Database'
+	#category : 'SQLite3-Core-Database',
+	#package : 'SQLite3-Core',
+	#tag : 'Database'
 }
 
-{ #category : #bindings }
+{ #category : 'bindings' }
 SQLite3PreparedStatement >> at: aColumn putBoolean: aBoolean [
 
 	^ self library
@@ -28,7 +30,7 @@ SQLite3PreparedStatement >> at: aColumn putBoolean: aBoolean [
 "See http://www.sqlite.org/datatype3.html."
 ]
 
-{ #category : #bindings }
+{ #category : 'bindings' }
 SQLite3PreparedStatement >> at: aColumn putByteArray: anObject [
 
 	| byteArray |
@@ -36,7 +38,7 @@ SQLite3PreparedStatement >> at: aColumn putByteArray: anObject [
 	^ self library with: handle at: aColumn putBlob: byteArray
 ]
 
-{ #category : #bindings }
+{ #category : 'bindings' }
 SQLite3PreparedStatement >> at: aColumn putDate: aDate [
 
 	| string |
@@ -47,7 +49,7 @@ SQLite3PreparedStatement >> at: aColumn putDate: aDate [
 	^ self library with: handle at: aColumn putText: string
 ]
 
-{ #category : #bindings }
+{ #category : 'bindings' }
 SQLite3PreparedStatement >> at: aColumn putDateTime: aDateTime [
 
 	| string |
@@ -58,7 +60,7 @@ SQLite3PreparedStatement >> at: aColumn putDateTime: aDateTime [
 	^ self library with: handle at: aColumn putText: string
 ]
 
-{ #category : #bindings }
+{ #category : 'bindings' }
 SQLite3PreparedStatement >> at: aColumn putFloat: aFloat [
 	| f |
 
@@ -68,20 +70,20 @@ SQLite3PreparedStatement >> at: aColumn putFloat: aFloat [
 	^ self library with: handle at: aColumn putFloat: f
 ]
 
-{ #category : #bindings }
+{ #category : 'bindings' }
 SQLite3PreparedStatement >> at: aColumn putInteger: anInteger [
 
 	^ self library with: handle at: aColumn putInteger: anInteger
 ]
 
-{ #category : #bindings }
+{ #category : 'bindings' }
 SQLite3PreparedStatement >> at: aColumn putNil: anObject [
 	"Goofy interface note - anObject is ignored here."
 	"When used by SQLite3Connection, anObject will always be nil."
 	^ self library with: handle putNullAt: aColumn
 ]
 
-{ #category : #bindings }
+{ #category : 'bindings' }
 SQLite3PreparedStatement >> at: aColumn putObject: anObject [
 
 	| blob |
@@ -92,7 +94,7 @@ SQLite3PreparedStatement >> at: aColumn putObject: anObject [
 		  putBlob: blob
 ]
 
-{ #category : #bindings }
+{ #category : 'bindings' }
 SQLite3PreparedStatement >> at: aColumn putString: aString [
 
 	| s |
@@ -101,7 +103,7 @@ SQLite3PreparedStatement >> at: aColumn putString: aString [
 	^ self library with: handle at: aColumn putText: s
 ]
 
-{ #category : #bindings }
+{ #category : 'bindings' }
 SQLite3PreparedStatement >> at: aColumn putTime: aTime [
 
 	| string |
@@ -112,7 +114,7 @@ SQLite3PreparedStatement >> at: aColumn putTime: aTime [
 	^ self library with: handle at: aColumn putText: string
 ]
 
-{ #category : #public }
+{ #category : 'public' }
 SQLite3PreparedStatement >> basicExecute: aBlock [
 	| ret |
 
@@ -125,17 +127,17 @@ SQLite3PreparedStatement >> basicExecute: aBlock [
 				ret := self step ]]
 ]
 
-{ #category : #bindings }
+{ #category : 'bindings' }
 SQLite3PreparedStatement >> bindParameterCount [
 	^ self library bindParameterCount: handle
 ]
 
-{ #category : #bindings }
+{ #category : 'bindings' }
 SQLite3PreparedStatement >> bindParameterIndex: aName [
 	^ self library bindParameterIndex: handle for: aName
 ]
 
-{ #category : #bindings }
+{ #category : 'bindings' }
 SQLite3PreparedStatement >> bindParameters: parameters [
 
 	"A 'variable' or 'parameter' token specifies a placeholder in the expression for a value that is filled in at runtime using the sqlite3_bind() family of C/C++ interfaces. Parameters can take several forms:
@@ -165,27 +167,27 @@ Parameters that are not assigned values using sqlite3_bind() are treated as NULL
 			self perform: (self dataTypeForObject: v) with: idx with: v ] ]
 ]
 
-{ #category : #bindings }
+{ #category : 'bindings' }
 SQLite3PreparedStatement >> bindingAt: anObject ifAbsentPut: aBlock [
 	^bindings at: anObject ifAbsentPut: aBlock
 ]
 
-{ #category : #fetching }
+{ #category : 'fetching' }
 SQLite3PreparedStatement >> booleanAt: aColumn [
 	^self library booleanFrom: handle at: aColumn
 ]
 
-{ #category : #fetching }
+{ #category : 'fetching' }
 SQLite3PreparedStatement >> byteArrayAt: aColumn [
 	^ self library blobFrom: handle at: aColumn
 ]
 
-{ #category : #'public - accessing' }
+{ #category : 'public - accessing' }
 SQLite3PreparedStatement >> changes [
 	^changes ifNil: [ changes := 0 ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 SQLite3PreparedStatement >> checkOk: aValue [
 
 	"These are normal conditions."
@@ -201,7 +203,7 @@ SQLite3PreparedStatement >> checkOk: aValue [
 	connection signal: SQLite3AbstractError with: aValue
 ]
 
-{ #category : #bindings }
+{ #category : 'bindings' }
 SQLite3PreparedStatement >> clearBindings [
 
 	| cleared |
@@ -210,12 +212,12 @@ SQLite3PreparedStatement >> clearBindings [
 	^cleared
 ]
 
-{ #category : #public }
+{ #category : 'public' }
 SQLite3PreparedStatement >> columnCount [
 	^self library columnCount: handle
 ]
 
-{ #category : #'public - accessing' }
+{ #category : 'public - accessing' }
 SQLite3PreparedStatement >> columnNames [
 
 	^ columnNames ifNil: [
@@ -223,12 +225,12 @@ SQLite3PreparedStatement >> columnNames [
 		  columnNames ]
 ]
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 SQLite3PreparedStatement >> connection: anObject [
 	connection := anObject
 ]
 
-{ #category : #bindings }
+{ #category : 'bindings' }
 SQLite3PreparedStatement >> dataTypeForObject: anObject [
 
 	anObject ifNil: [ ^ #at:putNil: ].
@@ -260,29 +262,29 @@ SQLite3PreparedStatement >> dataTypeForObject: anObject [
 	^ #at:putObject:
 ]
 
-{ #category : #'public - accessing' }
+{ #category : 'public - accessing' }
 SQLite3PreparedStatement >> dataValuesAvailable [
 	^ self library dataValuesAvailable: handle
 ]
 
-{ #category : #fetching }
+{ #category : 'fetching' }
 SQLite3PreparedStatement >> dateAt: aColumn [
 
 	^ Date fromString: ( self stringAt: aColumn )
 ]
 
-{ #category : #fetching }
+{ #category : 'fetching' }
 SQLite3PreparedStatement >> dateTimeAt: aColumn [
 
 	^ DateAndTime fromString: ( self stringAt: aColumn )
 ]
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 SQLite3PreparedStatement >> dbHandle [
 	^(self library dbHandle: handle)
 ]
 
-{ #category : #operating }
+{ #category : 'operating' }
 SQLite3PreparedStatement >> execute: parameters [
 
 	| result |
@@ -294,7 +296,7 @@ SQLite3PreparedStatement >> execute: parameters [
 	^ SQLite3Cursor on: self
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 SQLite3PreparedStatement >> finalize [
 	"Finalize the statement as required by the SQLite3 API. As per the API, the user is expected to finalize a statement after use.
 
@@ -309,18 +311,18 @@ SQLite3PreparedStatement >> finalize [
 	^ 0
 ]
 
-{ #category : #fetching }
+{ #category : 'fetching' }
 SQLite3PreparedStatement >> floatAt: aColumn [
 
 	^self library floatFrom: handle at: aColumn
 ]
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 SQLite3PreparedStatement >> handle [
 	^ handle
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 SQLite3PreparedStatement >> initialize [
 
 	super initialize.
@@ -329,62 +331,62 @@ SQLite3PreparedStatement >> initialize [
 	handle autoRelease
 ]
 
-{ #category : #fetching }
+{ #category : 'fetching' }
 SQLite3PreparedStatement >> integerAt: aColumn [
 	^self library integerFrom: handle at: aColumn
 ]
 
-{ #category : #'private - testing' }
+{ #category : 'private - testing' }
 SQLite3PreparedStatement >> isFloatLike: anObject [
 	^ (anObject isKindOf: Float) or: [ anObject isKindOf: Fraction ]
 ]
 
-{ #category : #'public - accessing' }
+{ #category : 'public - accessing' }
 SQLite3PreparedStatement >> isReadOnly [
 	^self library statementReadOnly: handle
 ]
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 SQLite3PreparedStatement >> library [
 	^SQLite3Library current
 ]
 
-{ #category : #fetching }
+{ #category : 'fetching' }
 SQLite3PreparedStatement >> nameOfColumn: aColumn [
 	^ self library nameFor: handle at: aColumn
 ]
 
-{ #category : #fetching }
+{ #category : 'fetching' }
 SQLite3PreparedStatement >> nilAt: aColumn [
 	^ nil
 ]
 
-{ #category : #fetching }
+{ #category : 'fetching' }
 SQLite3PreparedStatement >> objectAt: aColumn [
 	^ FLMaterializer materializeFromByteArray: (self library blobFrom: handle at: aColumn)
 ]
 
-{ #category : #public }
+{ #category : 'public' }
 SQLite3PreparedStatement >> prepare: anSQLText [
 	self library prepare: handle on: connection handle with: anSQLText
 ]
 
-{ #category : #public }
+{ #category : 'public' }
 SQLite3PreparedStatement >> reset [
 	^connection reset: self
 ]
 
-{ #category : #operating }
+{ #category : 'operating' }
 SQLite3PreparedStatement >> sqlText [
 	^ self library sqlText: handle
 ]
 
-{ #category : #public }
+{ #category : 'public' }
 SQLite3PreparedStatement >> step [
 	^ self stepOk: (self library step: handle)
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 SQLite3PreparedStatement >> stepOk: aValue [
 
 	"These are normal conditions."
@@ -404,7 +406,7 @@ SQLite3PreparedStatement >> stepOk: aValue [
 	connection signal: SQLite3AbstractError with: aValue
 ]
 
-{ #category : #fetching }
+{ #category : 'fetching' }
 SQLite3PreparedStatement >> stringAt: aColumn [
 	"Answer the string from the specified column"
 
@@ -413,24 +415,24 @@ SQLite3PreparedStatement >> stringAt: aColumn [
 	^ self library stringFrom: handle at: aColumn
 ]
 
-{ #category : #fetching }
+{ #category : 'fetching' }
 SQLite3PreparedStatement >> timeAt: aColumn [
 
 	^ Time fromString: ( self stringAt: aColumn )
 ]
 
-{ #category : #fetching }
+{ #category : 'fetching' }
 SQLite3PreparedStatement >> timestampAt: aColumn [
 
 	^ DateAndTime fromString: ( self stringAt: aColumn )
 ]
 
-{ #category : #fetching }
+{ #category : 'fetching' }
 SQLite3PreparedStatement >> typeOfColumn: aColumn [
 	^ self library typeFor: handle at: aColumn
 ]
 
-{ #category : #fetching }
+{ #category : 'fetching' }
 SQLite3PreparedStatement >> valueOfColumn: aColumn [
 	^ self perform: (self typeOfColumn: aColumn) with: aColumn
 ]

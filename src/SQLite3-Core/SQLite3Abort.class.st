@@ -10,12 +10,14 @@ If a ROLLBACK operation occurs on the same database connection as a pending read
 In addition to being a result code, the SQLITE_ABORT value is also used as a conflict resolution mode returned from the sqlite3_vtab_on_conflict() interface.
 "
 Class {
-	#name : #SQLite3Abort,
-	#superclass : #SQLite3NativeError,
-	#category : #'SQLite3-Core-Errors'
+	#name : 'SQLite3Abort',
+	#superclass : 'SQLite3NativeError',
+	#category : 'SQLite3-Core-Errors',
+	#package : 'SQLite3-Core',
+	#tag : 'Errors'
 }
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 SQLite3Abort class >> nativeErrorCode [
 
 	^ SQLITE_ABORT
